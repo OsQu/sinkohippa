@@ -1,0 +1,28 @@
+{
+  "name": "Sinkohippa-backend",
+  "version": "0.0.1",
+  "author": "OsQu",
+  "description": "Backend for world's greatest ASCII shooter game",
+
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/OsQu/sinkohippa"
+  },
+
+  "devDependencies": {
+    "mocha": "~1.8.1",
+    "should": "~1.2.2",
+    "colors": "0.6.0-1",
+    "underscore": "*"
+  },
+
+  "dependencies": {
+    "coffee-script": "~1.6.1",
+    "express": "~3.0.0",
+    "baconjs": "~0.1.7"
+  },
+
+  "engines": {
+    "node": "0.8.22"
+  }
+}
