@@ -19,7 +19,8 @@
   "dependencies": {
     "coffee-script": "~1.6.1",
     "express": "~3.0.0",
-    "baconjs": "~0.1.7"
+    "baconjs": "~0.1.7",
+    "socket.io": "~0.9"
   },
 
   "engines": {
