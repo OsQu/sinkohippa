@@ -9,6 +9,11 @@ Following packages are needed to run the backend:
 * [node](http://nodejs.org/)
 * [foreman](https://github.com/ddollar/foreman)
 
+Installation
+------------
+
+Just run `npm install`
+
 Running
 -------
 
