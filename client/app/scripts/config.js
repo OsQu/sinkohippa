@@ -6,7 +6,8 @@ require.config({
         'socket.io-client': '../components/socket.io-client/lib/socket.io-client',
         bacon: '../components/bacon/dist/Bacon',
         underscore: '../components/underscore/underscore',
-        bootstrap: 'vendor/bootstrap'
+        bootstrap: 'vendor/bootstrap',
+        rot: 'vendor/rot.js/rot'
     },
     shim: {
         bootstrap: {
@@ -18,6 +19,9 @@ require.config({
         },
         bacon: {
             deps: ['jquery']
+        },
+        rot: {
+          exports: 'ROT'
         }
     }
 });
