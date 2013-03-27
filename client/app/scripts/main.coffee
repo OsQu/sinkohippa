@@ -1,4 +1,5 @@
-require ['app', 'jquery', 'underscore', 'bacon', 'rot', 'bootstrap'],  (app, $, _, bacon, rot) ->
+require ['jquery', 'game', 'bootstrap'],  ($, Game) ->
     'use strict'
-    console.log(app)
-    console.log('Running jQuery %s', $().jquery)
+    sinkohippa = new Game
+    sinkohippa.init()
+    sinkohippa.render()
