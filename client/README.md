@@ -1,6 +1,12 @@
 Sinkohippa client
 ================
 
+Dependencies
+------------
+Following packages are needed to run the backend
+* [grunt](http://gruntjs.com/)
+* [bower](https://github.com/twitter/bower)
+
 Installation
 ------------
 
@@ -10,4 +16,12 @@ git submodule init
 git submodule update
 npm install
 bower install
+```
+
+Developing
+-------
+To start developing new cool features to Sinkohippa, simply type:
+
+```
+grunt server
 ```

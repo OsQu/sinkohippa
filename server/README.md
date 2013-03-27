@@ -12,7 +12,15 @@ Following packages are needed to run the backend:
 Installation
 ------------
 
-Just run `npm install`
+Install node from [http://nodejs.org/download/](http://nodejs.org/download/)
+
+Install foreman with gem:
+
+```
+gem install foreman
+```
+
+After that install project dependencies with `npm install`
 
 Running
 -------
