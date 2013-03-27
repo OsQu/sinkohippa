@@ -7,9 +7,13 @@ lib-cov
 *.pid
 *.gz
 
+.sass-cache
+
 pids
 logs
 results
+.tmp/
+client/app/components/
 
 npm-debug.log
 node_modules
