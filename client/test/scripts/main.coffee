@@ -16,7 +16,7 @@ require(['mocha'], (mocha) ->
   'use strict'
   mocha.setup 'bdd'
   require(
-    ['../spec/test'
+    ['../spec/game-spec'
     ], ->
       require(['../runner/mocha'])
   )
