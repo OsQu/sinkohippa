@@ -26,7 +26,7 @@ module.exports = function (grunt) {
         yeoman: yeomanConfig,
         watch: {
             coffee: {
-                files: ['<%= yeoman.app %>/scripts/{,*/}*.coffee'],
+                files: ['<%= yeoman.app %>/scripts/**/*.coffee'],
                 tasks: ['coffee:dist']
             },
             coffeeTest: {
@@ -69,8 +69,8 @@ module.exports = function (grunt) {
                 options: {
                     middleware: function (connect) {
                         return [
-                            mountFolder(connect, '.tmp'),
                             mountFolder(connect, 'test'),
+                            mountFolder(connect, '.tmp'),
                             mountFolder(connect, 'app'),
                             lrSnippet
                         ];
