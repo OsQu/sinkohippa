@@ -255,6 +255,18 @@ module.exports = function (grunt) {
             return grunt.task.run(['build', 'open', 'connect:dist:keepalive']);
         }
 
+        if (target === 'test') {
+              return grunt.task.run([
+                'clean:server',
+                'coffee',
+                'compass:server',
+                'livereload-start',
+                'connect:test',
+                'open',
+                'watch'
+              ]);
+          }
+
         grunt.task.run([
             'clean:server',
             'coffee:dist',
