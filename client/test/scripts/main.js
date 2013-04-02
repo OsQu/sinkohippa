@@ -20,7 +20,9 @@ require(['mocha'], function(mocha) {
   'use strict';
   mocha.setup('bdd');
   require(
-    ['../spec/game-spec'
+    ['../spec/game-spec',
+    '../spec/map-spec',
+    '../spec/player-spec'
     ], function() {
       require(['../runner/mocha']);
   });
