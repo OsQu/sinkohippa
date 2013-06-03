@@ -3,7 +3,7 @@ Sinkohippa client
 
 Dependencies
 ------------
-Following packages are needed to run the backend
+Following packages are needed to run the frontend
 * [grunt](http://gruntjs.com/)
 * [bower](https://github.com/twitter/bower)
 
