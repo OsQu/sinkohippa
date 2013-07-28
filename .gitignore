@@ -13,6 +13,7 @@ pids
 logs
 results
 .tmp/
+dist
 client/app/components/
 
 npm-debug.log
