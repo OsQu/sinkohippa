@@ -27,7 +27,10 @@
     "socket.io-client": "~0.9.11",
     "baconjs": "~0.6.8",
     "underscore": "~1.4.4",
-    "browsernizr": "~1.0.0"
+    "browsernizr": "~1.0.0",
+    "chai": "*",
+    "mocha": "*",
+    "sinon": "~1.7.3"
   },
   "engines": {
     "node": ">=0.8.0"

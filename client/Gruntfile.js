@@ -31,7 +31,7 @@ module.exports = function (grunt) {
             },
             coffeeTest: {
                 files: ['test/**/*.coffee'],
-                tasks: ['coffee:test']
+                tasks: ['coffee:test', 'browserify']
             },
             compass: {
                 files: ['<%= yeoman.app %>/styles/{,*/}*.{scss,sass}'],
@@ -255,6 +255,18 @@ module.exports = function (grunt) {
                     ]
                 }]
 
+            },
+            test: {
+                files: [{
+                    expand: true,
+                    dot: true,
+                    cwd: '<%= yeoman.test %>/lib',
+                    dest: '.tmp/scripts/lib',
+                    src: [
+                      '**/*.js',
+                      '**/*.css'
+                    ]
+                }]
             }
         },
         bower: {
@@ -278,6 +290,8 @@ module.exports = function (grunt) {
               return grunt.task.run([
                 'clean:server',
                 'coffee',
+                'copy',
+                'browserify',
                 'compass:server',
                 'livereload-start',
                 'connect:test',
@@ -289,7 +303,7 @@ module.exports = function (grunt) {
         grunt.task.run([
             'clean:server',
             'coffee:dist',
-            'copy:vendor',
+            'copy',
             'browserify',
             'compass:server',
             'livereload-start',
@@ -298,14 +312,6 @@ module.exports = function (grunt) {
             'watch'
         ]);
     });
-
-    grunt.registerTask('test', [
-        'clean:server',
-        'coffee',
-        'compass',
-        'connect:test',
-        'mocha'
-    ]);
 
     grunt.registerTask('build', [
         'clean:dist',
