@@ -286,6 +286,7 @@ module.exports = function (grunt) {
             return grunt.task.run(['build', 'open', 'connect:dist:keepalive']);
         }
 
+        grunt.option('force', true);
         if (target === 'test') {
               return grunt.task.run([
                 'clean:server',

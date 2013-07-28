@@ -3,6 +3,7 @@ expect = require('chai').expect
 ROT = require('../scripts/vendor/rot.js/rot')
 Bacon= require('baconjs')
 Game = require('../scripts/game')
+Player = require('../scripts/player')
 'use strict'
 describe 'Game', ->
   beforeEach ->
@@ -26,3 +27,8 @@ describe 'Game', ->
       expect(@game.gameLoopStream).to.be.undefined
       @game.start()
       expect(@game.gameLoopStream).to.be.not.undefined
+
+    it 'should add player', ->
+      expect(@game.players.length).to.be.equals(0)
+      @game.addPlayer(new Player('Test player'))
+      expect(@game.players.length).to.be.equals(1)
