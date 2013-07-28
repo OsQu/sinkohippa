@@ -1,24 +1,27 @@
-define ['jquery', 'underscore', 'bacon', 'rot', 'map'], ($, _, Bacon, ROT, Map) ->
-  class Game
-    init: ->
-      @display = new ROT.Display()
-      @map = new Map()
-      @map.generate()
-      @gameContainer = $('#game-container')
+ROT = require('./vendor/rot.js/rot')
+Bacon = require('baconjs')
 
-      @gameLoop = Bacon.fromPoll 100, @gameLoop
-      @gameContainer.append @display.getContainer()
+Map = require('./map')
 
-    render: ->
-      @map.render(@display)
+class Game
+  init: ->
+    @display = new ROT.Display()
+    @map = new Map()
+    @map.generate()
+    @gameContainer = $('#game-container')
 
-    gameLoop: =>
-      console.log "rendering game"
-      @render()
+    @gameLoop = Bacon.fromPoll 100, @gameLoop
+    @gameContainer.append @display.getContainer()
 
-    start: ->
-      console.log "Starting engine"
-      @gameLoopStream = @gameLoop.onValue()
+  render: ->
+    @map.render(@display)
 
+  gameLoop: =>
+    console.log "rendering game"
+    @render()
 
+  start: ->
+    console.log "Starting engine"
+    @gameLoopStream = @gameLoop.onValue()
 
+module.exports = Game

@@ -1,16 +1,21 @@
-define ['rot', 'tile'], (ROT, Tile) ->
-  class Map
-    constructor: (@width, @height) ->
-      @tiles = []
+ROT = require('./vendor/rot.js/rot')
+Tile = require('./tile')
+_ = require('underscore')
 
-    generate: () ->
-      generator = new ROT.Map.Arena(80, 25)
-      generator.create (x,y, wall) =>
-        @tiles.push new Tile x, y, wall
+class Map
+  constructor: (@width, @height) ->
+    @tiles = []
 
-    getTiles: () -> # Terrible
-      @tile
+  generate: () ->
+    generator = new ROT.Map.Arena(80, 25)
+    generator.create (x,y, wall) =>
+      @tiles.push new Tile x, y, wall
 
-    render: (display) =>
-      _.each @tiles, (tile) =>
-        display.draw tile.x, tile.y, tile.getChar()
+  getTiles: () -> # Terrible
+    @tile
+
+  render: (display) =>
+    _.each @tiles, (tile) =>
+      display.draw tile.x, tile.y, tile.getChar()
+
+module.exports = Map

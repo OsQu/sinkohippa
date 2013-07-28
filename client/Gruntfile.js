@@ -27,7 +27,7 @@ module.exports = function (grunt) {
         watch: {
             coffee: {
                 files: ['<%= yeoman.app %>/scripts/**/*.coffee'],
-                tasks: ['coffee:dist']
+                tasks: ['coffee:dist', 'browserify']
             },
             coffeeTest: {
                 files: ['test/**/*.coffee'],
@@ -144,7 +144,6 @@ module.exports = function (grunt) {
                 imagesDir: '<%= yeoman.app %>/images',
                 javascriptsDir: '<%= yeoman.app %>/scripts',
                 fontsDir: '<%= yeoman.app %>/styles/fonts',
-                importPath: 'app/components',
                 relativeAssets: true
             },
             dist: {},
@@ -244,12 +243,27 @@ module.exports = function (grunt) {
                         '.htaccess'
                     ]
                 }]
+            },
+            vendor: {
+                files: [{
+                    expand: true,
+                    dot: true,
+                    cwd: '<%= yeoman.app %>/scripts/vendor',
+                    dest: '.tmp/scripts/vendor',
+                    src: [
+                      '**/*.js'
+                    ]
+                }]
+
             }
         },
         bower: {
             all: {
                 rjsConfig: '<%= yeoman.app %>/scripts/main.js'
             }
+        },
+        browserify: {
+            '.tmp/scripts/bundle.js': ['.tmp/scripts/main.js']
         }
     });
 
@@ -275,6 +289,8 @@ module.exports = function (grunt) {
         grunt.task.run([
             'clean:server',
             'coffee:dist',
+            'copy:vendor',
+            'browserify',
             'compass:server',
             'livereload-start',
             'connect:livereload',
