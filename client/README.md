@@ -5,17 +5,15 @@ Dependencies
 ------------
 Following packages are needed to run the frontend
 * [grunt](http://gruntjs.com/)
-* [bower](https://github.com/twitter/bower)
 
 Installation
 ------------
 
 ```
-npm install -g grunt-cli bower
+npm install -g grunt-cli
 git submodule init
 git submodule update
 npm install
-bower install
 ```
 
 Developing
