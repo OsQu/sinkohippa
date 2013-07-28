@@ -1,0 +1,3 @@
+[submodule "client/app/scripts/vendor/rot.js"]
+	path = client/app/scripts/vendor/rot.js
+	url = git@github.com:waltsu/rot.js.git
