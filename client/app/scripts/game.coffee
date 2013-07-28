@@ -3,6 +3,7 @@ Bacon = require('baconjs')
 _ = require('underscore')
 
 Map = require('./map')
+KeyboardController = require('./keyboard-controller')
 
 class Game
   init: ->
@@ -17,12 +18,13 @@ class Game
     @gameLoop = Bacon.fromPoll 100, @gameLoop
     @gameContainer.append @display.getContainer()
 
+    @keyboardController = new KeyboardController()
+
   render: ->
     @map.render(@display)
     _.forEach @players, (p) => p.render(@display)
 
   gameLoop: =>
-    console.log "rendering game"
     @render()
 
   start: ->

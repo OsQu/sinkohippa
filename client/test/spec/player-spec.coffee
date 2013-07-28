@@ -16,3 +16,30 @@ describe 'Player', ->
           done()
       @player.render(mockDisplay)
 
+    it 'should be able to move around', ->
+      expectCoords = (player, x, y) ->
+        expect(player.x).to.be.equals(x)
+        expect(player.y).to.be.equals(y)
+      expectCoords(@player, 0, 0)
+      @player.moveRight()
+      expectCoords(@player, 1, 0)
+      @player.moveDown()
+      expectCoords(@player, 1, 1)
+      @player.moveUp()
+      expectCoords(@player, 1, 0)
+      @player.moveLeft()
+      expectCoords(@player, 0, 0)
+
+    it 'should bind hjkl for moving', ->
+      KeyboardController = require('../scripts/keyboard-controller')
+      bindStub = sinon.stub KeyboardController.prototype, 'bind', ->
+        onValue: ->
+
+      stubbedPlayer = new Player('stubbed')
+      expect(bindStub.callCount).to.be.equals(4)
+      expect(bindStub.firstCall.args[0]).to.be.equal('h')
+      expect(bindStub.secondCall.args[0]).to.be.equal('j')
+      expect(bindStub.getCall(2).args[0]).to.be.equal('k')
+      expect(bindStub.getCall(3).args[0]).to.be.equal('l')
+
+      bindStub.restore()
