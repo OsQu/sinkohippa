@@ -4,10 +4,17 @@ ROT = require('../scripts/vendor/rot.js/rot')
 Bacon= require('baconjs')
 Game = require('../scripts/game')
 Player = require('../scripts/player')
+io = require('socket.io-client')
 'use strict'
 describe 'Game', ->
   beforeEach ->
+    mockSocket =
+      on: ->
+    @connectStub = sinon.stub(io, 'connect', -> mockSocket)
     @game = new Game
+
+  afterEach ->
+    @connectStub.restore()
 
   describe 'After initialization', ->
     beforeEach ->
@@ -32,3 +39,6 @@ describe 'Game', ->
       expect(@game.players.length).to.be.equals(0)
       @game.addPlayer(new Player('Test player'))
       expect(@game.players.length).to.be.equals(1)
+
+    it 'should connect to web socket server', ->
+      expect(@connectStub.called).to.be.true
