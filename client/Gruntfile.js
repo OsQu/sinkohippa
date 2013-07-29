@@ -46,6 +46,19 @@ module.exports = function (grunt) {
                     '<%= yeoman.app %>/images/{,*/}*.{png,jpg,jpeg,webp}'
                 ],
                 tasks: ['livereload']
+            },
+            test: {
+                files: ['<%= yeoman.app %>/scripts/**/*.coffee',
+                        'test/**/*.coffee',
+                        '<%= yeoman.app %>/styles/{,*/}*.{scss,sass}',
+                        '<%= yeoman.app %>/**/*.html'],
+                tasks: ['coffee:dist', 'coffee:test', 'browserify', 'compass']
+            },
+            dist: {
+                files: ['<%= yeoman.app %>/scripts/**/*.coffee',
+                        '<%= yeoman.app %>/styles/{,*/}*.{scss,sass}',
+                        '<%= yeoman.app %>/**/*.html'],
+                tasks: ['coffee:dist', 'browserify', 'compass']
             }
         },
         connect: {
@@ -297,7 +310,7 @@ module.exports = function (grunt) {
                 'livereload-start',
                 'connect:test',
                 'open',
-                'watch'
+                'watch:test'
               ]);
           }
 
@@ -310,7 +323,7 @@ module.exports = function (grunt) {
             'livereload-start',
             'connect:livereload',
             'open',
-            'watch'
+            'watch:dist'
         ]);
     });
 
