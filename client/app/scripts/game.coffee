@@ -1,9 +1,11 @@
 ROT = require('./vendor/rot.js/rot')
 Bacon = require('baconjs')
 _ = require('underscore')
+io = require('socket.io-client')
 
 Map = require('./map')
 KeyboardController = require('./keyboard-controller')
+gameEventsHandler = require('./events')
 
 class Game
   init: ->
@@ -19,6 +21,8 @@ class Game
     @gameContainer.append @display.getContainer()
 
     @keyboardController = new KeyboardController()
+    @gameSocket = @connectToServer()
+    gameEventsHandler.handleEvents(@gameSocket)
 
   render: ->
     @map.render(@display)
@@ -33,5 +37,8 @@ class Game
 
   addPlayer: (player) ->
     @players.push(player)
+
+  connectToServer: ->
+    io.connect('http://localhost:5000')
 
 module.exports = Game
