@@ -26,9 +26,15 @@ Running
 -------
 
 ```
-foreman start
+foreman start backend
 ```
 
 To test that backend server is running correctly, go to `http://localhost:5000`
 with your browser
 
+Running tests
+------------
+
+```
+foreman start test
+```

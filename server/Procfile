@@ -1,1 +1,2 @@
 backend: ./node_modules/.bin/coffee app.coffee
+test: ./node_modules/.bin/mocha -r coffee-script test/spec/*
