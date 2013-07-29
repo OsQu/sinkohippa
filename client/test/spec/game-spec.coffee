@@ -11,30 +11,23 @@ describe 'Game', ->
     mockSocket =
       on: ->
     @connectStub = sinon.stub(io, 'connect', -> mockSocket)
-    @game = new Game
+    @requestAnimStub = sinon.stub(Game.prototype, 'requestAnimationFrame')
+    @game = new Game()
 
   afterEach ->
     @connectStub.restore()
+    @requestAnimStub.restore()
 
   describe 'After initialization', ->
     beforeEach ->
-      @pollStub = sinon.stub Bacon, 'fromPoll', ->
-        onValue: -> 'streamMock'
       @game.init()
-
-    afterEach ->
-      @pollStub.restore()
 
     it 'should have created map correctly', ->
       expect(@game.map).not.to.be.null
 
-    it 'should have game loop ready', ->
-      expect(@pollStub.called).to.be.true
-
     it 'should start polling when calling start', ->
-      expect(@game.gameLoopStream).to.be.undefined
       @game.start()
-      expect(@game.gameLoopStream).to.be.not.undefined
+      expect(@requestAnimStub.called).to.be.true
 
     it 'should add player', ->
       expect(@game.players.length).to.be.equals(0)

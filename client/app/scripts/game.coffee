@@ -17,7 +17,6 @@ class Game
 
     @gameContainer = $('#game-container')
 
-    @gameLoop = Bacon.fromPoll 100, @gameLoop
     @gameContainer.append @display.getContainer()
 
     @keyboardController = new KeyboardController()
@@ -28,17 +27,22 @@ class Game
     @map.render(@display)
     _.forEach @players, (p) => p.render(@display)
 
-  gameLoop: =>
+  gameLoop: ->
+    console.log("render")
     @render()
+    @requestAnimationFrame(_.bind(@gameLoop, @))
 
   start: ->
     console.log "Starting engine"
-    @gameLoopStream = @gameLoop.onValue()
+    @requestAnimationFrame(_.bind(@gameLoop, @))
 
   addPlayer: (player) ->
     @players.push(player)
 
   connectToServer: ->
     io.connect('http://localhost:5000')
+
+  requestAnimationFrame: (cb) ->
+    window.requestAnimationFrame(cb)
 
 module.exports = Game
