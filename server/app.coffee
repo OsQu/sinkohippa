@@ -9,8 +9,7 @@ server = http.createServer app
 socketio = require 'socket.io'
 io = socketio.listen server
 
-app.get '/', (req, res) ->
-  res.send "TODO: Implement backend"
+require('./routes')(app)
 
 server.listen(process.env.PORT)
 console.log "Started Sinkohippa backend to port:", process.env.PORT
