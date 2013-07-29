@@ -20,7 +20,8 @@
     "coffee-script": "~1.6.1",
     "express": "~3.0.0",
     "baconjs": "~0.1.7",
-    "socket.io": "~0.9"
+    "socket.io": "~0.9",
+    "debug": "~0.7.2*"
   },
 
   "engines": {
