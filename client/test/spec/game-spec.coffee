@@ -18,17 +18,18 @@ describe 'Game', ->
 
   describe 'After initialization', ->
     beforeEach ->
-      @pollSpy = sinon.spy Bacon, 'fromPoll'
+      @pollStub = sinon.stub Bacon, 'fromPoll', ->
+        onValue: -> 'streamMock'
       @game.init()
 
     afterEach ->
-      @pollSpy.restore()
+      @pollStub.restore()
 
     it 'should have created map correctly', ->
       expect(@game.map).not.to.be.null
 
     it 'should have game loop ready', ->
-      expect(@pollSpy.called).to.be.true
+      expect(@pollStub.called).to.be.true
 
     it 'should start polling when calling start', ->
       expect(@game.gameLoopStream).to.be.undefined
