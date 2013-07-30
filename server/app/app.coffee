@@ -16,5 +16,7 @@ SocketListener = require('./socket-listener')
 socketListener = new SocketListener(io)
 socketListener.startListening()
 
+gameController = require('./game-controller')
+
 server.listen(process.env.PORT)
 debug("Started Sinkohippa backend to port: #{process.env.PORT}")

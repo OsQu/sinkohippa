@@ -36,3 +36,7 @@ describe 'Socket', ->
     it 'should add socket to the room "all"', ->
       @mockSocket.join.called.should.be.true
       @mockSocket.join.firstCall.args[0].should.eql('all')
+
+    it 'should send map to socket', ->
+      @mockSocket.emit.firstCall.args[0].should.be.eql('map')
+      @mockSocket.emit.firstCall.args[1].length.should.be.above(0)

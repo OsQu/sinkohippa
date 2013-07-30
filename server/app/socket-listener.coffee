@@ -1,7 +1,7 @@
 debug = require('debug')('sh:socket')
 _ = require('underscore')
 
-sendNewPlayerEvent = ->
+gameController = require('./game-controller')
 
 class SocketListener
   constructor: (@io) ->
@@ -10,6 +10,7 @@ class SocketListener
     debug('Adding new connection to room "all"')
     socket.join("all")
 
+    @sendMapToSocket(socket)
     @sendEvent('all', 'info', { message: 'New player arrived!' })
 
   startListening: ->
@@ -18,5 +19,10 @@ class SocketListener
 
   sendEvent: (room, eventName, data) ->
     @io.sockets.in(room).emit(eventName, data)
+
+  sendMapToSocket: (socket) ->
+    debug('Sending map')
+    map = gameController.getMap()
+    socket.emit('map', map)
 
 module.exports = SocketListener
