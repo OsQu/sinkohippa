@@ -4,10 +4,10 @@ Bacon = require('baconjs')
 
 gameController = require('./game-controller')
 
-bind = (socket, key) ->
+bind = (io, socket, key) ->
   bus = new Bacon.Bus()
   socket.on key, (data) ->
-    bus.push { socket: socket, key: key, data: data }
+    bus.push { io: io, socket: socket, key: key, data: data }
   bus
 
 sendMapToSocket = (socket) ->
@@ -19,6 +19,15 @@ handlePlayerEvent = (ev) ->
   debug("Got player event")
   if ev.data.action == 'move'
     gameController.movePlayer(ev.socket.id, ev.data.direction)
+
+  broadcastGameState(ev.io)
+
+broadcastGameState = (io) ->
+  debug("Broadcasting the game state to all clients")
+
+  state = gameController.getGameState()
+  io.sockets.in('all').emit('state', state)
+
 module.exports = (io) ->
   debug("Starting to listening for connections")
   io.sockets.on 'connection', (socket) ->
@@ -28,6 +37,4 @@ module.exports = (io) ->
     gameController.addPlayer(socket.id)
     sendMapToSocket socket
 
-    bind(socket, 'player').onValue handlePlayerEvent
-
-
+    bind(io, socket, 'player').onValue handlePlayerEvent

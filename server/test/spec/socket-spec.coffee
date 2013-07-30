@@ -6,6 +6,7 @@ gameController = require('../../app/game-controller')
 describe 'Socket', ->
   beforeEach ->
     @socketsOnSpy = sinon.spy()
+    socketsEmitSpy = sinon.spy()
     @mockSocket =
       emit: sinon.spy()
       join: sinon.spy()
@@ -15,12 +16,18 @@ describe 'Socket', ->
     @mockIO =
       sockets:
         on: @socketsOnSpy
-        in: => @mockSocket
+        in: ->
+          emit: socketsEmitSpy
 
     socketListener(@mockIO)
 
   afterEach ->
+    @mockSocket.emit.reset()
+    @mockSocket.join.reset()
+    @mockSocket.on.reset()
     @socketsOnSpy.reset()
+    @mockIO.sockets.in().emit.reset()
+
     gameController.players = []
 
   it 'should listen connections', ->
@@ -43,3 +50,12 @@ describe 'Socket', ->
     it 'should add player to game-controller', ->
       gameController.players.length.should.be.above(0)
       gameController.players[0].id.should.be.eql(@mockSocket.id)
+
+    it 'should broadcast state after player-event', ->
+      socketOnCB = @mockSocket.on.firstCall.args[1]
+      socketOnCB 'player',
+        action: 'move'
+        direction: 'up'
+      @mockIO.sockets.in().emit.called.should.be.true
+      @mockIO.sockets.in().emit.firstCall.args[0].should.be.eql('state')
+
