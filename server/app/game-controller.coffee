@@ -5,6 +5,7 @@ class GameController
   constructor: ->
     @map = []
     @generateMap(@map)
+    @players = []
     debug('Map ready')
 
   generateMap: (map) ->
@@ -14,6 +15,14 @@ class GameController
       map.push {x, y, wall}
 
   getMap: -> @map
+
+  addPlayer: (id) ->
+    player =
+      id: id
+      x: 0
+      y: 0
+    @players.push(player)
+
 instance = new GameController()
 module.exports = instance
 

@@ -49,7 +49,7 @@ describe 'Player', ->
       count = 0
       gameEvents.globalBus.onValue (ev) ->
         count++
-        expect(ev.key).to.be.equals('server')
+        expect(ev.target).to.be.equals('server')
         if count >= 3
           done()
 

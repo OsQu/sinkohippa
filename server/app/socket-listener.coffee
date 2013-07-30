@@ -6,16 +6,16 @@ gameController = require('./game-controller')
 class SocketListener
   constructor: (@io) ->
 
+  startListening: ->
+    debug("Starting listening for client connections")
+    @io.sockets.on('connection', _.bind(@connectionReceived, @))
+
   connectionReceived: (socket) ->
     debug('Adding new connection to room "all"')
     socket.join("all")
 
     @sendMapToSocket(socket)
     @sendEvent('all', 'info', { message: 'New player arrived!' })
-
-  startListening: ->
-    debug("Starting listening for client connections")
-    @io.sockets.on('connection', _.bind(@connectionReceived, @))
 
   sendEvent: (room, eventName, data) ->
     @io.sockets.in(room).emit(eventName, data)

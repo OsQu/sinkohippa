@@ -19,7 +19,7 @@ class Player
     display.draw(@x, @y, @getChar())
 
   getMoveEvent: (direction) ->
-    key: 'server'
+    target: 'server'
     data:
       key: 'move'
       data: direction

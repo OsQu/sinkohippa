@@ -4,6 +4,7 @@ _ = require('underscore')
 io = require('socket.io-client')
 
 Map = require('./map')
+Player = require('./player')
 KeyboardController = require('./keyboard-controller')
 
 gameEvents = require('./game-events')
@@ -27,7 +28,7 @@ class Game
       console.log "Set new map"
 
     gameEvents.globalBus.onValue _.bind(@fromGlobalBus, @)
-    gameEvents.globalBus.filter((ev) -> ev.key == 'server').onValue(_.bind(@sendToServer, @))
+    gameEvents.globalBus.filter((ev) -> ev.target == 'server').onValue(_.bind(@sendToServer, @))
 
   render: ->
     @map?.render(@display)
@@ -43,8 +44,8 @@ class Game
     console.log "Starting engine"
     @requestAnimationFrame(_.bind(@gameLoop, @))
 
-  addPlayer: (player) ->
-    @players.push(player)
+  addPlayer: (playerName) ->
+    @players.push(new Player(playerName))
 
   connectToServer: ->
     io.connect('http://localhost:5000')

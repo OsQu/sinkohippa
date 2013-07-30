@@ -7,6 +7,7 @@ describe 'Socket', ->
     @mockSocket =
       emit: sinon.spy()
       join: sinon.spy()
+      on: sinon.spy()
 
     @mockIO =
       sockets:
