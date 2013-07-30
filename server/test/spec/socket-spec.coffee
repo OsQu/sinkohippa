@@ -1,9 +1,9 @@
 should = require('should')
 sinon = require('sinon')
-SocketListener = require('../../app/socket-listener')
+socketListener = require('../../app/socket-listener')
 describe 'Socket', ->
   beforeEach ->
-    @onSpy = sinon.spy()
+    @socketsOnSpy = sinon.spy()
     @mockSocket =
       emit: sinon.spy()
       join: sinon.spy()
@@ -11,28 +11,21 @@ describe 'Socket', ->
 
     @mockIO =
       sockets:
-        on: @onSpy
+        on: @socketsOnSpy
         in: => @mockSocket
 
-    @socketListener = new SocketListener(@mockIO)
-    @socketListener.startListening()
+    socketListener(@mockIO)
 
   afterEach ->
-    @onSpy.reset()
-  it 'should be initialized', ->
-    should.exist(@socketListener)
+    @socketsOnSpy.reset()
   it 'should listen connections', ->
-    @onSpy.called.should.be.true
-    @onSpy.firstCall.args[0].should.eql('connection')
+    @socketsOnSpy.called.should.be.true
+    @socketsOnSpy.firstCall.args[0].should.eql('connection')
 
-  describe 'When receiving connection', ->
+  describe 'when receiving connection', ->
     beforeEach ->
-      @receivedCB = @onSpy.firstCall.args[1]
+      @receivedCB = @socketsOnSpy.firstCall.args[1]
       @receivedCB(@mockSocket)
-
-    it 'should reply back when receiving connection', ->
-      @receivedCB.should.be.a('function')
-      @mockSocket.emit.called.should.be.true
 
     it 'should add socket to the room "all"', ->
       @mockSocket.join.called.should.be.true

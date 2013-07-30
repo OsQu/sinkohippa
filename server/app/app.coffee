@@ -12,9 +12,9 @@ socketio = require 'socket.io'
 io = socketio.listen server, { log: false }
 
 require('./routes')(app)
-SocketListener = require('./socket-listener')
-socketListener = new SocketListener(io)
-socketListener.startListening()
+
+listenSockets = require('./socket-listener')
+listenSockets(io)
 
 gameController = require('./game-controller')
 

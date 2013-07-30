@@ -1,28 +1,19 @@
 debug = require('debug')('sh:socket')
 _ = require('underscore')
+Bacon = require('baconjs')
 
 gameController = require('./game-controller')
 
-class SocketListener
-  constructor: (@io) ->
+sendMapToSocket = (socket) ->
+  debug('Sending map')
+  map = gameController.getMap()
+  socket.emit('map', map)
 
-  startListening: ->
-    debug("Starting listening for client connections")
-    @io.sockets.on('connection', _.bind(@connectionReceived, @))
-
-  connectionReceived: (socket) ->
+module.exports = (io) ->
+  debug("Starting to listening for connections")
+  io.sockets.on 'connection', (socket) ->
     debug('Adding new connection to room "all"')
     socket.join("all")
+    sendMapToSocket socket
 
-    @sendMapToSocket(socket)
-    @sendEvent('all', 'info', { message: 'New player arrived!' })
 
-  sendEvent: (room, eventName, data) ->
-    @io.sockets.in(room).emit(eventName, data)
-
-  sendMapToSocket: (socket) ->
-    debug('Sending map')
-    map = gameController.getMap()
-    socket.emit('map', map)
-
-module.exports = SocketListener
