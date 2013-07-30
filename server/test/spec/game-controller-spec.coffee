@@ -33,3 +33,17 @@ describe 'GameController', ->
     player.y.should.be.eql(0)
     @gameController.movePlayer('first', 'left')
     player.x.should.be.eql(0)
+
+  it 'should give game state', ->
+    @gameController.addPlayer('second')
+    @gameController.players[0].x = 5
+    @gameController.players[0].y = 3
+    @gameController.players[1].x = 8
+    @gameController.players[1].y = 7
+    state = @gameController.getGameState()
+    state.players[0].x.should.eql(5)
+    state.players[0].y.should.eql(3)
+    state.players[1].x.should.eql(8)
+    state.players[1].y.should.eql(7)
+    state.map.length.should.be.above(0)
+

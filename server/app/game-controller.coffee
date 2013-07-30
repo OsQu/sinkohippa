@@ -19,6 +19,11 @@ class GameController
 
   getMap: -> @map
 
+  getGameState: ->
+    state =
+      players: _.map(@players, (p) -> _.omit(p, 'id'))
+      map: @map
+
   addPlayer: (id) ->
     player =
       id: id
