@@ -21,13 +21,15 @@ class Game
 
     @gameSocket = @connectToServer()
 
-    gameEvents.on(@gameSocket, 'info').onValue (event) -> console.log(event.data)
-    gameEvents.on(@gameSocket, 'map').onValue (event) =>
+    gameEvents.socketMessage(@gameSocket, 'info').onValue (event) -> console.log(event.data)
+    gameEvents.socketMessage(@gameSocket, 'map').onValue (event) =>
       @map = new Map(event.data)
       console.log "Set new map"
 
+    gameEvents.globalBus.onValue _.bind(@fromGlobalBus, @)
+    gameEvents.globalBus.filter((ev) -> ev.key == 'server').onValue(_.bind(@sendToServer, @))
+
   render: ->
-    console.log("render")
     @map?.render(@display)
     _.forEach @players, (p) => p.render(@display)
 
@@ -49,5 +51,12 @@ class Game
 
   requestAnimationFrame: (cb) ->
     window.requestAnimationFrame(cb)
+
+  fromGlobalBus: (event) ->
+
+  sendToServer: (event) ->
+    serverData = event.data
+    @gameSocket.emit(serverData.key, serverData.data)
+
 
 module.exports = Game

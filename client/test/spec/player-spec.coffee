@@ -2,6 +2,7 @@
 expect = require('chai').expect
 
 Player = require('../scripts/player')
+gameEvents = require('../scripts/game-events')
 describe 'Player', ->
   beforeEach ->
     @player = new Player
@@ -43,3 +44,17 @@ describe 'Player', ->
       expect(bindStub.getCall(3).args[0]).to.be.equal('l')
 
       bindStub.restore()
+
+    it 'should send moving data to server', (done) ->
+      count = 0
+      gameEvents.globalBus.onValue (ev) ->
+        count++
+        expect(ev.key).to.be.equals('server')
+        if count >= 3
+          done()
+
+      @player.moveUp()
+      @player.moveDown()
+      @player.moveRight()
+      @player.moveLeft()
+

@@ -10,6 +10,7 @@ describe 'Game', ->
   beforeEach ->
     mockSocket =
       on: ->
+      emit: ->
     @connectStub = sinon.stub(io, 'connect', -> mockSocket)
     @requestAnimStub = sinon.stub(Game.prototype, 'requestAnimationFrame')
     @game = new Game()

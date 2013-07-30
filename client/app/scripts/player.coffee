@@ -1,5 +1,7 @@
 KeyboardController = require('./keyboard-controller')
 
+gameEvents = require('./game-events')
+
 class Player
   constructor: (@name) ->
     keyboardController = new KeyboardController()
@@ -16,10 +18,23 @@ class Player
   render: (display) ->
     display.draw(@x, @y, @getChar())
 
-  moveUp: -> @y--
-  moveDown: -> @y++
-  moveRight: -> @x++
-  moveLeft: -> @x--
+  getMoveEvent: (direction) ->
+    key: 'server'
+    data:
+      key: 'move'
+      data: direction
+  moveUp: ->
+    @y--
+    gameEvents.globalBus.push @getMoveEvent('up')
+  moveDown: ->
+    @y++
+    gameEvents.globalBus.push @getMoveEvent('down')
+  moveRight: ->
+    @x++
+    gameEvents.globalBus.push @getMoveEvent('right')
+  moveLeft: ->
+    @x--
+    gameEvents.globalBus.push @getMoveEvent('left')
 
 
 module.exports = Player
