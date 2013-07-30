@@ -3,8 +3,12 @@ Tile = require('./tile')
 _ = require('underscore')
 
 class Map
-  constructor: (@width, @height) ->
-    @tiles = []
+  constructor: (mapData) ->
+    @tiles = _.reduce mapData, (tiles, tileData) ->
+      tiles.push new Tile tileData.x, tileData.y, tileData.wall
+      tiles
+    , []
+
 
   generate: () ->
     generator = new ROT.Map.Arena(80, 25)

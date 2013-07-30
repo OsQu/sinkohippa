@@ -5,29 +5,30 @@ io = require('socket.io-client')
 
 Map = require('./map')
 KeyboardController = require('./keyboard-controller')
-gameEventsHandler = require('./events')
+
+gameEvents = require('./game-events')
 
 class Game
   init: ->
     @fps = 30
-
-    @display = new ROT.Display()
-    @map = new Map()
-    @map.generate()
-
     @players = []
 
+    @display = new ROT.Display()
     @gameContainer = $('#game-container')
-
     @gameContainer.append @display.getContainer()
 
     @keyboardController = new KeyboardController()
+
     @gameSocket = @connectToServer()
-    gameEventsHandler.handleEvents(@gameSocket)
+
+    gameEvents.on(@gameSocket, 'info').onValue (event) -> console.log(event.data)
+    gameEvents.on(@gameSocket, 'map').onValue (event) =>
+      @map = new Map(event.data)
+      console.log "Set new map"
 
   render: ->
     console.log("render")
-    @map.render(@display)
+    @map?.render(@display)
     _.forEach @players, (p) => p.render(@display)
 
   gameLoop: ->

@@ -4,12 +4,17 @@ expect = require('chai').expect
 
 describe 'Socket Events', ->
   beforeEach ->
-    @eventHandler = require('../scripts/events')
+    @eventHandler = require('../scripts/game-events')
 
-  it 'should listen info events', ->
+  it 'should push event to bus when', (done) ->
     onSpy = sinon.spy()
     mockSocket =
       on: onSpy
-    @eventHandler.handleEvents(mockSocket)
+    @eventHandler.on(mockSocket, 'test').onValue (event) ->
+      expect(event.data).to.be.equals('test-data')
+      expect(event.key).to.be.equals('test')
+      done()
+
     expect(onSpy.called).to.be.true
-    expect(onSpy.firstCall.args[0]).to.be.equals('info')
+    onCB = onSpy.firstCall.args[1]
+    onCB('test-data')
