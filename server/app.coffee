@@ -12,7 +12,7 @@ socketio = require 'socket.io'
 io = socketio.listen server, { log: false }
 
 require('./routes')(app)
-SocketListener = require('./socket')
+SocketListener = require('./socket-listener')
 socketListener = new SocketListener(io)
 socketListener.startListening()
 

@@ -1,6 +1,6 @@
 should = require('should')
 sinon = require('sinon')
-SocketListener = require('../../socket')
+SocketListener = require('../../socket-listener')
 describe 'Socket', ->
   beforeEach ->
     @onSpy = sinon.spy()
