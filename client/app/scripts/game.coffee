@@ -12,7 +12,13 @@ gameEvents = require('./game-events')
 class Game
   init: ->
     @fps = 30
-    @players = []
+    @playersForRendering = []
+
+    # Ugly and temporary
+    # I want to separate render logic from controlling the player.
+    # Maybe separate player-controller-class which will init the buttons
+    @ownPlayer = new Player()
+    @ownPlayer.initButtons()
 
     @display = new ROT.Display()
     @gameContainer = $('#game-container')
@@ -26,12 +32,13 @@ class Game
     gameEvents.socketMessage(@gameSocket, 'map').onValue (event) =>
       @map = new Map(event.data)
       console.log "Set new map"
+    gameEvents.socketMessage(@gameSocket, 'state').onValue _.bind(@stateUpdated, @)
 
     gameEvents.globalBus.filter((ev) -> ev.target == 'server').onValue(_.bind(@sendToServer, @))
 
   render: ->
     @map?.render(@display)
-    _.forEach @players, (p) => p.render(@display)
+    _.forEach @playersForRendering, (p) => p.render(@display)
 
   gameLoop: ->
     setTimeout =>
@@ -43,19 +50,18 @@ class Game
     console.log "Starting engine"
     @requestAnimationFrame(_.bind(@gameLoop, @))
 
-  addPlayer: (playerName) ->
-    @players.push(new Player(playerName))
-
   connectToServer: ->
     io.connect('http://localhost:5000')
 
   requestAnimationFrame: (cb) ->
     window.requestAnimationFrame(cb)
 
-  fromGlobalBus: (event) ->
-
   sendToServer: (event) ->
     serverData = event.data
     @gameSocket.emit(serverData.key, serverData.data)
+
+  stateUpdated: (ev) ->
+    @playersForRendering = _.map ev.data.players, (p) -> new Player('', p.x, p.y)
+    console.log("state updated")
 
 module.exports = Game

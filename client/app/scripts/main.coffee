@@ -8,5 +8,3 @@ sinkohippa.init()
 
 sinkohippa.start()
 
-sinkohippa.addPlayer('Manny')
-

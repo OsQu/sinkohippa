@@ -5,7 +5,7 @@ Player = require('../scripts/player')
 gameEvents = require('../scripts/game-events')
 describe 'Player', ->
   beforeEach ->
-    @player = new Player
+    @player = new Player '', 0, 0
 
   describe 'After initialization', ->
     it 'should have correct character', ->
@@ -21,6 +21,7 @@ describe 'Player', ->
       expectCoords = (player, x, y) ->
         expect(player.x).to.be.equals(x)
         expect(player.y).to.be.equals(y)
+
       expectCoords(@player, 0, 0)
       @player.moveRight()
       expectCoords(@player, 1, 0)
@@ -37,6 +38,7 @@ describe 'Player', ->
         onValue: ->
 
       stubbedPlayer = new Player('stubbed')
+      stubbedPlayer.initButtons()
       expect(bindStub.callCount).to.be.equals(4)
       expect(bindStub.firstCall.args[0]).to.be.equal('h')
       expect(bindStub.secondCall.args[0]).to.be.equal('j')

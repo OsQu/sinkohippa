@@ -30,10 +30,24 @@ describe 'Game', ->
       @game.start()
       expect(@requestAnimStub.called).to.be.true
 
-    it 'should add player', ->
-      expect(@game.players.length).to.be.equals(0)
-      @game.addPlayer(new Player('Test player'))
-      expect(@game.players.length).to.be.equals(1)
-
     it 'should connect to web socket server', ->
       expect(@connectStub.called).to.be.true
+
+    it 'change state of the game correspond to server', ->
+      state =
+        data:
+          players: [
+            {
+              x: 1
+              y: 2
+            },
+            {
+              x: 10,
+              y: 20
+            }
+          ]
+      @game.stateUpdated(state)
+      expect(@game.playersForRendering[0].x).to.be.equals(1)
+      expect(@game.playersForRendering[0].y).to.be.equals(2)
+      expect(@game.playersForRendering[1].x).to.be.equals(10)
+      expect(@game.playersForRendering[1].y).to.be.equals(20)

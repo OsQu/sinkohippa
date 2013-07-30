@@ -3,14 +3,7 @@ KeyboardController = require('./keyboard-controller')
 gameEvents = require('./game-events')
 
 class Player
-  constructor: (@name) ->
-    keyboardController = new KeyboardController()
-    keyboardController.bind('h').onValue => @moveLeft()
-    keyboardController.bind('j').onValue => @moveDown()
-    keyboardController.bind('k').onValue => @moveUp()
-    keyboardController.bind('l').onValue => @moveRight()
-    @x = 0
-    @y = 0
+  constructor: (@name, @x, @y) ->
 
   getChar: ->
     '@'
@@ -39,5 +32,11 @@ class Player
     @x--
     gameEvents.globalBus.push @getMoveEvent('left')
 
+  initButtons: ->
+    keyboardController = new KeyboardController()
+    keyboardController.bind('h').onValue => @moveLeft()
+    keyboardController.bind('j').onValue => @moveDown()
+    keyboardController.bind('k').onValue => @moveUp()
+    keyboardController.bind('l').onValue => @moveRight()
 
 module.exports = Player
