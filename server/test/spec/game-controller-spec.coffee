@@ -21,6 +21,12 @@ describe 'GameController', ->
     @gameController.addPlayer('second')
     @gameController.players.length.should.eql(2)
 
+  it 'should be able to remove a player', ->
+    @gameController.players.length.should.eql(1)
+    @gameController.removePlayer('first')
+    @gameController.players.length.should.eql(0)
+
+
   it 'should be able to move player', ->
     player = @gameController.players[0]
     player.x.should.be.eql(0)

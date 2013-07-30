@@ -55,11 +55,17 @@ describe 'Socket', ->
       @mockIO.sockets.in().emit.callCount.should.eql(1)
 
     it 'should broadcast state after player-event', ->
-      socketOnCB = @mockSocket.on.firstCall.args[1]
-      socketOnCB 'player',
+      playerCB = @mockSocket.on.firstCall.args[1]
+      playerCB 'player',
         action: 'move'
         direction: 'up'
       @mockIO.sockets.in().emit.called.should.be.true
       @mockIO.sockets.in().emit.callCount.should.eql(2)
       @mockIO.sockets.in().emit.firstCall.args[0].should.be.eql('state')
+
+    it 'should inform game controller when disconnecting', ->
+      gameController.players.length.should.be.above(0)
+      disconnectCB = @mockSocket.on.secondCall.args[1]
+      disconnectCB()
+      gameController.players.length.should.be.eql(0)
 

@@ -31,6 +31,9 @@ class GameController
       y: 0
     @players.push(player)
 
+  removePlayer: (id) ->
+    @players = _.filter @players, (p) -> p.id != id
+
   movePlayer: (playerId, direction) ->
     player = _.find @players, (p) -> p.id == playerId
     if player
