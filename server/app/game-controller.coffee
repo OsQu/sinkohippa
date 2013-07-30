@@ -1,16 +1,19 @@
 debug = require('debug')('sh:game-controller')
 ROT = require('./vendor/rot.js/rot')
+_ = require('underscore')
 
 class GameController
   constructor: ->
     @map = []
-    @generateMap(@map)
+    @mapWidth = 80
+    @mapHeight = 25
+    @generateMap(@map, @mapWidth, @mapHeight)
     @players = []
     debug('Map ready')
 
-  generateMap: (map) ->
+  generateMap: (map, width, height) ->
     debug('Generationg map')
-    generator = new ROT.Map.Arena(80.25)
+    generator = new ROT.Map.Arena(width, height)
     generator.create (x, y, wall) ->
       map.push {x, y, wall}
 
@@ -22,6 +25,19 @@ class GameController
       x: 0
       y: 0
     @players.push(player)
+
+  movePlayer: (playerId, direction) ->
+    player = _.find @players, (p) -> p.id == playerId
+    if player
+      switch direction
+        when 'up' then player.y--
+        when 'down' then player.y++
+        when 'left' then player.x--
+        when 'right' then player.x++
+      debug 'Player moved'
+    else
+      debug 'Player not found :('
+
 
 instance = new GameController()
 module.exports = instance

@@ -21,8 +21,11 @@ class Player
   getMoveEvent: (direction) ->
     target: 'server'
     data:
-      key: 'move'
-      data: direction
+      key: 'player'
+      data:
+        action: 'move'
+        direction: direction
+
   moveUp: ->
     @y--
     gameEvents.globalBus.push @getMoveEvent('up')

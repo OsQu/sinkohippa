@@ -1,6 +1,8 @@
 should = require('should')
 sinon = require('sinon')
 socketListener = require('../../app/socket-listener')
+gameController = require('../../app/game-controller')
+
 describe 'Socket', ->
   beforeEach ->
     @socketsOnSpy = sinon.spy()
@@ -8,6 +10,7 @@ describe 'Socket', ->
       emit: sinon.spy()
       join: sinon.spy()
       on: sinon.spy()
+      id: 'socket-1'
 
     @mockIO =
       sockets:
@@ -18,6 +21,8 @@ describe 'Socket', ->
 
   afterEach ->
     @socketsOnSpy.reset()
+    gameController.players = []
+
   it 'should listen connections', ->
     @socketsOnSpy.called.should.be.true
     @socketsOnSpy.firstCall.args[0].should.eql('connection')
@@ -34,3 +39,7 @@ describe 'Socket', ->
     it 'should send map to socket', ->
       @mockSocket.emit.firstCall.args[0].should.be.eql('map')
       @mockSocket.emit.firstCall.args[1].length.should.be.above(0)
+
+    it 'should add player to game-controller', ->
+      gameController.players.length.should.be.above(0)
+      gameController.players[0].id.should.be.eql(@mockSocket.id)

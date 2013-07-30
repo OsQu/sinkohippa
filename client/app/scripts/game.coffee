@@ -27,7 +27,6 @@ class Game
       @map = new Map(event.data)
       console.log "Set new map"
 
-    gameEvents.globalBus.onValue _.bind(@fromGlobalBus, @)
     gameEvents.globalBus.filter((ev) -> ev.target == 'server').onValue(_.bind(@sendToServer, @))
 
   render: ->
@@ -58,6 +57,5 @@ class Game
   sendToServer: (event) ->
     serverData = event.data
     @gameSocket.emit(serverData.key, serverData.data)
-
 
 module.exports = Game
