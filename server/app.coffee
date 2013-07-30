@@ -12,7 +12,9 @@ socketio = require 'socket.io'
 io = socketio.listen server, { log: false }
 
 require('./routes')(app)
-require('./socket')(io)
+SocketListener = require('./socket')
+socketListener = new SocketListener(io)
+socketListener.startListening()
 
 server.listen(process.env.PORT)
 debug("Started Sinkohippa backend to port: #{process.env.PORT}")
