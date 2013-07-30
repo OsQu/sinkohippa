@@ -9,6 +9,8 @@ gameEventsHandler = require('./events')
 
 class Game
   init: ->
+    @fps = 30
+
     @display = new ROT.Display()
     @map = new Map()
     @map.generate()
@@ -24,13 +26,15 @@ class Game
     gameEventsHandler.handleEvents(@gameSocket)
 
   render: ->
+    console.log("render")
     @map.render(@display)
     _.forEach @players, (p) => p.render(@display)
 
   gameLoop: ->
-    console.log("render")
-    @render()
-    @requestAnimationFrame(_.bind(@gameLoop, @))
+    setTimeout =>
+      @requestAnimationFrame(_.bind(@gameLoop, @))
+      @render()
+    , 1000 / @fps
 
   start: ->
     console.log "Starting engine"
