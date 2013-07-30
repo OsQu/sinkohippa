@@ -36,5 +36,6 @@ module.exports = (io) ->
 
     gameController.addPlayer(socket.id)
     sendMapToSocket socket
+    broadcastGameState(io)
 
     bind(io, socket, 'player').onValue handlePlayerEvent

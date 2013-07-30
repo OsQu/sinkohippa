@@ -47,9 +47,12 @@ describe 'Socket', ->
       @mockSocket.emit.firstCall.args[0].should.be.eql('map')
       @mockSocket.emit.firstCall.args[1].length.should.be.above(0)
 
-    it 'should add player to game-controller', ->
+    it 'should add player to game-controller when client connects', ->
       gameController.players.length.should.be.above(0)
       gameController.players[0].id.should.be.eql(@mockSocket.id)
+
+    it 'should broadcast state after client connects', ->
+      @mockIO.sockets.in().emit.callCount.should.eql(1)
 
     it 'should broadcast state after player-event', ->
       socketOnCB = @mockSocket.on.firstCall.args[1]
@@ -57,5 +60,6 @@ describe 'Socket', ->
         action: 'move'
         direction: 'up'
       @mockIO.sockets.in().emit.called.should.be.true
+      @mockIO.sockets.in().emit.callCount.should.eql(2)
       @mockIO.sockets.in().emit.firstCall.args[0].should.be.eql('state')
 
