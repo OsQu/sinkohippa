@@ -48,4 +48,4 @@ There is also Vagrantfile so setupping the backend couldn't be easier: Install V
 vagrant up
 ```
 
-Installation script also introduces ```debug``` alias which can be used to run the node in debug-mode. see ```~/.bash_aliases for more details
+Installation script also introduces ```debug``` alias which can be used to run the node in debug-mode. see ```~/.bash_aliases``` for more details
