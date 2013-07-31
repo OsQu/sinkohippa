@@ -5,6 +5,7 @@ Bacon= require('baconjs')
 Game = require('../scripts/game')
 Player = require('../scripts/player')
 io = require('socket.io-client')
+
 'use strict'
 describe 'Game', ->
   beforeEach ->
@@ -43,6 +44,11 @@ describe 'Game', ->
                 x: 1
                 y: 2
               },
+              {
+                id: 'player-two'
+                x: 5
+                y: 7
+              }
             ]
 
       it 'should add new players to map when noticing them in new state', ->
@@ -50,6 +56,13 @@ describe 'Game', ->
         expect(@game.players[0].id).to.be.equals('player')
         expect(@game.players[0].x).to.be.equals(1)
         expect(@game.players[0].y).to.be.equals(2)
+
+      it 'should remove players if they doesn\'t exist in new state', ->
+        @game.stateUpdated(@state)
+        expect(@game.players.length).to.be.equals(2)
+        @state.data.players.pop()
+        @game.stateUpdated(@state)
+        expect(@game.players.length).to.be.equals(1)
 
       it 'should add new state of existing player according to new state', ->
         @game.players.push(new Player 'player', 100, 100)

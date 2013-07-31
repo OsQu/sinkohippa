@@ -25,7 +25,7 @@ class Game
     gameEvents.socketMessage(@gameSocket, 'info').onValue (event) -> console.log(event.data)
     gameEvents.socketMessage(@gameSocket, 'map').onValue (event) =>
       @map = new Map(event.data)
-      @map?.render(@display)
+      @renderMap()
       console.log "New map set and rendered"
     gameEvents.socketMessage(@gameSocket, 'player-id').onValue (event) =>
       @ownPlayerId = event.data
@@ -36,6 +36,10 @@ class Game
 
   render: ->
     _.forEach @players, (p) => p.render(@display)
+
+  renderMap: ->
+    @map?.render(@display)
+
 
   gameLoop: ->
     setTimeout =>
@@ -73,11 +77,17 @@ class Game
       player.newX = newData.x
       player.newY = newData.y
 
+    # Update online players
+    oldCount = @players.length
+    @players = _.filter @players, (player) -> _.some ev.data.players, (sp) -> sp.id == player.id
+    if oldCount != @players.length
+      @renderMap()
+
     # Move players to new positions
     _.forEach ev.data.players, (newData) =>
       player = _.find(@players, (p) -> p.id == newData.id)
       updatePlayer(player, newData)
-    
+
     console.log("state updated")
 
 module.exports = Game
