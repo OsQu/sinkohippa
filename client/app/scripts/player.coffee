@@ -34,15 +34,25 @@ class Player
 
   moveUp: ->
     gameEvents.globalBus.push @getMoveEvent('up')
+    @lastMoved = 'up'
   moveDown: ->
     gameEvents.globalBus.push @getMoveEvent('down')
+    @lastMoved = 'down'
   moveRight: ->
     gameEvents.globalBus.push @getMoveEvent('right')
+    @lastMoved = 'right'
   moveLeft: ->
     gameEvents.globalBus.push @getMoveEvent('left')
+    @lastMoved = 'left'
 
   shootRocket: ->
-    console.log("shoot rocket!")
+    gameEvents.globalBus.push
+      target: 'server'
+      data:
+        key: 'player'
+        data:
+          action: 'shoot'
+          direction: @lastMoved
 
   initButtons: ->
     console.log("Turning on buttons!")

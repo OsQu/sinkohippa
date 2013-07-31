@@ -45,6 +45,28 @@ describe 'Player', ->
       @player.moveRight()
       @player.moveLeft()
 
+    it 'should track the last movement', ->
+      @player.moveUp()
+      expect(@player.lastMoved).to.be.equals('up')
+      @player.moveDown()
+      expect(@player.lastMoved).to.be.equals('down')
+      @player.moveLeft()
+      expect(@player.lastMoved).to.be.equals('left')
+      @player.moveRight()
+      expect(@player.lastMoved).to.be.equals('right')
+
+    it 'should send shooting data to server', (done) ->
+      gameEvents.globalBus.onValue (ev) ->
+        expect(ev.target).to.be.equals('server')
+        expect(ev.data.key).to.be.equals('player')
+        expect(ev.data.data.action).to.be.equals('shoot')
+        expect(ev.data.data.direction).to.be.equals('up')
+        done()
+
+      @player.lastMoved = 'up'
+      @player.shootRocket()
+
+
     describe 'keyboard bindings', ->
       beforeEach ->
         KeyboardController = require('../scripts/keyboard-controller')
