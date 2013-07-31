@@ -5,6 +5,7 @@ Dependencies
 ------------
 Following packages are needed to run the frontend
 * [grunt](http://gruntjs.com/)
+* [node](http://nodejs.org/)
 
 Installation
 ------------
