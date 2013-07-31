@@ -30,7 +30,7 @@ handlePlayerEvent = (ev) ->
 handleDisconnection = (ev) ->
   debug("Player #{ev.socket.id} is disconnecting")
   gameController.removePlayer(ev.socket.id)
-
+  broadcastGameState(ev.io)
 
 broadcastGameState = (io) ->
   debug("Broadcasting the game state to all clients")

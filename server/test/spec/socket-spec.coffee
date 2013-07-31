@@ -72,3 +72,9 @@ describe 'Socket', ->
       disconnectCB()
       gameController.players.length.should.be.eql(0)
 
+    it 'should inform other sockets when client disconnects', ->
+      disconnectCB = @mockSocket.on.secondCall.args[1]
+      disconnectCB()
+      @mockIO.sockets.in().emit.callCount.should.eql(2)
+
+
