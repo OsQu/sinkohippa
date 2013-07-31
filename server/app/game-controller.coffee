@@ -21,7 +21,7 @@ class GameController
 
   getGameState: ->
     state =
-      players: _.map(@players, (p) -> _.omit(p, 'id'))
+      players: @players
       map: @map
 
   addPlayer: (id) ->

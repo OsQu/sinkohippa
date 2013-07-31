@@ -51,6 +51,9 @@ describe 'Socket', ->
       gameController.players.length.should.be.above(0)
       gameController.players[0].id.should.be.eql(@mockSocket.id)
 
+    it 'should tell client to its player id', ->
+      @mockSocket.emit.secondCall.args[0].should.be.eql('player-id')
+
     it 'should broadcast state after client connects', ->
       @mockIO.sockets.in().emit.callCount.should.eql(1)
 

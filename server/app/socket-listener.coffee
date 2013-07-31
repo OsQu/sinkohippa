@@ -15,6 +15,11 @@ sendMapToSocket = (socket) ->
   map = gameController.getMap()
   socket.emit('map', map)
 
+sendPlayerIdToSocket = (socket) ->
+  id = socket.id
+  debug("Sending player id #{socket.id} to socket")
+  socket.emit('player-id', id)
+
 handlePlayerEvent = (ev) ->
   debug("Got player event")
   if ev.data.action == 'move'
@@ -41,6 +46,7 @@ module.exports = (io) ->
 
     gameController.addPlayer(socket.id)
     sendMapToSocket socket
+    sendPlayerIdToSocket socket
     broadcastGameState(io)
 
     bind(io, socket, 'player').onValue handlePlayerEvent
