@@ -41,6 +41,9 @@ class Player
   moveLeft: ->
     gameEvents.globalBus.push @getMoveEvent('left')
 
+  shootRocket: ->
+    console.log("shoot rocket!")
+
   initButtons: ->
     console.log("Turning on buttons!")
     keyboardController = new KeyboardController()
@@ -48,5 +51,6 @@ class Player
     keyboardController.bind('j').onValue => @moveDown()
     keyboardController.bind('k').onValue => @moveUp()
     keyboardController.bind('l').onValue => @moveRight()
+    keyboardController.bind('space').onValue => @shootRocket()
 
 module.exports = Player

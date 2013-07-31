@@ -32,21 +32,6 @@ describe 'Player', ->
       expect(drawSpy.firstCall.args[0]).to.be.equals(0)
       expect(drawSpy.firstCall.args[2]).to.be.equals('.')
 
-    it 'should bind hjkl for moving', ->
-      KeyboardController = require('../scripts/keyboard-controller')
-      bindStub = sinon.stub KeyboardController.prototype, 'bind', ->
-        onValue: ->
-
-      stubbedPlayer = new Player('stubbed')
-      stubbedPlayer.initButtons()
-      expect(bindStub.callCount).to.be.equals(4)
-      expect(bindStub.firstCall.args[0]).to.be.equal('h')
-      expect(bindStub.secondCall.args[0]).to.be.equal('j')
-      expect(bindStub.getCall(2).args[0]).to.be.equal('k')
-      expect(bindStub.getCall(3).args[0]).to.be.equal('l')
-
-      bindStub.restore()
-
     it 'should send moving data to server', (done) ->
       count = 0
       gameEvents.globalBus.onValue (ev) ->
@@ -59,4 +44,24 @@ describe 'Player', ->
       @player.moveDown()
       @player.moveRight()
       @player.moveLeft()
+
+    describe 'keyboard bindings', ->
+      beforeEach ->
+        KeyboardController = require('../scripts/keyboard-controller')
+        @bindStub = sinon.stub KeyboardController.prototype, 'bind', ->
+          onValue: ->
+        @stubbedPlayer = new Player('stubbed')
+        @stubbedPlayer.initButtons()
+
+      afterEach ->
+        @bindStub.restore()
+
+      it 'should bind hjkl for moving', ->
+        expect(@bindStub.firstCall.args[0]).to.be.equal('h')
+        expect(@bindStub.secondCall.args[0]).to.be.equal('j')
+        expect(@bindStub.getCall(2).args[0]).to.be.equal('k')
+        expect(@bindStub.getCall(3).args[0]).to.be.equal('l')
+
+      it 'should bind space for shooting', ->
+        expect(@bindStub.getCall(4).args[0]).to.be.equal('space')
 
