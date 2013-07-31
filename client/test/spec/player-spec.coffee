@@ -1,5 +1,6 @@
 'use strict'
 expect = require('chai').expect
+Bacon = require('baconjs')
 
 Player = require('../scripts/player')
 gameEvents = require('../scripts/game-events')
@@ -70,8 +71,7 @@ describe 'Player', ->
     describe 'keyboard bindings', ->
       beforeEach ->
         KeyboardController = require('../scripts/keyboard-controller')
-        @bindStub = sinon.stub KeyboardController.prototype, 'bind', ->
-          onValue: ->
+        @bindStub = sinon.stub KeyboardController.prototype, 'bind', -> new Bacon.Bus()
         @stubbedPlayer = new Player('stubbed')
         @stubbedPlayer.initButtons()
 

@@ -61,6 +61,6 @@ class Player
     keyboardController.bind('j').onValue => @moveDown()
     keyboardController.bind('k').onValue => @moveUp()
     keyboardController.bind('l').onValue => @moveRight()
-    keyboardController.bind('space').onValue => @shootRocket()
+    keyboardController.bind('space').doAction('.preventDefault').onValue => @shootRocket()
 
 module.exports = Player
