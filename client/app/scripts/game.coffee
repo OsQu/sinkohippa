@@ -28,8 +28,7 @@ class Game
       @map?.render(@display)
       console.log "New map set and rendered"
     gameEvents.socketMessage(@gameSocket, 'player-id').onValue (event) =>
-      @ownPlayer = new Player(event.data)
-      @ownPlayer.initButtons()
+      @ownPlayerId = event.data
 
     gameEvents.socketMessage(@gameSocket, 'state').onValue _.bind(@stateUpdated, @)
 
@@ -61,6 +60,8 @@ class Game
   addNewPlayer: (playerData) ->
     console.log "Adding new player"
     player = new Player(playerData.id, playerData.x, playerData.y)
+    if player.id == @ownPlayerId
+      player.initButtons()
     @players.push(player)
     player
 

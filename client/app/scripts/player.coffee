@@ -33,16 +33,12 @@ class Player
         direction: direction
 
   moveUp: ->
-    @y--
     gameEvents.globalBus.push @getMoveEvent('up')
   moveDown: ->
-    @y++
     gameEvents.globalBus.push @getMoveEvent('down')
   moveRight: ->
-    @x++
     gameEvents.globalBus.push @getMoveEvent('right')
   moveLeft: ->
-    @x--
     gameEvents.globalBus.push @getMoveEvent('left')
 
   initButtons: ->
