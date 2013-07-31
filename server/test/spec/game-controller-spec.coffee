@@ -12,9 +12,17 @@ describe 'GameController', ->
   it 'should be initialized', ->
     should.exist(@gameController)
     should.exist(@gameController.map)
+    should.exist(@gameController.arrayedMap)
 
   it 'should have generated the map', ->
     @gameController.getMap().length.should.be.above(0)
+
+  it 'should have genereated two dimension version correctly', ->
+    console.log(@gameController.arrayedMap)
+    @gameController.arrayedMap[0][0].wall.should.eql(1)
+    @gameController.arrayedMap[0][1].wall.should.eql(1)
+    @gameController.arrayedMap[1][1].wall.should.eql(0)
+    should.exist(@gameController.arrayedMap[@gameController.mapHeight-1][@gameController.mapWidth-1])
 
   it 'should be able to add a player', ->
     @gameController.players.length.should.eql(1)
@@ -29,16 +37,22 @@ describe 'GameController', ->
 
   it 'should be able to move player', ->
     player = @gameController.players[0]
-    player.x.should.be.eql(0)
-    player.y.should.be.eql(0)
-    @gameController.movePlayer('first', 'down')
-    player.y.should.be.eql(1)
-    @gameController.movePlayer('first', 'right')
     player.x.should.be.eql(1)
+    player.y.should.be.eql(1)
+    @gameController.movePlayer('first', 'down')
+    player.y.should.be.eql(2)
+    @gameController.movePlayer('first', 'right')
+    player.x.should.be.eql(2)
     @gameController.movePlayer('first', 'up')
-    player.y.should.be.eql(0)
+    player.y.should.be.eql(1)
     @gameController.movePlayer('first', 'left')
-    player.x.should.be.eql(0)
+    player.x.should.be.eql(1)
+
+  it 'should prevent walking inside the walls', ->
+    player = @gameController.players[0]
+    player.x.should.be.eql(1)
+    @gameController.movePlayer('first', 'left')
+    player.x.should.be.eql(1)
 
   it 'should give game state', ->
     @gameController.addPlayer('second')
