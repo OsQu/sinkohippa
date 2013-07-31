@@ -17,20 +17,20 @@ describe 'Player', ->
           done()
       @player.render(mockDisplay)
 
-    it 'should be able to move around', ->
-      expectCoords = (player, x, y) ->
-        expect(player.x).to.be.equals(x)
-        expect(player.y).to.be.equals(y)
+    it 'should move player to new position if possible', ->
+      @player.newX = 5
+      @player.newY = 6
+      @player.handleNewPosition({ draw: -> })
+      expect(@player.x).to.be.equal(5)
+      expect(@player.y).to.be.equal(6)
 
-      expectCoords(@player, 0, 0)
-      @player.moveRight()
-      expectCoords(@player, 1, 0)
-      @player.moveDown()
-      expectCoords(@player, 1, 1)
-      @player.moveUp()
-      expectCoords(@player, 1, 0)
-      @player.moveLeft()
-      expectCoords(@player, 0, 0)
+    it 'should clear current position if new position exists', ->
+      @player.newX = 5
+      drawSpy = sinon.spy()
+      @player.handleNewPosition({ draw: drawSpy })
+      expect(drawSpy.called).to.be.true
+      expect(drawSpy.firstCall.args[0]).to.be.equals(0)
+      expect(drawSpy.firstCall.args[2]).to.be.equals('.')
 
     it 'should bind hjkl for moving', ->
       KeyboardController = require('../scripts/keyboard-controller')

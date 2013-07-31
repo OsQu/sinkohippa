@@ -33,21 +33,27 @@ describe 'Game', ->
     it 'should connect to web socket server', ->
       expect(@connectStub.called).to.be.true
 
-    it 'change state of the game correspond to server', ->
-      state =
-        data:
-          players: [
-            {
-              x: 1
-              y: 2
-            },
-            {
-              x: 10,
-              y: 20
-            }
-          ]
-      @game.stateUpdated(state)
-      expect(@game.players[0].x).to.be.equals(1)
-      expect(@game.players[0].y).to.be.equals(2)
-      expect(@game.players[1].x).to.be.equals(10)
-      expect(@game.players[1].y).to.be.equals(20)
+    describe 'Got new state', ->
+      beforeEach ->
+        @state =
+          data:
+            players: [
+              {
+                id: 'player'
+                x: 1
+                y: 2
+              },
+            ]
+
+      it 'should add new players to map when noticing them in new state', ->
+        @game.stateUpdated(@state)
+        expect(@game.players[0].id).to.be.equals('player')
+        expect(@game.players[0].x).to.be.equals(1)
+        expect(@game.players[0].y).to.be.equals(2)
+
+      it 'should add new state of existing player according to new state', ->
+        @game.players.push(new Player 'player', 100, 100)
+        @game.stateUpdated(@state)
+        expect(@game.players[0].id).to.be.equals('player')
+        expect(@game.players[0].newX).to.be.equals(1)
+        expect(@game.players[0].newY).to.be.equals(2)
