@@ -47,7 +47,7 @@ describe 'Game', ->
             }
           ]
       @game.stateUpdated(state)
-      expect(@game.playersForRendering[0].x).to.be.equals(1)
-      expect(@game.playersForRendering[0].y).to.be.equals(2)
-      expect(@game.playersForRendering[1].x).to.be.equals(10)
-      expect(@game.playersForRendering[1].y).to.be.equals(20)
+      expect(@game.players[0].x).to.be.equals(1)
+      expect(@game.players[0].y).to.be.equals(2)
+      expect(@game.players[1].x).to.be.equals(10)
+      expect(@game.players[1].y).to.be.equals(20)
