@@ -27,6 +27,7 @@ class Game
     gameEvents.socketMessage(@gameSocket, 'map').onValue @updateMap
     gameEvents.socketMessage(@gameSocket, 'info').onValue @gotServerInfo
     gameEvents.socketMessage(@gameSocket, 'new-player').onValue @addNewPlayer
+    gameEvents.socketMessage(@gameSocket, 'player-state-changed').onValue @playerStateChanged
 
     gameEvents.globalBus.filter((ev) -> ev.target == 'server').onValue @sendToServer
 
@@ -47,6 +48,12 @@ class Game
       player.initButtons()
 
     @players.push(player)
+
+  playerStateChanged: (ev) =>
+    newData = ev.data
+    player = _.find(@players, (p) -> p.id == newData.id)
+    player.newX = newData.x
+    player.newY = newData.y
 
   sendToServer: (event) =>
     serverData = event.data

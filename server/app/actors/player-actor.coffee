@@ -1,3 +1,5 @@
+debug = require('debug')('sh:player-actor')
+
 class PlayerActor
   constructor: (@manager, @id) ->
     @type = 'player'
@@ -17,7 +19,7 @@ class PlayerActor
       y: @y
     state
 
-  movePlayer: (ev) ->
+  movePlayer: (ev) =>
     debug "Moving player #{@id}"
     mapActor = @manager.getMapActor()
     switch ev.direction
@@ -25,5 +27,7 @@ class PlayerActor
       when 'down' then if mapActor.canMove(@x, @y + 1) then @y++
       when 'left' then if mapActor.canMove(@x - 1, @y) then @x--
       when 'right' then if mapActor.canMove(@x + 1, @y) then @x++
+
+    @manager.globalBus.push { type: 'BROADCAST', key: 'player-state-changed', data: @getState() }
 
 module.exports = PlayerActor
