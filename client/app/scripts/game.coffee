@@ -28,6 +28,7 @@ class Game
     gameEvents.socketMessage(@gameSocket, 'map').onValue @updateMap
     gameEvents.socketMessage(@gameSocket, 'info').onValue @gotServerInfo
     gameEvents.socketMessage(@gameSocket, 'new-player').onValue @addNewPlayer
+    gameEvents.socketMessage(@gameSocket, 'player-leaving').onValue @playerLeaving
     gameEvents.socketMessage(@gameSocket, 'player-state-changed').onValue @playerStateChanged
 
     gameEvents.globalBus.filter((ev) -> ev.target == 'server').onValue @sendToServer
@@ -60,6 +61,13 @@ class Game
       player.initButtons()
 
     @players.push(player)
+
+  playerLeaving: (ev) =>
+    console.log "Removing player"
+    playerId = ev.data
+    @players = _.filter @players, (p) -> p.id != playerId
+    @renderMap()
+
 
   playerStateChanged: (ev) =>
     newData = ev.data
