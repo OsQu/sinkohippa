@@ -28,7 +28,11 @@ describe 'ActorManager', ->
 
   describe 'actor creation', ->
     beforeEach ->
+      @oldActors = @actorManager.actors
       @actorManager.actors = []
+
+    afterEach ->
+      @actorManager.actors = @oldActors
 
     it 'should be able to create map actor', ->
       @actorManager.createMapActor()
