@@ -12,6 +12,8 @@ describe 'Game', ->
     mockSocket =
       on: ->
       emit: ->
+      socket:
+        sessionid: 'player-1'
     @connectStub = sinon.stub(io, 'connect', -> mockSocket)
     @requestAnimStub = sinon.stub(Game.prototype, 'requestAnimationFrame')
     @game = new Game()
@@ -34,39 +36,72 @@ describe 'Game', ->
     it 'should connect to web socket server', ->
       expect(@connectStub.called).to.be.true
 
-    describe 'Got new state', ->
-      beforeEach ->
-        @state =
+    describe 'Got socket event', ->
+      it 'should add players from game-state event', ->
+        state =
           data:
-            players: [
+            [
               {
-                id: 'player'
-                x: 1
-                y: 2
-              },
-              {
-                id: 'player-two'
-                x: 5
-                y: 7
+                type: 'player'
+                state:
+                  id: 'player-1'
+                  x: '5'
+                  y: '6'
               }
             ]
-
-      it 'should add new players to map when noticing them in new state', ->
-        @game.stateUpdated(@state)
-        expect(@game.players[0].id).to.be.equals('player')
-        expect(@game.players[0].x).to.be.equals(1)
-        expect(@game.players[0].y).to.be.equals(2)
-
-      it 'should remove players if they doesn\'t exist in new state', ->
-        @game.stateUpdated(@state)
-        expect(@game.players.length).to.be.equals(2)
-        @state.data.players.pop()
-        @game.stateUpdated(@state)
+        @game.gotGameState(state)
         expect(@game.players.length).to.be.equals(1)
 
-      it 'should add new state of existing player according to new state', ->
+      it 'should update map from game-state event', ->
+        state =
+          data:
+            [
+              {
+                type: 'map'
+                state: [{x: 0, y: 0, wall: 1}]
+              }
+            ]
+        @game.gotGameState(state)
+        expect(@game.map).to.be.not.undefined
+
+      it 'should update map from map event', ->
+        @game.updateMap([{x: 0, y: 0, wall: 1}])
+        expect(@game.map).to.be.not.undefined
+
+      it 'should add new player from new-player event', ->
+        @game.addNewPlayer
+          data:
+            id: 'player1'
+            x: 1
+            y: 1
+
+        expect(@game.players.length).to.be.equals(1)
+
+      it 'should not add player from new-player event if player exists', ->
+        @game.players.push(new Player('player', x: 1, y: 1))
+        expect(@game.players.length).to.be.equals(1)
+        @game.addNewPlayer
+          data:
+            id: 'player'
+            x: 1
+            y: 1
+        expect(@game.players.length).to.be.equals(1)
+
+      it 'should delete player from player-leaving event', ->
+        @game.players.push(new Player('player', x: 1, y: 1))
+        expect(@game.players.length).to.be.equals(1)
+        @game.playerLeaving
+          data: 'player'
+        expect(@game.players.length).to.be.equals(0)
+
+
+      it 'should change player state from player-state-changed event', ->
         @game.players.push(new Player 'player', 100, 100)
-        @game.stateUpdated(@state)
-        expect(@game.players[0].id).to.be.equals('player')
-        expect(@game.players[0].newX).to.be.equals(1)
-        expect(@game.players[0].newY).to.be.equals(2)
+        @game.playerStateChanged
+          data:
+            id: 'player'
+            x: 99
+            y: 101
+        expect(@game.players[0].newX).to.be.equals(99)
+        expect(@game.players[0].newY).to.be.equals(101)
+
