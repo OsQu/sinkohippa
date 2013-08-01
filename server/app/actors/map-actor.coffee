@@ -36,6 +36,9 @@ class MapActor
       acc
     , [[]])
 
+  getState: ->
+    @map
+
   canMove: (x, y) ->
     @arrayedMap[x][y].wall == 0
 

@@ -10,7 +10,11 @@ class PlayerActor
     @bindEvents()
 
   bindEvents: ->
-    @manager.globalBus.filter((ev) => ev.id == @id).filter((ev) => ev.type == 'PLAYER_MOVE').onValue @movePlayer
+    @unsubscribeMovePlayer = @manager.globalBus.filter((ev) => ev.id == @id).filter((ev) => ev.type == 'PLAYER_MOVE').onValue @movePlayer
+
+  destroy: ->
+    @manager.globalBus.push { type: 'BROADCAST', key: 'player-leaving', data: @id }
+    @unsubscribeMovePlayer()
 
   getState: ->
     state =

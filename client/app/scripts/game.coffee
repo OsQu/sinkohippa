@@ -24,12 +24,20 @@ class Game
     @bindEvents()
 
   bindEvents: ->
+    gameEvents.socketMessage(@gameSocket, 'game-state').onValue @gotGameState
     gameEvents.socketMessage(@gameSocket, 'map').onValue @updateMap
     gameEvents.socketMessage(@gameSocket, 'info').onValue @gotServerInfo
     gameEvents.socketMessage(@gameSocket, 'new-player').onValue @addNewPlayer
     gameEvents.socketMessage(@gameSocket, 'player-state-changed').onValue @playerStateChanged
 
     gameEvents.globalBus.filter((ev) -> ev.target == 'server').onValue @sendToServer
+
+  gotGameState: (event) =>
+    state = event.data
+    for part in state
+      switch part.type
+        when 'map' then @updateMap { data: part.state }
+        when 'player' then @addNewPlayer { data: part.state }
 
   updateMap: (event) =>
     @map = new Map(event.data)
@@ -41,6 +49,10 @@ class Game
 
   addNewPlayer: (ev) =>
     playerData = ev.data
+
+    if _.some(@players, (existingPlayer) -> existingPlayer.id == playerData.id)
+      return
+
     console.log "Adding new player"
     player = new Player(playerData.id, playerData.x, playerData.y)
     if player.id == @gameSocket.socket.sessionid

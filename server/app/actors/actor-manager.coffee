@@ -15,6 +15,17 @@ class ActorManager
     @createMapActor()
     @createSocketActor()
 
+  # Collects state of all actors expect socket and returns it
+  getGameState: ->
+    gameState = []
+    for actor in _.filter(@actors, (a) -> a.type != 'socket')
+      gameState.push
+        type: actor.type
+        state: actor.getState()
+
+    gameState
+
+
   getMapActor: ->
     _.find(@actors, (a) -> a.type == 'map')
 
@@ -32,6 +43,12 @@ class ActorManager
     debug('Creating player actor')
     playerActor = new PlayerActor(@, playerId)
     @actors.push(playerActor)
+
+  deletePlayerActor: (playerId) ->
+    actor = _.find(@actors, (a) -> a.type == 'player' && a.id == playerId)
+    debug("Cleaning player actor #{actor.id}")
+    actor.destroy()
+    @actors = _.without(@actors, actor)
 
 actorManager = new ActorManager()
 

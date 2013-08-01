@@ -41,12 +41,24 @@ class SocketActor
     socket.join('all')
 
     @manager.createPlayerActor(socket.id)
+    gameState = @manager.getGameState()
 
-    @manager.globalBus.push { type: 'SEND_MAP', id: socket.id }
+    socket.emit('game-state', gameState)
+    debug('Game state to new player sent')
+
     @bind(socket, 'player').onValue @handlePlayerEvent
+    @bind(socket, 'disconnect').onValue @handleDisconnection
 
   handlePlayerEvent: (ev) =>
     switch ev.data.action
       when 'move' then @manager.globalBus.push { type: 'PLAYER_MOVE', direction: ev.data.direction, id: ev.socket.id }
+
+  handleDisconnection: (ev) =>
+    debug 'Got disconnection event. Cleaning up...'
+    @manager.deletePlayerActor(ev.socket.id)
+
+  getState: ->
+    # Change to io-state
+    'online'
 
 module.exports = SocketActor
