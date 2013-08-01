@@ -25,8 +25,11 @@ class SocketActor
 
   sendToSocket: (ev) =>
     socket = _.find @sockets, (s) -> s.id == ev.id
-    debug("Sending something to socket #{socket.id}")
-    socket.emit(ev.key, ev.data)
+    if socket
+      debug("Sending something to socket #{socket.id}")
+      socket.emit(ev.key, ev.data)
+    else
+      debug("Unknown socket")
 
   bind: (socket, key) ->
     bus = new Bacon.Bus()
