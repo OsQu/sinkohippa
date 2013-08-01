@@ -1,13 +1,15 @@
 should = require('should')
 sinon = require('sinon')
 _ = require('underscore')
+Bacon = require('baconjs')
 
 SocketActor = require('../../app/actors/socket-actor')
 
 describe 'ActorManager', ->
   beforeEach ->
-    sinon.stub(SocketActor.prototype, 'broadcast')
     @actorManager = require('../../app/actors/actor-manager')
+    @oldBus = @actorManager.globalBus
+    @actorManager.globalBus = new Bacon.Bus()
 
   afterEach ->
     SocketActor.prototype.broadcast.restore?()
