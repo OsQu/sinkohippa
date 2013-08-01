@@ -14,7 +14,7 @@ class MapActor
     @bindEvents()
 
   bindEvents: ->
-    @manager.globalBus.filter((ev) -> ev.type == 'SEND_MAP').onValue @sendMapToSocket
+
   generateMap: (map, width, height) ->
     debug('Generationg map')
     generator = new ROT.Map.Arena(width, height)
@@ -41,9 +41,5 @@ class MapActor
 
   canMove: (x, y) ->
     @arrayedMap[x][y].wall == 0
-
-  sendMapToSocket: (ev) =>
-    debug("Sending map to socket #{ev.id}")
-    @manager.globalBus.push { type: 'SEND_TO_SOCKET', id: ev.id, key: 'map', data: @map }
 
 module.exports = MapActor
