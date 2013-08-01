@@ -49,5 +49,5 @@ module.exports = (io) ->
     sendPlayerIdToSocket socket
     broadcastGameState(io)
 
-    bind(io, socket, 'player').onValue handlePlayerEvent
-    bind(io, socket, 'disconnect').onValue handleDisconnection
+    #bind(io, socket, 'player').onValue handlePlayerEvent
+    #bind(io, socket, 'disconnect').onValue handleDisconnection
