@@ -25,6 +25,7 @@ describe 'SocketActor', ->
     @startListeningSocketsSpy = sinon.spy SocketActor.prototype, 'startListeningSockets'
     @sendToSocketSpy = sinon.spy SocketActor.prototype, 'sendToSocket'
     @broadcastSpy = sinon.spy SocketActor.prototype, 'broadcast'
+    @deletePlayerActorStub = sinon.stub actorManager, 'deletePlayerActor'
 
     @socketActor = new SocketActor(actorManager)
     @socketActor.io = @io
@@ -37,6 +38,7 @@ describe 'SocketActor', ->
     @socket.join.reset()
     @socket.emit.reset()
     @socket.on.reset()
+    @deletePlayerActorStub.restore()
 
   it 'should be a correct type', ->
     @socketActor.type.should.be.eql('socket')
@@ -64,6 +66,41 @@ describe 'SocketActor', ->
       type: 'BROADCAST'
 
     @broadcastSpy.called.should.be.true
+
+  it 'should bind socket event to bacon stream', (done) ->
+    mockSocket =
+      on: sinon.spy()
+    @socketActor.bind(mockSocket, 'event-key').onValue (ev) ->
+      ev.data.should.be.eql('data')
+      ev.socket.should.be.eql(mockSocket)
+      ev.key.should.be.eql('event-key')
+      done()
+
+    onCb = mockSocket.on.firstCall.args[1]
+    onCb('data')
+
+  it 'should give state', ->
+    should.exist(@socketActor.getState())
+
+  it 'should handle disconnection', ->
+    @socketActor.handleDisconnection
+      socket:
+        id: 123
+    @deletePlayerActorStub.called.should.be.true
+
+  describe 'receive player event', ->
+    it 'should push PLAYER_MOVE event to globalBus when player-move-event is received', (done) ->
+      actorManager.globalBus.filter((ev) -> ev.type == 'PLAYER_MOVE').onValue (ev) ->
+        ev.direction.should.be.eql('up')
+        ev.id.should.be.eql('123')
+        done()
+
+      @socketActor.handlePlayerEvent
+        data:
+          action: 'move'
+          direction: 'up'
+        socket:
+          id: '123'
 
   describe 'new connection', ->
     beforeEach ->
