@@ -11,8 +11,10 @@ class MapActor
     @generateMap(@map, @mapWidth, @mapHeight)
     @arrayedMap = @makeTwoDimensionArrayFromMap(@map)
 
-    @manager.globalBus.filter((ev) -> ev.type == 'SEND_MAP').onValue @sendMapToSocket
+    @bindEvents()
 
+  bindEvents: ->
+    @manager.globalBus.filter((ev) -> ev.type == 'SEND_MAP').onValue @sendMapToSocket
   generateMap: (map, width, height) ->
     debug('Generationg map')
     generator = new ROT.Map.Arena(width, height)
@@ -34,7 +36,7 @@ class MapActor
       acc
     , [[]])
 
-  canMove: (player, x, y) ->
+  canMove: (x, y) ->
     @arrayedMap[x][y].wall == 0
 
   sendMapToSocket: (ev) =>

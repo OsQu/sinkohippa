@@ -7,13 +7,21 @@ class SocketActor
     @type = 'socket'
     @sockets = []
 
+    @bindEvents()
+
+  bindEvents: ->
     @manager.globalBus.filter((ev) -> ev.type == 'START_LISTENING_SOCKETS').onValue @startListeningSockets
     @manager.globalBus.filter((ev) -> ev.type == 'SEND_TO_SOCKET').onValue @sendToSocket
+    @manager.globalBus.filter((ev) -> ev.type == 'BROADCAST').onValue @broadcast
 
   startListeningSockets: (ev) =>
     debug('Start listening for sockets')
     @io = ev.io
     @io.sockets.on 'connection', @newConnection
+
+  broadcast: (ev) =>
+    debug("Broadcasting to all clients")
+    @io.sockets.in('all').emit(ev.key, ev.data)
 
   sendToSocket: (ev) =>
     socket = _.find @sockets, (s) -> s.id == ev.id

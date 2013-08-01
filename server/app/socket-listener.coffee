@@ -34,7 +34,6 @@ handleDisconnection = (ev) ->
 
 broadcastGameState = (io) ->
   debug("Broadcasting the game state to all clients")
-
   state = gameController.getGameState()
   io.sockets.in('all').emit('state', state)
 
