@@ -39,6 +39,7 @@ class SocketActor
 
     debug('Adding new connection to room "all"')
     socket.join('all')
+
     @manager.createPlayerActor(socket.id)
 
     @manager.globalBus.push { type: 'SEND_MAP', id: socket.id }

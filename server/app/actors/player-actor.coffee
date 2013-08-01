@@ -3,12 +3,19 @@ class PlayerActor
     @type = 'player'
     @x = 1
     @y = 1
-    @manager.globalBus.push { type: 'BROADCAST', key: 'new-player', data: @id }
+    @manager.globalBus.push { type: 'BROADCAST', key: 'new-player', data: @getState() }
 
     @bindEvents()
 
   bindEvents: ->
     @manager.globalBus.filter((ev) => ev.id == @id).filter((ev) => ev.type == 'PLAYER_MOVE').onValue @movePlayer
+
+  getState: ->
+    state =
+      id: @id
+      x: @x
+      y: @y
+    state
 
   movePlayer: (ev) ->
     debug "Moving player #{@id}"
