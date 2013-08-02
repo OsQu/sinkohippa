@@ -26,6 +26,16 @@ describe 'ActorManager', ->
   it 'should be able to give map actor', ->
     should.exist(@actorManager.getMapActor())
 
+  it 'should be able to give state', ->
+    @actorManager.createPlayerActor('123')
+    state = @actorManager.getGameState()
+    state[0].type.should.be.eql('map')
+    state[0].state.should.be.instanceOf(Array)
+    state[1].type.should.be.eql('player')
+    state[1].state.id.should.be.eql('123')
+    state[1].state.x.should.be.eql(1)
+    state[1].state.y.should.be.eql(1)
+
   describe 'actor creation', ->
     beforeEach ->
       @oldActors = @actorManager.actors
@@ -56,3 +66,4 @@ describe 'ActorManager', ->
       @actorManager.deletePlayerActor('123')
       @actorManager.actors.length.should.be.eql(1)
       deleteActor.destroy.called.should.be.true
+
