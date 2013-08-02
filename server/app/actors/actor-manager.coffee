@@ -17,14 +17,9 @@ class ActorManager
 
   # Collects state of all actors expect socket and returns it
   getGameState: ->
-    gameState = []
-    for actor in _.filter(@actors, (a) -> a.type != 'socket')
-      gameState.push
-        type: actor.type
-        state: actor.getState()
-
-    gameState
-
+    _.map _.filter(@actors, (a) -> a.type != 'socket'), (a) ->
+      type: a.type
+      state: a.getState()
 
   getMapActor: ->
     _.find(@actors, (a) -> a.type == 'map')
