@@ -11,10 +11,12 @@ class PlayerActor
 
   bindEvents: ->
     @unsubscribeMovePlayer = @manager.globalBus.filter((ev) => ev.id == @id).filter((ev) => ev.type == 'PLAYER_MOVE').onValue @movePlayer
+    @unsubscribeShoot = @manager.globalBus.filter((ev) => ev.id == @id).filter((ev) => ev.type == 'PLAYER_SHOOT').onValue @shootWithPlayer
 
   destroy: ->
     @manager.globalBus.push { type: 'BROADCAST', key: 'player-leaving', data: @id }
     @unsubscribeMovePlayer()
+    @unsubscribeShoot()
 
   getState: ->
     state =
@@ -33,5 +35,10 @@ class PlayerActor
       when 'right' then if mapActor.canMove(@x + 1, @y) then @x++
 
     @manager.globalBus.push { type: 'BROADCAST', key: 'player-state-changed', data: @getState() }
+
+  shootWithPlayer: (ev) =>
+    debug "Player #{@id} is shooting"
+    @manager.createRocketActor(@id, @x, @y, ev.direction)
+
 
 module.exports = PlayerActor

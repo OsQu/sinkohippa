@@ -64,3 +64,9 @@ describe 'PlayerActor', ->
     actorManager.globalBus.filter((ev) -> ev.type == 'BROADCAST').onValue -> done()
     @playerActor.movePlayer
       direction: 'right'
+
+  it 'should create rocket actor when player is shooting', ->
+    @playerActor.shootWithPlayer
+      direction: 'right'
+    rocketActor = _.last actorManager.actors
+    rocketActor.type.should.be.eql('rocket')
