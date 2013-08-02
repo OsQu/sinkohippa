@@ -6,11 +6,13 @@ Bacon = require('baconjs')
 SocketActor = require('./socket-actor')
 PlayerActor = require('./player-actor')
 MapActor = require('./map-actor')
+RocketActor = require('./rocket-actor')
 
 class ActorManager
   constructor: ->
     @actors = []
     @globalBus = new Bacon.Bus()
+    @rocketCount = 0 # TODO: BETTER ROCKET ID!
 
     @createMapActor()
     @createSocketActor()
@@ -38,6 +40,13 @@ class ActorManager
     debug('Creating player actor')
     playerActor = new PlayerActor(@, playerId)
     @actors.push(playerActor)
+
+  createRocketActor: (shooterId, x, y, direction) ->
+    debug('Creating rocket actor')
+
+    # TODO: BETTER ID!!
+    rocketActor = new RocketActor(@, @rocketCount++, shooterId, x, y, direction)
+    @actors.push(rocketActor)
 
   deletePlayerActor: (playerId) ->
     actor = _.find(@actors, (a) -> a.type == 'player' && a.id == playerId)
