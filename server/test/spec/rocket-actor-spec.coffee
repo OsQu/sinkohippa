@@ -64,10 +64,11 @@ describe 'RocketActor', ->
     @clock.tick(@rocketActor.speed)
     @rocketActor.x.should.be.eql(6)
 
-  it 'should be able to destroy rocket', ->
+  it 'should be able to destroy rocket', (done) ->
+    actorManager.globalBus.filter((ev) => ev.type == 'BROADCAST').onValue (ev) =>
+      ev.key.should.be.eql('rocket-destroyed')
+      done()
     @rocketActor.destroy()
-    @clock.tick(@rocketActor.speed)
-    @rocketActor.x.should.be.eql(5)
 
   it 'should broadcast rocket-destroyed event when rocket is destroyed', (done) ->
     actorManager.globalBus.filter((ev) => ev.type == 'BROADCAST').onValue (ev) ->

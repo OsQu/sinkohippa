@@ -16,9 +16,11 @@ class RocketActor
     state
 
   destroy: ->
-    @manager.globalBus.push { type: 'BROADCAST', key: 'rocket-destroyed', data: @getState() }
-    debug("Destroying rocket #{@id}")
-    @stopMoving()
+    # We need to destroy rocket after the moving tick has happened
+    process.nextTick =>
+      debug("Destroying rocket #{@id}")
+      @stopMoving()
+      @manager.globalBus.push { type: 'BROADCAST', key: 'rocket-destroyed', data: @getState() }
 
   startMoving: ->
     @intervalId = setInterval(@move, @speed)
