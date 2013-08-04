@@ -7,12 +7,19 @@ Dependencies
 Following packages are needed to run the backend:
 
 * [node](http://nodejs.org/)
+* [grunt (For tests)](http://gruntjs.com)
 * [foreman](https://github.com/ddollar/foreman)
 
 Installation
 ------------
 
 Install node from [http://nodejs.org/download/](http://nodejs.org/download/)
+
+Install grunt with npm:
+
+```
+npm install -g grunt-cli
+```
 
 Install foreman with gem:
 
@@ -36,7 +43,12 @@ Running tests
 ------------
 
 ```
-foreman start test
+grunt mochaTest
+```
+
+For watcher use
+```
+grunt test
 ```
 
 Vagrant

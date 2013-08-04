@@ -13,6 +13,8 @@ then
   aptitude install -y ruby
   aptitude install -y rubygems1.8
   gem install foreman
+  npm install -g grunt-cli
+
   touch /root/setup-utils
 else
   echo "All utils already installed"

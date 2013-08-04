@@ -21,25 +21,69 @@ class Game
     @keyboardController = new KeyboardController()
 
     @gameSocket = @connectToServer()
+    @bindEvents()
 
-    gameEvents.socketMessage(@gameSocket, 'info').onValue (event) -> console.log(event.data)
-    gameEvents.socketMessage(@gameSocket, 'map').onValue (event) =>
-      @map = new Map(event.data)
-      @renderMap()
-      console.log "New map set and rendered"
-    gameEvents.socketMessage(@gameSocket, 'player-id').onValue (event) =>
-      @ownPlayerId = event.data
+  bindEvents: ->
+    gameEvents.socketMessage(@gameSocket, 'game-state').onValue @gotGameState
+    gameEvents.socketMessage(@gameSocket, 'map').onValue @updateMap
+    gameEvents.socketMessage(@gameSocket, 'info').onValue @gotServerInfo
+    gameEvents.socketMessage(@gameSocket, 'new-player').onValue @addNewPlayer
+    gameEvents.socketMessage(@gameSocket, 'player-leaving').onValue @playerLeaving
+    gameEvents.socketMessage(@gameSocket, 'player-state-changed').onValue @playerStateChanged
 
-    gameEvents.socketMessage(@gameSocket, 'state').onValue _.bind(@stateUpdated, @)
+    gameEvents.globalBus.filter((ev) -> ev.target == 'server').onValue @sendToServer
 
-    gameEvents.globalBus.filter((ev) -> ev.target == 'server').onValue(_.bind(@sendToServer, @))
+  gotGameState: (event) =>
+    state = event.data
+    for part in state
+      switch part.type
+        when 'map' then @updateMap { data: part.state }
+        when 'player' then @addNewPlayer { data: part.state }
+
+  updateMap: (event) =>
+    @map = new Map(event.data)
+    @renderMap()
+    console.log "New map set and rendered"
+
+  gotServerInfo: (event) =>
+    console.log event.data
+
+  addNewPlayer: (ev) =>
+    playerData = ev.data
+
+    if _.some(@players, (existingPlayer) -> existingPlayer.id == playerData.id)
+      return
+
+    console.log "Adding new player"
+    player = new Player(playerData.id, playerData.x, playerData.y)
+    if player.id == @gameSocket.socket.sessionid
+      console.log "Found our player!"
+      player.initButtons()
+
+    @players.push(player)
+
+  playerLeaving: (ev) =>
+    console.log "Removing player"
+    playerId = ev.data
+    @players = _.filter @players, (p) -> p.id != playerId
+    @renderMap()
+
+
+  playerStateChanged: (ev) =>
+    newData = ev.data
+    player = _.find(@players, (p) -> p.id == newData.id)
+    player.newX = newData.x
+    player.newY = newData.y
+
+  sendToServer: (event) =>
+    serverData = event.data
+    @gameSocket.emit(serverData.key, serverData.data)
 
   render: ->
     _.forEach @players, (p) => p.render(@display)
 
   renderMap: ->
     @map?.render(@display)
-
 
   gameLoop: ->
     setTimeout =>
@@ -56,38 +100,5 @@ class Game
 
   requestAnimationFrame: (cb) ->
     window.requestAnimationFrame(cb)
-
-  sendToServer: (event) ->
-    serverData = event.data
-    @gameSocket.emit(serverData.key, serverData.data)
-
-  addNewPlayer: (playerData) ->
-    console.log "Adding new player"
-    player = new Player(playerData.id, playerData.x, playerData.y)
-    if player.id == @ownPlayerId
-      player.initButtons()
-    @players.push(player)
-    player
-
-  stateUpdated: (ev) ->
-    updatePlayer = (player, newData) =>
-      if !player # new player
-        player = @addNewPlayer(newData)
-
-      player.newX = newData.x
-      player.newY = newData.y
-
-    # Update online players
-    oldCount = @players.length
-    @players = _.filter @players, (player) -> _.some ev.data.players, (sp) -> sp.id == player.id
-    if oldCount != @players.length
-      @renderMap()
-
-    # Move players to new positions
-    _.forEach ev.data.players, (newData) =>
-      player = _.find(@players, (p) -> p.id == newData.id)
-      updatePlayer(player, newData)
-
-    console.log("state updated")
 
 module.exports = Game

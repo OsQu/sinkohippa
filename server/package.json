@@ -3,20 +3,21 @@
   "version": "0.0.1",
   "author": "OsQu",
   "description": "Backend for world's greatest ASCII shooter game",
-
   "repository": {
     "type": "git",
     "url": "https://github.com/OsQu/sinkohippa"
   },
-
   "devDependencies": {
     "mocha": "~1.8.1",
     "should": "~1.2.2",
     "colors": "0.6.0-1",
     "underscore": "*",
-    "sinon": "~1.7.3"
+    "sinon": "~1.7.3",
+    "grunt-mocha-test": "~0.6.2",
+    "grunt": "~0.4.1",
+    "grunt-contrib-watch": "~0.5.1",
+    "matchdep": "~0.1.1"
   },
-
   "dependencies": {
     "coffee-script": "~1.6.1",
     "express": "~3.0.0",
@@ -24,7 +25,6 @@
     "socket.io": "~0.9",
     "debug": "~0.7.2"
   },
-
   "engines": {
     "node": "0.8.22"
   }
