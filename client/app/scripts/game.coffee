@@ -94,6 +94,9 @@ class Game
 
   rocketDestroyed: (ev) =>
     console.log "Destroying rocket"
+    rocketId = ev.data.id
+    @items = _.filter @items, (i) -> i.id != rocketId
+    @renderMap()
 
   sendToServer: (event) =>
     serverData = event.data

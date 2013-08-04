@@ -127,3 +127,14 @@ describe 'Game', ->
             y: 5
         expect(@game.items.length).to.be.equals(1)
         expect(@game.items[0].newX).to.be.equals(6)
+
+      it 'should destroy existing rocket when receiving destroy event from rocket', ->
+        @game.items.push new Rocket(0, 5, 5, 'shooter-1', 'right')
+        @game.rocketDestroyed
+          data:
+            shooter: 'shooter-1'
+            id: 0
+            x: 5
+            y: 5
+            direction: 'up'
+        expect(@game.items.length).to.be.equals(0)
