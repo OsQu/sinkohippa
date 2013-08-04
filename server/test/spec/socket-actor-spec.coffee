@@ -102,6 +102,18 @@ describe 'SocketActor', ->
         socket:
           id: '123'
 
+    it 'should push PLAYER_SHOOT event to bus when player-shoot is received', (done) ->
+      actorManager.globalBus.filter((ev) -> ev.type == 'PLAYER_SHOOT').onValue (ev) ->
+        ev.id.should.be.eql('123')
+        ev.direction.should.be.eql('right')
+        done()
+      @socketActor.handlePlayerEvent
+        data:
+          action: 'shoot'
+          direction: 'right'
+        socket:
+          id: '123'
+
   describe 'new connection', ->
     beforeEach ->
       @socketActor.newConnection(@socket)

@@ -55,6 +55,7 @@ class SocketActor
   handlePlayerEvent: (ev) =>
     switch ev.data.action
       when 'move' then @manager.globalBus.push { type: 'PLAYER_MOVE', direction: ev.data.direction, id: ev.socket.id }
+      when 'shoot' then @manager.globalBus.push { type: 'PLAYER_SHOOT', direction: ev.data.direction, id: ev.socket.id }
 
   handleDisconnection: (ev) =>
     debug 'Got disconnection event. Cleaning up...'
