@@ -27,3 +27,9 @@ describe 'MapActor', ->
   it 'should be able to tell if player can move to point', ->
     @mapActor.canMove(0, 0).should.be.false
     @mapActor.canMove(1, 1).should.be.true
+
+  it 'should destroy rocket when it hits the wall', ->
+    sinon.spy(actorManager, 'deleteRocketActor')
+    actorManager.globalBus.push { type: 'ROCKET_MOVED', x: 0, y: 0, rocketId: 0 }
+    actorManager.deleteRocketActor.called.should.be.true
+    actorManager.deleteRocketActor.restore?()

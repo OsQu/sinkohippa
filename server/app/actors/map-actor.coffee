@@ -14,6 +14,7 @@ class MapActor
     @bindEvents()
 
   bindEvents: ->
+    @manager.globalBus.filter((ev) => ev.type == 'ROCKET_MOVED').filter((ev) => !@canMove(ev.x, ev.y)).onValue @rocketHitTheWall
 
   generateMap: (map, width, height) ->
     debug('Generationg map')
@@ -39,7 +40,12 @@ class MapActor
   getState: ->
     @map
 
-  canMove: (x, y) ->
+  canMove: (x, y) =>
     @arrayedMap[x][y].wall == 0
+
+  rocketHitTheWall: (ev) =>
+    debug("Rocket #{ev.rocketId} hit the wall")
+    @manager.deleteRocketActor(ev.rocketId)
+
 
 module.exports = MapActor

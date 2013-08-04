@@ -58,7 +58,6 @@ class ActorManager
       debug("Can't find player #{playerId}")
 
   deleteRocketActor: (rocketId) ->
-    console.log @actors
     actor = _.find(@actors, (a) -> a.type == 'rocket' && a.id == rocketId)
     if actor
       debug("Destroying rocket actor #{actor.id}")
