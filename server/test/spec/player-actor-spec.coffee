@@ -12,12 +12,14 @@ describe 'PlayerActor', ->
     actorManager.globalBus = new Bacon.Bus()
 
     @movePlayerSpy = sinon.spy PlayerActor.prototype, 'movePlayer'
+    @rocketHitSpy = sinon.spy PlayerActor.prototype, 'rocketHit'
 
     @playerActor = new PlayerActor(actorManager, '123')
 
   afterEach ->
     actorManager.globalBus = @oldBus
     @movePlayerSpy.restore()
+    @rocketHitSpy.restore()
 
   it 'should be correct type', ->
     @playerActor.type.should.be.eql('player')
@@ -64,3 +66,13 @@ describe 'PlayerActor', ->
     actorManager.globalBus.filter((ev) -> ev.type == 'BROADCAST').onValue -> done()
     @playerActor.movePlayer
       direction: 'right'
+
+  it 'should create rocket actor when player is shooting', ->
+    @playerActor.shootWithPlayer
+      direction: 'right'
+    rocketActor = _.last actorManager.actors
+    rocketActor.type.should.be.eql('rocket')
+
+  it 'should be able to hit player with rocket', ->
+    actorManager.globalBus.push { type: 'ROCKET_MOVED', x: @playerActor.x, y: @playerActor.y }
+    @rocketHitSpy.called.should.be.true

@@ -12,6 +12,7 @@ describe 'ActorManager', ->
     @actorManager.globalBus = new Bacon.Bus()
 
   afterEach ->
+    @actorManager.rocketCount = 0
     SocketActor.prototype.broadcast.restore?()
 
   it 'should have global bus', ->
@@ -56,6 +57,11 @@ describe 'ActorManager', ->
       @actorManager.createPlayerActor('123')
       @actorManager.actors[0].type.should.be.eql('player')
 
+    it 'should be able to create rocket actor', ->
+      @actorManager.createRocketActor('shooter-1', 1, 4, 'up')
+      @actorManager.actors[0].type.should.be.eql('rocket')
+      @actorManager.actors[0].shooterId.should.be.eql('shooter-1')
+
     it 'should be able to delete player actor', ->
       @actorManager.createPlayerActor('123')
       @actorManager.createPlayerActor('321')
@@ -64,6 +70,16 @@ describe 'ActorManager', ->
       deleteActor = @actorManager.actors[0]
       deleteActor.destroy = sinon.spy()
       @actorManager.deletePlayerActor('123')
+      @actorManager.actors.length.should.be.eql(1)
+      deleteActor.destroy.called.should.be.true
+
+    it 'should be able to delete rocket actor', ->
+      @actorManager.createRocketActor('shooter-1', 1, 4, 'up')
+      @actorManager.createRocketActor('shooter-2', 2, 6, 'right')
+      @actorManager.actors.length.should.be.eql(2)
+      deleteActor = @actorManager.actors[0]
+      deleteActor.destroy = sinon.spy()
+      @actorManager.deleteRocketActor(0)
       @actorManager.actors.length.should.be.eql(1)
       deleteActor.destroy.called.should.be.true
 
