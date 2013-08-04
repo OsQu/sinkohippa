@@ -50,9 +50,23 @@ class ActorManager
 
   deletePlayerActor: (playerId) ->
     actor = _.find(@actors, (a) -> a.type == 'player' && a.id == playerId)
-    debug("Cleaning player actor #{actor.id}")
-    actor.destroy()
-    @actors = _.without(@actors, actor)
+    if actor
+      debug("Cleaning player actor #{actor.id}")
+      actor.destroy()
+      @actors = _.without(@actors, actor)
+    else
+      debug("Can't find player #{playerId}")
+
+  deleteRocketActor: (rocketId) ->
+    console.log @actors
+    actor = _.find(@actors, (a) -> a.type == 'rocket' && a.id == rocketId)
+    if actor
+      debug("Destroying rocket actor #{actor.id}")
+      actor.destroy()
+      @actors = _.without(@actors, actor)
+    else
+      debug("Cant'find rocket #{rocketId}")
+
 
 actorManager = new ActorManager()
 

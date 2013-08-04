@@ -63,3 +63,14 @@ describe 'RocketActor', ->
     @rocketActor.stopMoving()
     @clock.tick(@rocketActor.speed)
     @rocketActor.x.should.be.eql(6)
+
+  it 'should be able to destroy rocket', ->
+    @rocketActor.destroy()
+    @clock.tick(@rocketActor.speed)
+    @rocketActor.x.should.be.eql(5)
+
+  it 'should broadcast rocket-destroyed event when rocket is destroyed', (done) ->
+    actorManager.globalBus.filter((ev) => ev.type == 'BROADCAST').onValue (ev) ->
+      ev.key.should.be.eql('rocket-destroyed')
+      done()
+    @rocketActor.destroy()
