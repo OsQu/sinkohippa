@@ -50,6 +50,12 @@ describe 'RocketActor', ->
 
     @rocketActor.move()
 
+  it 'should broadcast rocket-moving when rocket is moving', (done) ->
+    actorManager.globalBus.filter((ev) -> ev.type == 'BROADCAST').onValue (ev) ->
+      ev.key.should.be.eql('rocket-moved')
+      done()
+    @rocketActor.move()
+
   it 'should be able to stop rocket', ->
     @rocketActor.x.should.be.eql(5)
     @clock.tick(@rocketActor.speed)

@@ -9,6 +9,7 @@ class RocketActor
   getState: ->
     state =
       shooter: @shooterId
+      id: @rocketId
       x: @x
       y: @y
       direction: @direction
@@ -27,6 +28,7 @@ class RocketActor
       when 'left' then @x--
       when 'right' then @x++
     @manager.globalBus.push { type: 'ROCKET_MOVED', rocketId: @rocketId, x: @x, y: @y }
+    @manager.globalBus.push { type: 'BROADCAST', key: 'rocket-moved', data: @getState() }
     debug("Moved rocket #{@rocketId}")
 
 module.exports = RocketActor
