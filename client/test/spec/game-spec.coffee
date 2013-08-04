@@ -4,6 +4,7 @@ ROT = require('../scripts/vendor/rot.js/rot')
 Bacon= require('baconjs')
 Game = require('../scripts/game')
 Player = require('../scripts/player')
+Rocket = require('../scripts/rocket')
 io = require('socket.io-client')
 
 'use strict'
@@ -105,3 +106,24 @@ describe 'Game', ->
         expect(@game.players[0].newX).to.be.equals(99)
         expect(@game.players[0].newY).to.be.equals(101)
 
+      it 'should add rocket as an item when receiving moving events from unknown rocket', ->
+        @game.rocketMoved
+          data:
+            direction: 'down'
+            id: 0
+            shooter: 'shooter-1'
+            x: 2
+            y: 5
+        expect(@game.items.length).to.be.equals(1)
+
+      it 'should move existing rocket when receiving move event from known rocket', ->
+        @game.items.push new Rocket(0, 5, 5, 'shooter-1', 'right')
+        @game.rocketMoved
+          data:
+            direction: 'right'
+            id: 0
+            shooter: 'shooter-1'
+            x: 6
+            y: 5
+        expect(@game.items.length).to.be.equals(1)
+        expect(@game.items[0].newX).to.be.equals(6)

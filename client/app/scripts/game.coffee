@@ -5,6 +5,7 @@ io = require('socket.io-client')
 
 Map = require('./map')
 Player = require('./player')
+Rocket = require('./rocket')
 KeyboardController = require('./keyboard-controller')
 
 gameEvents = require('./game-events')
@@ -13,6 +14,7 @@ class Game
   init: ->
     @fps = 30
     @players = []
+    @items = []
 
     @display = new ROT.Display()
     @gameContainer = $('#game-container')
@@ -30,6 +32,8 @@ class Game
     gameEvents.socketMessage(@gameSocket, 'new-player').onValue @addNewPlayer
     gameEvents.socketMessage(@gameSocket, 'player-leaving').onValue @playerLeaving
     gameEvents.socketMessage(@gameSocket, 'player-state-changed').onValue @playerStateChanged
+    gameEvents.socketMessage(@gameSocket, 'rocket-moved').onValue @rocketMoved
+    gameEvents.socketMessage(@gameSocket, 'rocket-destroyed').onValue @rocketDestroyed
 
     gameEvents.globalBus.filter((ev) -> ev.target == 'server').onValue @sendToServer
 
@@ -68,12 +72,28 @@ class Game
     @players = _.filter @players, (p) -> p.id != playerId
     @renderMap()
 
-
   playerStateChanged: (ev) =>
     newData = ev.data
     player = _.find(@players, (p) -> p.id == newData.id)
     player.newX = newData.x
     player.newY = newData.y
+
+  addNewRocket: (data) ->
+    rocket = new Rocket(data.id, data.x, data.y, data.shooter, data.direction)
+    @items.push(rocket)
+    rocket
+
+  rocketMoved: (ev) =>
+    data = ev.data
+    rocket = _.find @items, (i) -> i.id == data.id
+    if rocket
+      rocket.newX = data.x
+      rocket.newY = data.y
+    else
+      @addNewRocket data
+
+  rocketDestroyed: (ev) =>
+    console.log "Destroying rocket"
 
   sendToServer: (event) =>
     serverData = event.data
@@ -81,6 +101,7 @@ class Game
 
   render: ->
     _.forEach @players, (p) => p.render(@display)
+    _.forEach @items, (i) => i.render(@display)
 
   renderMap: ->
     @map?.render(@display)
