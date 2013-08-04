@@ -3,7 +3,7 @@ debug = require('debug')('sh:rocket-actor')
 class RocketActor
   constructor: (@manager, @id, @shooterId, @x, @y, @direction) ->
     @type = 'rocket'
-    @speed = 200 # 200ms / square
+    @speed = 100 # ms / square
     @startMoving()
 
   getState: ->
