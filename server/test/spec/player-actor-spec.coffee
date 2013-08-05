@@ -74,6 +74,14 @@ describe 'PlayerActor', ->
     rocketActor = _.last actorManager.actors
     rocketActor.type.should.be.eql('rocket')
 
-  it 'should be able to hit player with rocket', ->
+  it 'should be able to be hit by rocket', ->
     actorManager.globalBus.push { type: 'ROCKET_MOVED', x: @playerActor.x, y: @playerActor.y }
     @rocketHitSpy.called.should.be.true
+
+  it 'should reduce health when hit by rocket', ->
+    @playerActor.rocketHit
+      rocketId: 'rocket-1'
+      damage: 1
+      x: @playerActor.x
+      y: @playerActor.y
+    @playerActor.health.should.be.eql(4)

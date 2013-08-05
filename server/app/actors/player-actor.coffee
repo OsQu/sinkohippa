@@ -47,5 +47,10 @@ class PlayerActor
   rocketHit: (ev) =>
     debug "Player #{@id} got hit by rocket #{ev.rocketId}"
     @manager.deleteRocketActor(ev.rocketId)
+    @reduceHealth ev.damage
+
+  reduceHealth: (amount) ->
+    @health = @health - amount
+    debug "Reduced player #{@id} health to #{@health}"
 
 module.exports = PlayerActor
