@@ -51,9 +51,6 @@ class MessageHandler
     newData = ev.data
     @game.playerStateChanged(newData)
 
-  addNewRocket: (data) ->
-    @game.addNewRocket(data)
-
   rocketMoved: (ev) =>
     @game.moveRocket(ev.data)
 
