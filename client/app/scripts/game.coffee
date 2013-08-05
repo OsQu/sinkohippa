@@ -58,8 +58,8 @@ class Game
     @players.push(player)
 
   removePlayer: (playerId) ->
-    @game.players = _.filter @players, (p) -> p.id != playerId
-    @game.renderMap()
+    @players = _.filter @players, (p) -> p.id != playerId
+    @renderMap()
 
   playerStateChanged: (newData) ->
     player = _.find(@players, (p) -> p.id == newData.id)
