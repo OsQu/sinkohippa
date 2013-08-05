@@ -4,6 +4,7 @@ Bacon = require('baconjs')
 
 Player = require('../scripts/player')
 gameEvents = require('../scripts/game-events')
+
 describe 'Player', ->
   beforeEach ->
     @player = new Player '', 0, 0

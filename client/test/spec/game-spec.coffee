@@ -6,14 +6,20 @@ Game = require('../scripts/game')
 Player = require('../scripts/player')
 Rocket = require('../scripts/rocket')
 
+MessageHandler = require('../scripts/message-handler')
+
 'use strict'
 describe 'Game', ->
   beforeEach ->
     @requestAnimStub = sinon.stub(Game.prototype, 'requestAnimationFrame')
+    sinon.stub(MessageHandler.prototype, 'connect')
+    sinon.stub(MessageHandler.prototype, 'ourId')
     @game = new Game()
 
   afterEach ->
     @requestAnimStub.restore()
+    MessageHandler.prototype.connect.restore?()
+    MessageHandler.prototype.ourId.restore?()
 
   describe 'After initialization', ->
     beforeEach ->
