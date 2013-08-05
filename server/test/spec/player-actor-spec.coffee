@@ -8,6 +8,8 @@ PlayerActor = require('../../app/actors/player-actor')
 
 describe 'PlayerActor', ->
   beforeEach ->
+    @clock = sinon.useFakeTimers(0)
+
     @oldBus = actorManager.globalBus
     actorManager.globalBus = new Bacon.Bus()
 
@@ -17,6 +19,7 @@ describe 'PlayerActor', ->
     @playerActor = new PlayerActor(actorManager, '123')
 
   afterEach ->
+    @clock.restore()
     actorManager.globalBus = @oldBus
     @movePlayerSpy.restore()
     @rocketHitSpy.restore()
@@ -85,3 +88,18 @@ describe 'PlayerActor', ->
       x: @playerActor.x
       y: @playerActor.y
     @playerActor.health.should.be.eql(4)
+
+  it 'should die if health is reduced to zero', ->
+    @playerActor.x = 10
+    @playerActor.y = 12
+    @playerActor.health = 3
+    @playerActor.reduceHealth(3)
+    @playerActor.x.should.be.eql(1)
+    @playerActor.y.should.be.eql(1)
+    @playerActor.health.should.be.eql(5)
+
+  it 'should broadcast player-state-changed when dying', (done) ->
+    actorManager.globalBus.filter((ev) -> ev.type == 'BROADCAST').onValue (ev) ->
+      done()
+    @playerActor.die()
+

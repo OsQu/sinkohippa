@@ -29,6 +29,10 @@ class PlayerActor
       health: @health
     state
 
+
+  broadcastStateChanged: ->
+    @manager.globalBus.push { type: 'BROADCAST', key: 'player-state-changed', data: @getState() }
+
   movePlayer: (ev) =>
     debug "Moving player #{@id}"
     mapActor = @manager.getMapActor()
@@ -37,8 +41,7 @@ class PlayerActor
       when 'down' then if mapActor.canMove(@x, @y + 1) then @y++
       when 'left' then if mapActor.canMove(@x - 1, @y) then @x--
       when 'right' then if mapActor.canMove(@x + 1, @y) then @x++
-
-    @manager.globalBus.push { type: 'BROADCAST', key: 'player-state-changed', data: @getState() }
+    @broadcastStateChanged()
 
   shootWithPlayer: (ev) =>
     debug "Player #{@id} is shooting"
@@ -52,5 +55,14 @@ class PlayerActor
   reduceHealth: (amount) ->
     @health = @health - amount
     debug "Reduced player #{@id} health to #{@health}"
+    if @health <= 0 then @die()
+
+  # For now just respawns player back to starting point
+  die: ->
+    debug "Crap! (For player #{@id}). It died :("
+    @x = 1
+    @y = 1
+    @health = 5
+    @broadcastStateChanged()
 
 module.exports = PlayerActor
