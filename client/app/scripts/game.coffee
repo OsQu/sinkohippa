@@ -7,6 +7,8 @@ Map = require('./map')
 Player = require('./player')
 Rocket = require('./rocket')
 
+gameEvents = require('./game-events')
+
 class Game
   init: ->
     @fps = 30
@@ -65,6 +67,10 @@ class Game
     player = _.find(@players, (p) -> p.id == newData.id)
     player.newX = newData.x
     player.newY = newData.y
+    player.health = newData.health
+    if player.id == @messageHandler.ourId()
+      gameEvents.globalBus.push { target: 'hud', data: player }
+
 
   addNewRocket: (data) ->
     rocket = new Rocket(data.id, data.x, data.y, data.shooter, data.direction)
