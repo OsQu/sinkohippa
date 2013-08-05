@@ -27,6 +27,7 @@ describe 'RocketActor', ->
     state.x.should.be.eql(5)
     state.y.should.be.eql(4)
     state.direction.should.be.eql('right')
+    state.damage.should.be.eql(1)
 
   it 'should have rocket speed', ->
     should.exist(@rocketActor.speed)
@@ -46,7 +47,12 @@ describe 'RocketActor', ->
     @rocketActor.x.should.be.eql(7)
 
   it 'should emit rocket-moved event when moving the rocket', (done) ->
-    actorManager.globalBus.filter((ev) -> ev.type == 'ROCKET_MOVED').onValue (ev) -> done()
+    actorManager.globalBus.filter((ev) -> ev.type == 'ROCKET_MOVED').onValue (ev) ->
+      ev.rocketId.should.be.eql('rocket-1')
+      ev.x.should.be.eql(6)
+      ev.y.should.be.eql(4)
+      ev.damage.should.be.eql(1)
+      done()
 
     @rocketActor.move()
 

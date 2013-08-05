@@ -4,6 +4,7 @@ class RocketActor
   constructor: (@manager, @id, @shooterId, @x, @y, @direction) ->
     @type = 'rocket'
     @speed = 100 # ms / square
+    @damage = 1
     @startMoving()
 
   getState: ->
@@ -13,6 +14,7 @@ class RocketActor
       x: @x
       y: @y
       direction: @direction
+      damage: @damage
     state
 
   destroy: ->
@@ -34,7 +36,7 @@ class RocketActor
       when 'down' then @y++
       when 'left' then @x--
       when 'right' then @x++
-    @manager.globalBus.push { type: 'ROCKET_MOVED', rocketId: @id, x: @x, y: @y }
+    @manager.globalBus.push { type: 'ROCKET_MOVED', rocketId: @id, x: @x, y: @y, damage: @damage }
     @manager.globalBus.push { type: 'BROADCAST', key: 'rocket-moved', data: @getState() }
     debug("Moved rocket #{@id}")
 
