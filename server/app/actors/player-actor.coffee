@@ -57,6 +57,7 @@ class PlayerActor
     @health = @health - amount
     debug "Reduced player #{@id} health to #{@health}"
     if @health <= 0 then @die()
+    @broadcastStateChanged()
 
   # For now just respawns player back to starting point
   die: ->

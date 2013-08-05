@@ -99,6 +99,12 @@ describe 'PlayerActor', ->
       y: @playerActor.y
     @playerActor.health.should.be.eql(4)
 
+  it 'should broadcast player-state-changed when losing health', (done) ->
+    actorManager.globalBus.filter((ev) -> ev.type == 'BROADCAST').onValue (ev) ->
+      done()
+
+    @playerActor.reduceHealth(1)
+
   it 'should die if health is reduced to zero', ->
     @playerActor.x = 10
     @playerActor.y = 12
