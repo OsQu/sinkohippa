@@ -5,6 +5,7 @@ class PlayerActor
     @type = 'player'
     @x = 1
     @y = 1
+    @health = 5
     @manager.globalBus.push { type: 'BROADCAST', key: 'new-player', data: @getState() }
 
     @bindEvents()
@@ -25,6 +26,7 @@ class PlayerActor
       id: @id
       x: @x
       y: @y
+      health: @health
     state
 
   movePlayer: (ev) =>

@@ -29,6 +29,7 @@ describe 'PlayerActor', ->
     state.id.should.be.eql('123')
     state.x.should.be.eql(1)
     state.y.should.be.eql(1)
+    state.health.should.be.eql(5)
 
   it 'should respond to own player_move event', ->
     actorManager.globalBus.push
