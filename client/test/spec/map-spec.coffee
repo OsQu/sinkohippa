@@ -2,7 +2,8 @@
 expect = require('chai').expect
 
 ROT = require('../scripts/vendor/rot.js/rot')
-Bacon= require('baconjs')
+Bacon = require('baconjs')
+_ = require('underscore')
 Map = require('../scripts/map')
 describe 'Map', ->
   beforeEach ->
@@ -22,6 +23,17 @@ describe 'Map', ->
       displaySpy = sinon.spy ROT.Display.prototype, 'draw'
       @map.render(new ROT.Display())
       expect(displaySpy.called).to.be.true
-      displaySpy.reset()
+      displaySpy.restore()
 
+    it 'should be able to render specific tile', ->
+      displaySpy = sinon.spy ROT.Display.prototype, 'draw'
+      tile = _.find @map.tiles, (t) -> t.x == 4 && t.y == 5
+      @map.renderTile(new ROT.Display(), 4, 5)
+      expect(displaySpy.called).to.be.true
+      args = displaySpy.firstCall.args
+      expect(args[0]).to.be.equals(4)
+      expect(args[1]).to.be.equals(5)
+      expect(args[2]).to.be.equals(tile.getChar())
+
+      displaySpy.restore()
 

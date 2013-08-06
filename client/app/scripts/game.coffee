@@ -26,9 +26,6 @@ class Game
     _.forEach @players, (p) => p.render(@display)
     _.forEach @items, (i) => i.render(@display)
 
-  renderMap: ->
-    @map?.render(@display)
-
   gameLoop: ->
     setTimeout =>
       @requestAnimationFrame(_.bind(@gameLoop, @))
@@ -44,7 +41,7 @@ class Game
 
   setNewMap: (data) ->
     @map = new Map(data)
-    @renderMap()
+    @map.render(@display)
     console.log "New map set and rendered"
 
   addNewPlayer: (playerData) ->
@@ -60,8 +57,9 @@ class Game
     @players.push(player)
 
   removePlayer: (playerId) ->
-    @players = _.filter @players, (p) -> p.id != playerId
-    @renderMap()
+    player = _.find @players, (p) -> p.id == playerId
+    @players = _.without @players, player
+    @map?.renderTile(@display, player.x, player.y)
 
   playerStateChanged: (newData) ->
     player = _.find(@players, (p) -> p.id == newData.id)
@@ -79,8 +77,9 @@ class Game
 
   removeRocket: (rocketId) ->
     console.log "Destroying rocket"
-    @items = _.filter @items, (i) -> i.id != rocketId
-    @renderMap()
+    item = _.find @items, (i) -> i.id == rocketId
+    @items = _.without @items, item
+    @map?.renderTile(@display, item.x, item.y)
 
   moveRocket: (data) ->
     rocket = _.find @items, (i) -> i.id == data.id

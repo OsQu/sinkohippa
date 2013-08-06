@@ -31,9 +31,6 @@ describe 'Game', ->
     beforeEach ->
       @game.init()
 
-    it 'should have created map correctly', ->
-      expect(@game.map).not.to.be.null
-
     it 'should start polling when calling start', ->
       @game.start()
       expect(@requestAnimStub.called).to.be.true

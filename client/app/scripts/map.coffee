@@ -22,4 +22,7 @@ class Map
     _.each @tiles, (tile) =>
       display.draw tile.x, tile.y, tile.getChar()
 
+  renderTile: (display, x, y) ->
+    tile = _.find @tiles, (t) -> t.x == x && t.y == y
+    display.draw tile.x, tile.y, tile.getChar()
 module.exports = Map
