@@ -15,6 +15,7 @@ describe 'PlayerActor', ->
 
     @movePlayerSpy = sinon.spy PlayerActor.prototype, 'movePlayer'
     @rocketHitSpy = sinon.spy PlayerActor.prototype, 'rocketHit'
+    @shootWithPlayerSpy = sinon.spy PlayerActor.prototype, 'shootWithPlayer'
 
     @playerActor = new PlayerActor(actorManager, '123')
 
@@ -23,6 +24,7 @@ describe 'PlayerActor', ->
     actorManager.globalBus = @oldBus
     @movePlayerSpy.restore()
     @rocketHitSpy.restore()
+    @shootWithPlayerSpy.restore()
 
   it 'should be correct type', ->
     @playerActor.type.should.be.eql('player')
@@ -76,6 +78,14 @@ describe 'PlayerActor', ->
       direction: 'right'
     rocketActor = _.last actorManager.actors
     rocketActor.type.should.be.eql('rocket')
+
+  it 'should throttle rocket shootings', ->
+    actorManager.globalBus.push { type: "PLAYER_SHOOT", id: @playerActor.id }
+    actorManager.globalBus.push { type: "PLAYER_SHOOT", id: @playerActor.id }
+    @shootWithPlayerSpy.callCount.should.be.eql(1)
+    @clock.tick(@playerActor.shootCooldown)
+    actorManager.globalBus.push { type: "PLAYER_SHOOT", id: @playerActor.id }
+    @shootWithPlayerSpy.callCount.should.be.eql(2)
 
   it 'should be able to be hit by rocket', ->
     actorManager.globalBus.push { type: 'ROCKET_MOVED', x: @playerActor.x, y: @playerActor.y }
