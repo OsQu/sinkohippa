@@ -43,12 +43,12 @@ Running tests
 ------------
 
 ```
-grunt mochaTest
+grunt test
 ```
 
 For watcher use
 ```
-grunt test
+grunt watch
 ```
 
 Vagrant

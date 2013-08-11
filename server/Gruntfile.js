@@ -31,5 +31,5 @@ module.exports = function (grunt) {
         }
     });
 
-    grunt.registerTask('test', 'watch:test');
+    grunt.registerTask('test', 'mochaTest');
 };
