@@ -12,8 +12,7 @@ Installation
 
 ```
 npm install -g grunt-cli
-git submodule init
-git submodule update
+git submodule update --init
 npm install
 ```
 
