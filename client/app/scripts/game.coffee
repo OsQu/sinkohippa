@@ -23,18 +23,20 @@ class Game
     @messageHandler.connect()
 
   render: ->
-    _.forEach @players, (p) => p.render(@display)
-    _.forEach @items, (i) => i.render(@display)
+    for player in @players
+      player.render(@display)
+    for item in @items
+      item.render(@display)
 
-  gameLoop: ->
+  gameLoop: =>
     setTimeout =>
-      @requestAnimationFrame(_.bind(@gameLoop, @))
+      @requestAnimationFrame(@gameLoop)
       @render()
     , 1000 / @fps
 
-  start: ->
+  start: =>
     console.log "Starting engine"
-    @requestAnimationFrame(_.bind(@gameLoop, @))
+    @requestAnimationFrame(@gameLoop)
 
   requestAnimationFrame: (cb) ->
     window.requestAnimationFrame(cb)
