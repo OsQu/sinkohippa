@@ -1,11 +1,11 @@
 ROT = require('./vendor/rot.js/rot')
-Bacon = require('baconjs')
 _ = require('underscore')
-io = require('socket.io-client')
+
+MessageHandler = require('./message-handler')
 
 Map = require('./map')
 Player = require('./player')
-KeyboardController = require('./keyboard-controller')
+Rocket = require('./rocket')
 
 gameEvents = require('./game-events')
 
@@ -13,92 +13,82 @@ class Game
   init: ->
     @fps = 30
     @players = []
+    @items = []
 
     @display = new ROT.Display()
     @gameContainer = $('#game-container')
     @gameContainer.append @display.getContainer()
 
-    @keyboardController = new KeyboardController()
+    @messageHandler = new MessageHandler(@)
+    @messageHandler.connect()
 
-    @gameSocket = @connectToServer()
-    @bindEvents()
+  render: ->
+    for player in @players
+      player.render(@display)
+    for item in @items
+      item.render(@display)
 
-  bindEvents: ->
-    gameEvents.socketMessage(@gameSocket, 'game-state').onValue @gotGameState
-    gameEvents.socketMessage(@gameSocket, 'map').onValue @updateMap
-    gameEvents.socketMessage(@gameSocket, 'info').onValue @gotServerInfo
-    gameEvents.socketMessage(@gameSocket, 'new-player').onValue @addNewPlayer
-    gameEvents.socketMessage(@gameSocket, 'player-leaving').onValue @playerLeaving
-    gameEvents.socketMessage(@gameSocket, 'player-state-changed').onValue @playerStateChanged
+  gameLoop: =>
+    setTimeout =>
+      @requestAnimationFrame(@gameLoop)
+      @render()
+    , 1000 / @fps
 
-    gameEvents.globalBus.filter((ev) -> ev.target == 'server').onValue @sendToServer
+  start: =>
+    console.log "Starting engine"
+    @requestAnimationFrame(@gameLoop)
 
-  gotGameState: (event) =>
-    state = event.data
-    for part in state
-      switch part.type
-        when 'map' then @updateMap { data: part.state }
-        when 'player' then @addNewPlayer { data: part.state }
+  requestAnimationFrame: (cb) ->
+    window.requestAnimationFrame(cb)
 
-  updateMap: (event) =>
-    @map = new Map(event.data)
-    @renderMap()
+  setNewMap: (data) ->
+    @map = new Map(data)
+    @map.render(@display)
     console.log "New map set and rendered"
 
-  gotServerInfo: (event) =>
-    console.log event.data
-
-  addNewPlayer: (ev) =>
-    playerData = ev.data
-
+  addNewPlayer: (playerData) ->
     if _.some(@players, (existingPlayer) -> existingPlayer.id == playerData.id)
       return
 
     console.log "Adding new player"
     player = new Player(playerData.id, playerData.x, playerData.y)
-    if player.id == @gameSocket.socket.sessionid
+    if player.id == @messageHandler.ourId()
       console.log "Found our player!"
       player.initButtons()
 
     @players.push(player)
 
-  playerLeaving: (ev) =>
-    console.log "Removing player"
-    playerId = ev.data
-    @players = _.filter @players, (p) -> p.id != playerId
-    @renderMap()
+  removePlayer: (playerId) ->
+    player = _.find @players, (p) -> p.id == playerId
+    @players = _.without @players, player
+    @map?.renderTile(@display, player.x, player.y)
 
-
-  playerStateChanged: (ev) =>
-    newData = ev.data
+  playerStateChanged: (newData) ->
     player = _.find(@players, (p) -> p.id == newData.id)
     player.newX = newData.x
     player.newY = newData.y
+    player.health = newData.health
+    if player.id == @messageHandler.ourId()
+      gameEvents.globalBus.push { target: 'hud', data: player }
 
-  sendToServer: (event) =>
-    serverData = event.data
-    @gameSocket.emit(serverData.key, serverData.data)
 
-  render: ->
-    _.forEach @players, (p) => p.render(@display)
+  addNewRocket: (data) ->
+    rocket = new Rocket(data.id, data.x, data.y, data.shooter, data.direction)
+    @items.push(rocket)
+    rocket
 
-  renderMap: ->
-    @map?.render(@display)
+  removeRocket: (rocketId) ->
+    console.log "Destroying rocket"
+    item = _.find @items, (i) -> i.id == rocketId
+    @items = _.without @items, item
+    @map?.renderTile(@display, item.x, item.y)
 
-  gameLoop: ->
-    setTimeout =>
-      @requestAnimationFrame(_.bind(@gameLoop, @))
-      @render()
-    , 1000 / @fps
-
-  start: ->
-    console.log "Starting engine"
-    @requestAnimationFrame(_.bind(@gameLoop, @))
-
-  connectToServer: ->
-    io.connect('http://localhost:5000')
-
-  requestAnimationFrame: (cb) ->
-    window.requestAnimationFrame(cb)
+  moveRocket: (data) ->
+    rocket = _.find @items, (i) -> i.id == data.id
+    if rocket
+      rocket.newX = data.x
+      rocket.newY = data.y
+    else
+      @addNewRocket data
 
 module.exports = Game

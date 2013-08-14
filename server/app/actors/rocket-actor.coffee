@@ -3,7 +3,8 @@ debug = require('debug')('sh:rocket-actor')
 class RocketActor
   constructor: (@manager, @id, @shooterId, @x, @y, @direction) ->
     @type = 'rocket'
-    @speed = 200 # 200ms / square
+    @speed = 100 # ms / square
+    @damage = 1
     @startMoving()
 
   getState: ->
@@ -13,12 +14,15 @@ class RocketActor
       x: @x
       y: @y
       direction: @direction
+      damage: @damage
     state
 
   destroy: ->
-    @manager.globalBus.push { type: 'BROADCAST', key: 'rocket-destroyed', data: @getState() }
-    debug("Destroying rocket #{@id}")
-    @stopMoving()
+    # We need to destroy rocket after the moving tick has happened
+    process.nextTick =>
+      debug("Destroying rocket #{@id}")
+      @stopMoving()
+      @manager.globalBus.push { type: 'BROADCAST', key: 'rocket-destroyed', data: @getState() }
 
   startMoving: ->
     @intervalId = setInterval(@move, @speed)
@@ -32,7 +36,7 @@ class RocketActor
       when 'down' then @y++
       when 'left' then @x--
       when 'right' then @x++
-    @manager.globalBus.push { type: 'ROCKET_MOVED', rocketId: @id, x: @x, y: @y }
+    @manager.globalBus.push { type: 'ROCKET_MOVED', rocketId: @id, x: @x, y: @y, damage: @damage }
     @manager.globalBus.push { type: 'BROADCAST', key: 'rocket-moved', data: @getState() }
     debug("Moved rocket #{@id}")
 

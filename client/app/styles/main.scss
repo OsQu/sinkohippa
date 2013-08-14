@@ -1,7 +1,14 @@
+$pageWidth: 720px;
+
 h1 {
   text-align: center;
 }
 #game-container {
-  width: 720px;
+  width: $pageWidth;
+  margin: 0 auto;
+}
+
+#player-info {
+  width: $pageWidth;
   margin: 0 auto;
 }
