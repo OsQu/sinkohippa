@@ -1,6 +1,9 @@
 expect = require('chai').expect
 io = require('socket.io-client')
 
+Game = require('../scripts/game')
+Player = require('../scripts/player')
+Rocket = require('../scripts/rocket')
 MessageHandler = require('../scripts/message-handler')
 gameEvents = require('../scripts/game-events')
 
@@ -11,14 +14,7 @@ describe 'MessageHandler', ->
       socket: { sessionid: 'ownId' }
 
     sinon.spy(gameEvents, 'socketMessage')
-    @game =
-      setNewMap: sinon.spy()
-      addNewPlayer: sinon.spy()
-      removePlayer: sinon.spy()
-      playerStateChanged: sinon.spy()
-      addNewRocket: sinon.spy()
-      removeRocket: sinon.spy()
-      moveRocket: sinon.spy()
+    @game = new Game(serverUrl: "http://example.com")
 
     @messageHandler = new MessageHandler @game
 
@@ -49,7 +45,7 @@ describe 'MessageHandler', ->
             }
           ]
       @messageHandler.gotGameState(state)
-      expect(@game.addNewPlayer.called).to.be.true
+      expect(@game.players.length).to.be.equals(1)
 
     it 'should update map to Game from game state event', ->
       state =
@@ -61,11 +57,11 @@ describe 'MessageHandler', ->
             }
           ]
       @messageHandler.gotGameState(state)
-      expect(@game.setNewMap.called).to.be.true
+      expect(@game.map).to.be.not.undefined
 
     it 'should update map to Game from map event', ->
-      @messageHandler.updateMap([{x: 0, y: 0, wall: 1}])
-      expect(@game.setNewMap.called).to.be.true
+      @messageHandler.updateMap(data: [{x: 0, y: 0, wall: 1}])
+      expect(@game.map.tiles[0]).to.be.not.undefined
 
     it 'should add new player to Game from new-player event', ->
       @messageHandler.addNewPlayer
@@ -73,23 +69,31 @@ describe 'MessageHandler', ->
           id: 'player1'
           x: 1
           y: 1
-      expect(@game.addNewPlayer.called).to.be.true
+      expect(@game.players.length).to.be.equals(1)
 
     it 'should delete player to Game from player-leaving event', ->
+      player = new Player('player', 0, 0)
+      @game.players.push(player)
+
       @messageHandler.playerLeaving
         data: 'player'
 
-      expect(@game.removePlayer.called).to.be.true
+      expect(@game.players.length).to.be.equals(0)
 
     it 'should change player state to Game from player-state-changed event', ->
+      player = new Player('player', 0, 0)
+      @game.players.push(player)
       @messageHandler.playerStateChanged
         data:
           id: 'player'
           x: 99
           y: 101
-      expect(@game.playerStateChanged.called).to.be.true
+      expect(player.newX).to.be.equals(99)
+      expect(player.newY).to.be.equals(101)
 
     it 'should move rocket in Game from rocket-moving event', ->
+      rocket = new Rocket(0, 2, 4, 'shooter-1', 'down')
+      @game.items.push(rocket)
       @messageHandler.rocketMoved
         data:
           direction: 'down'
@@ -97,9 +101,11 @@ describe 'MessageHandler', ->
           shooter: 'shooter-1'
           x: 2
           y: 5
-      expect(@game.moveRocket.called).to.be.true
+      expect(rocket.newY).to.be.equals(5)
 
     it 'should remove rocket in Game from rocket-destroyed event', ->
+      rocket = new Rocket(0, 2, 4, 'shooter-1', 'down')
+      @game.items.push(rocket)
       @messageHandler.rocketDestroyed
         data:
           shooter: 'shooter-1'
@@ -107,7 +113,7 @@ describe 'MessageHandler', ->
           x: 5
           y: 5
           direction: 'up'
-      expect(@game.removeRocket.called).to.be.true
+      expect(@game.items.length).to.be.equals(0)
 
     it 'should give our id when asking it', ->
       @messageHandler.connect()

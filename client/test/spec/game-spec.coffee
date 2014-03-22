@@ -19,7 +19,7 @@ describe 'Game', ->
     @ourId = 'player-1'
     sinon.stub(MessageHandler.prototype, 'connect')
     sinon.stub(MessageHandler.prototype, 'ourId', => @ourId)
-    @game = new Game()
+    @game = new Game(serverUrl: "http://example.com")
 
   afterEach ->
     gameEvents.globalBus = @oldBus
@@ -28,12 +28,12 @@ describe 'Game', ->
     MessageHandler.prototype.ourId.restore?()
 
   describe 'After initialization', ->
-    beforeEach ->
-      @game.init()
-
     it 'should start polling when calling start', ->
       @game.start()
       expect(@requestAnimStub.called).to.be.true
+
+    it 'should save server url', ->
+      expect(@game.serverUrl).to.be.equals("http://example.com")
 
     describe 'Change game state', ->
       it 'should set new map', ->
