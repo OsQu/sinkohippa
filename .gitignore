@@ -19,3 +19,4 @@ client/app/components/
 
 npm-debug.log
 node_modules
+env.json

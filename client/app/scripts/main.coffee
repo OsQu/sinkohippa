@@ -3,10 +3,13 @@
 console.log "Real mainjs"
 Game = require('./game')
 Hud = require('./hud')
+Bacon = require('baconjs')
 
-hud = new Hud()
-sinkohippa = new Game
-sinkohippa.init()
+environment = Bacon.fromPromise($.getJSON("env.json"))
 
-sinkohippa.start()
+hud = new Hud() # TODO: Some nice loading indicator
+
+environment.onValue (env) ->
+  sinkohippa = new Game(serverUrl: env["server_url"])
+  sinkohippa.start()
 

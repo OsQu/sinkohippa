@@ -10,10 +10,11 @@ Rocket = require('./rocket')
 gameEvents = require('./game-events')
 
 class Game
-  init: ->
+  constructor: (options = {}) ->
     @fps = 30
     @players = []
     @items = []
+    @serverUrl = options.serverUrl
 
     @display = new ROT.Display()
     @gameContainer = $('#game-container')

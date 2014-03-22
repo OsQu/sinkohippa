@@ -12,7 +12,7 @@ class MessageHandler
     @bindEvents()
 
   connectToServer: ->
-    io.connect('http://localhost:5000')
+    io.connect(@game.serverUrl)
 
   bindEvents: ->
     gameEvents.socketMessage(@gameSocket, 'game-state').onValue @gotGameState
@@ -35,7 +35,7 @@ class MessageHandler
   updateMap: (event) =>
     @game.setNewMap(event.data)
 
-  gotServerInfo: (event) =>
+  gotServerInfo: (event) ->
     console.log event.data
 
   addNewPlayer: (ev) =>
