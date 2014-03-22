@@ -14,6 +14,7 @@ Installation
 npm install -g grunt-cli
 git submodule update --init
 npm install
+cp app/env.json.sample app/env.json
 ```
 
 Developing
