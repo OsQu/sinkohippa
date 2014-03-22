@@ -171,25 +171,6 @@ module.exports = function (grunt) {
         /*concat: {
             dist: {}
         },*/
-        requirejs: {
-            dist: {
-                // Options: https://github.com/jrburke/r.js/blob/master/build/example.build.js
-                options: {
-                    // `name` and `out` is set by grunt-usemin
-                    baseUrl: 'app/scripts',
-                    optimize: 'none',
-                    // TODO: Figure out how to make sourcemaps work with grunt-usemin
-                    // https://github.com/yeoman/grunt-usemin/issues/30
-                    //generateSourceMaps: true,
-                    // required to support SourceMaps
-                    // http://requirejs.org/docs/errors.html#sourcemapcomments
-                    preserveLicenseComments: false,
-                    useStrict: true,
-                    wrap: true,
-                    //uglify2: {} // https://github.com/mishoo/UglifyJS2
-                }
-            }
-        },
         useminPrepare: {
             html: '<%= yeoman.app %>/index.html',
             options: {
@@ -267,7 +248,17 @@ module.exports = function (grunt) {
                       '**/*.js'
                     ]
                 }]
-
+            },
+            vendor_dist: {
+                files: [{
+                    expand: true,
+                    dot: true,
+                    cwd: '<%= yeoman.app %>/scripts/vendor',
+                    dest: '<%= yeoman.dist %>/scripts/vendor',
+                    src: [
+                      '**/*.js'
+                    ]
+                }]
             },
             test: {
                 files: [{
@@ -289,6 +280,13 @@ module.exports = function (grunt) {
         },
         browserify: {
             '.tmp/scripts/bundle.js': ['.tmp/scripts/main.js']
+        },
+        uglify: {
+          dest: {
+            files: {
+              '<%= yeoman.dist %>/scripts/main.min.js': ['.tmp/scripts/bundle.js']
+            }
+          }
         }
     });
 
@@ -328,17 +326,15 @@ module.exports = function (grunt) {
     });
 
     grunt.registerTask('build', [
-        'clean:dist',
-        'coffee',
+        'clean:server',
+        'coffee:dist',
+        'copy',
+        'browserify',
         'compass:dist',
         'useminPrepare',
-        'requirejs',
-        'imagemin',
-        'htmlmin',
-        'concat',
         'cssmin',
+        'htmlmin',
         'uglify',
-        'copy',
         'usemin'
     ]);
 
