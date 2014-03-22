@@ -6,3 +6,5 @@ developed with [Node.js](http://nodejs.org/) and [rot.js](http://ondras.github.c
 
 For more info check [client](https://github.com/OsQu/sinkohippa/tree/master/client) and [server](https://github.com/OsQu/sinkohippa/tree/master/server) folders
 
+## Live demo
+Live demo is available at [http://exobaldes.info](http://exobaldes.info)
