@@ -42,6 +42,7 @@ class Player
     gameEvents.globalBus.push @getMoveEvent('right')
     @lastMoved = 'right'
   moveLeft: ->
+    console.log "moving left"
     gameEvents.globalBus.push @getMoveEvent('left')
     @lastMoved = 'left'
 
@@ -57,10 +58,10 @@ class Player
   initButtons: ->
     console.log("Turning on buttons!")
     keyboardController = new KeyboardController()
-    keyboardController.bind('h').onValue => @moveLeft()
-    keyboardController.bind('j').onValue => @moveDown()
-    keyboardController.bind('k').onValue => @moveUp()
-    keyboardController.bind('l').onValue => @moveRight()
+    keyboardController.bind('h').merge(keyboardController.bind("left")).onValue => @moveLeft()
+    keyboardController.bind('j').merge(keyboardController.bind("down")).onValue => @moveDown()
+    keyboardController.bind('k').merge(keyboardController.bind("up")).onValue => @moveUp()
+    keyboardController.bind('l').merge(keyboardController.bind("right")).onValue => @moveRight()
     keyboardController.bind('space').doAction('.preventDefault').onValue => @shootRocket()
 
 module.exports = Player

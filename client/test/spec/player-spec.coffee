@@ -58,33 +58,85 @@ describe 'Player', ->
       expect(@player.lastMoved).to.be.equals('right')
 
     it 'should send shooting data to server', (done) ->
-      gameEvents.globalBus.onValue (ev) ->
+      unsubGlobalBus = gameEvents.globalBus.onValue (ev) ->
         expect(ev.target).to.be.equals('server')
         expect(ev.data.key).to.be.equals('player')
         expect(ev.data.data.action).to.be.equals('shoot')
         expect(ev.data.data.direction).to.be.equals('up')
+        unsubGlobalBus()
         done()
 
       @player.lastMoved = 'up'
       @player.shootRocket()
 
-
     describe 'keyboard bindings', ->
       beforeEach ->
-        KeyboardController = require('../scripts/keyboard-controller')
-        @bindStub = sinon.stub KeyboardController.prototype, 'bind', -> new Bacon.Bus()
         @stubbedPlayer = new Player('stubbed')
         @stubbedPlayer.initButtons()
 
       afterEach ->
-        @bindStub.restore()
+        @unsubKeydown()
 
-      it 'should bind hjkl for moving', ->
-        expect(@bindStub.firstCall.args[0]).to.be.equal('h')
-        expect(@bindStub.secondCall.args[0]).to.be.equal('j')
-        expect(@bindStub.getCall(2).args[0]).to.be.equal('k')
-        expect(@bindStub.getCall(3).args[0]).to.be.equal('l')
+      it 'should bind h to move left', (done) ->
+        @unsubKeydown = $('html').asEventStream('keydown').onValue =>
+          expect(@stubbedPlayer.lastMoved).to.be.equals('left')
+          done()
+        hEvent = $.Event('keydown')
+        hEvent.keyCode = 72
+        $('html').trigger(hEvent)
 
-      it 'should bind space for shooting', ->
-        expect(@bindStub.getCall(4).args[0]).to.be.equal('space')
+      it 'should bind left to move left', (done) ->
+        @unsubKeydown = $('html').asEventStream('keydown').onValue =>
+          expect(@stubbedPlayer.lastMoved).to.be.equals('left')
+          done()
+        leftEvent = $.Event('keydown')
+        leftEvent.keyCode = 37
+        $('html').trigger(leftEvent)
 
+      it 'should bind j to move down', (done) ->
+        @unsubKeydown = $('html').asEventStream('keydown').onValue =>
+          expect(@stubbedPlayer.lastMoved).to.be.equals('down')
+          done()
+        jEvent = $.Event('keydown')
+        jEvent.keyCode = 74
+        $('html').trigger(jEvent)
+
+      it 'should bind down to move down', (done) ->
+        @unsubKeydown = $('html').asEventStream('keydown').onValue =>
+          expect(@stubbedPlayer.lastMoved).to.be.equals('down')
+          done()
+        downEvent = $.Event('keydown')
+        downEvent.keyCode = 40
+        $('html').trigger(downEvent)
+
+      it 'should bind k to move up', (done) ->
+        @unsubKeydown = $('html').asEventStream('keydown').onValue =>
+          expect(@stubbedPlayer.lastMoved = 'up')
+          done()
+        kEvent = $.Event('keydown')
+        kEvent.keyCode = 75
+        $('html').trigger(kEvent)
+
+      it 'should bind up to move down', (done) ->
+        @unsubKeydown = $('html').asEventStream('keydown').onValue =>
+          expect(@stubbedPlayer.lastMoved = 'up')
+          done()
+        upEvent = $.Event('keydown')
+        upEvent.keyCode = 38
+        $('html').trigger(upEvent)
+
+      it 'should bind l move right', (done) ->
+        @unsubKeydown = $('html').asEventStream('keydown').onValue =>
+          expect(@stubbedPlayer.lastMoved = 'right')
+          done()
+        lEvent = $.Event('keydown')
+        lEvent.keyCode = 76
+        $('html').trigger(lEvent)
+
+      it 'should bind right to move right', (done) ->
+        @unsubKeydown = $('html').asEventStream('keydown').onValue =>
+          expect(@stubbedPlayer.lastMoved = 'right')
+          done()
+        rightEvent = $.Event('keydown')
+        rightEvent.keyCode = 39
+        $('html').trigger(rightEvent)
