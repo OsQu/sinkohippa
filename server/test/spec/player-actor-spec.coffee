@@ -3,25 +3,26 @@ sinon = require('sinon')
 _ = require('underscore')
 Bacon = require('baconjs')
 
-actorManager = require('../../app/actors/actor-manager')
+GameManager = require('../../app/actors/game-manager')
 PlayerActor = require('../../app/actors/player-actor')
 
 describe 'PlayerActor', ->
   beforeEach ->
+    @gameManager = new GameManager(0)
     @clock = sinon.useFakeTimers(0)
 
-    @oldBus = actorManager.globalBus
-    actorManager.globalBus = new Bacon.Bus()
+    @oldBus = @gameManager.globalBus
+    @gameManager.globalBus = new Bacon.Bus()
 
     @movePlayerSpy = sinon.spy PlayerActor.prototype, 'movePlayer'
     @rocketHitSpy = sinon.spy PlayerActor.prototype, 'rocketHit'
     @shootWithPlayerSpy = sinon.spy PlayerActor.prototype, 'shootWithPlayer'
 
-    @playerActor = new PlayerActor(actorManager, '123')
+    @playerActor = new PlayerActor(@gameManager, '123')
 
   afterEach ->
     @clock.restore()
-    actorManager.globalBus = @oldBus
+    @gameManager.globalBus = @oldBus
     @movePlayerSpy.restore()
     @rocketHitSpy.restore()
     @shootWithPlayerSpy.restore()
@@ -37,13 +38,13 @@ describe 'PlayerActor', ->
     state.health.should.be.eql(5)
 
   it 'should respond to own player_move event', ->
-    actorManager.globalBus.push
+    @gameManager.globalBus.push
       id: '123'
       type: 'PLAYER_MOVE'
     @movePlayerSpy.called.should.be.true
 
   it 'should not respond to other player_move event', ->
-    actorManager.globalBus.push
+    @gameManager.globalBus.push
       id: '321'
       type: 'PLAYER_MOVE'
     @movePlayerSpy.called.should.be.false
@@ -65,30 +66,30 @@ describe 'PlayerActor', ->
     @playerActor.y.should.be.eql(1)
 
   it 'should broadcast player leaving when destroying actor', (done) ->
-    actorManager.globalBus.filter((ev) -> ev.type == 'BROADCAST').onValue -> done()
+    @gameManager.globalBus.filter((ev) -> ev.type == 'BROADCAST').onValue -> done()
     @playerActor.destroy()
 
   it 'should broadcast player state changed when player is moving', (done) ->
-    actorManager.globalBus.filter((ev) -> ev.type == 'BROADCAST').onValue -> done()
+    @gameManager.globalBus.filter((ev) -> ev.type == 'BROADCAST').onValue -> done()
     @playerActor.movePlayer
       direction: 'right'
 
   it 'should create rocket actor when player is shooting', ->
     @playerActor.shootWithPlayer
       direction: 'right'
-    rocketActor = _.last actorManager.actors
+    rocketActor = _.last @gameManager.actors
     rocketActor.type.should.be.eql('rocket')
 
   it 'should throttle rocket shootings', ->
-    actorManager.globalBus.push { type: "PLAYER_SHOOT", id: @playerActor.id }
-    actorManager.globalBus.push { type: "PLAYER_SHOOT", id: @playerActor.id }
+    @gameManager.globalBus.push { type: "PLAYER_SHOOT", id: @playerActor.id }
+    @gameManager.globalBus.push { type: "PLAYER_SHOOT", id: @playerActor.id }
     @shootWithPlayerSpy.callCount.should.be.eql(1)
     @clock.tick(@playerActor.shootCooldown)
-    actorManager.globalBus.push { type: "PLAYER_SHOOT", id: @playerActor.id }
+    @gameManager.globalBus.push { type: "PLAYER_SHOOT", id: @playerActor.id }
     @shootWithPlayerSpy.callCount.should.be.eql(2)
 
   it 'should be able to be hit by rocket', ->
-    actorManager.globalBus.push { type: 'ROCKET_MOVED', x: @playerActor.x, y: @playerActor.y }
+    @gameManager.globalBus.push { type: 'ROCKET_MOVED', x: @playerActor.x, y: @playerActor.y }
     @rocketHitSpy.called.should.be.true
 
   it 'should reduce health when hit by rocket', ->
@@ -100,7 +101,7 @@ describe 'PlayerActor', ->
     @playerActor.health.should.be.eql(4)
 
   it 'should broadcast player-state-changed when losing health', (done) ->
-    actorManager.globalBus.filter((ev) -> ev.type == 'BROADCAST').onValue (ev) ->
+    @gameManager.globalBus.filter((ev) -> ev.type == 'BROADCAST').onValue (ev) ->
       done()
 
     @playerActor.reduceHealth(1)
@@ -115,7 +116,7 @@ describe 'PlayerActor', ->
     @playerActor.health.should.be.eql(5)
 
   it 'should broadcast player-state-changed when dying', (done) ->
-    actorManager.globalBus.filter((ev) -> ev.type == 'BROADCAST').onValue (ev) ->
+    @gameManager.globalBus.filter((ev) -> ev.type == 'BROADCAST').onValue (ev) ->
       done()
     @playerActor.die()
 
