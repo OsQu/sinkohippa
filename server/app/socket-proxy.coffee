@@ -1,6 +1,9 @@
 debug = require('debug')('sh:socket-proxy')
 Bacon = require('baconjs')
 _ = require('underscore')
+uuid = require('node-uuid')
+
+GameManager = require('./actors/game-manager')
 
 bind = (socket, key) ->
   bus = new Bacon.Bus()
@@ -11,6 +14,7 @@ bind = (socket, key) ->
 class SocketProxy
   constructor: ->
     @sockets = []
+    @games = []
 
   startListeningSockets: (io) ->
     @io = io
@@ -24,6 +28,11 @@ class SocketProxy
 
   handleDisconnection: (ev) ->
     @sockets = _.filter(@sockets, (socket) -> socket.id != ev.socket.id)
+
+  createGame: ->
+    game = new GameManager(uuid.v4())
+    @games.push(game)
+  joinToGame: (socketId, gameId) ->
 
 
 socketProxy = new SocketProxy()

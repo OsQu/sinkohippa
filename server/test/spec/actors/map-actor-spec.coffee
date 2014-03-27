@@ -2,8 +2,8 @@ should = require('should')
 sinon = require('sinon')
 _ = require('underscore')
 
-GameManager = require('../../app/actors/game-manager')
-MapActor = require('../../app/actors/map-actor')
+GameManager = require('../../../app/actors/game-manager')
+MapActor = require('../../../app/actors/map-actor')
 
 describe 'MapActor', ->
   beforeEach ->

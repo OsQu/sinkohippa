@@ -3,8 +3,8 @@ sinon = require('sinon')
 _ = require('underscore')
 Bacon = require('baconjs')
 
-gameManager = require('../../app/actors/game-manager')
-RocketActor = require('../../app/actors/rocket-actor')
+gameManager = require('../../../app/actors/game-manager')
+RocketActor = require('../../../app/actors/rocket-actor')
 
 describe 'RocketActor', ->
   beforeEach ->
@@ -71,13 +71,13 @@ describe 'RocketActor', ->
     @rocketActor.x.should.be.eql(6)
 
   it 'should be able to destroy rocket', (done) ->
-    gameManager.globalBus.filter((ev) => ev.type == 'BROADCAST').onValue (ev) =>
+    gameManager.globalBus.filter((ev) -> ev.type == 'BROADCAST').onValue (ev) ->
       ev.key.should.be.eql('rocket-destroyed')
       done()
     @rocketActor.destroy()
 
   it 'should broadcast rocket-destroyed event when rocket is destroyed', (done) ->
-    gameManager.globalBus.filter((ev) => ev.type == 'BROADCAST').onValue (ev) ->
+    gameManager.globalBus.filter((ev) -> ev.type == 'BROADCAST').onValue (ev) ->
       ev.key.should.be.eql('rocket-destroyed')
       done()
     @rocketActor.destroy()

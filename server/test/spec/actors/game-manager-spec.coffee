@@ -3,8 +3,8 @@ sinon = require('sinon')
 _ = require('underscore')
 Bacon = require('baconjs')
 
-SocketActor = require('../../app/actors/socket-actor')
-GameManager = require('../../app/actors/game-manager')
+SocketActor = require('../../../app/actors/socket-actor')
+GameManager = require('../../../app/actors/game-manager')
 
 describe 'ActorManager', ->
   beforeEach ->
