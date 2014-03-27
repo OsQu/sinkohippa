@@ -3,3 +3,4 @@ root = (req, res) ->
 
 module.exports = (app) ->
   app.get '/', root
+  require('./game.coffee')(app)

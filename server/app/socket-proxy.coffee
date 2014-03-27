@@ -31,6 +31,7 @@ class SocketProxy
   createGame: ->
     game = new GameManager(uuid.v4())
     @games.push(game)
+    game
 
   joinToGame: (socketId, gameId) ->
 
