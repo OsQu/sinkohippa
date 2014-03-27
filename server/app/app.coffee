@@ -13,9 +13,12 @@ io = socketio.listen server, { log: false }
 
 require('./routes')(app)
 
-actorManager = require('./actors/actor-manager')
+###
+GameManager = require('./actors/game-manager')
+gameManager.globalBus.push({ type: 'START_LISTENING_SOCKETS', io: io})
+###
 
-actorManager.globalBus.push({ type: 'START_LISTENING_SOCKETS', io: io})
-
+socketProxy = require('./socket-proxy')
+socketProxy.startListeningSockets(io)
 server.listen(process.env.PORT)
 debug("Started Sinkohippa backend to port: #{process.env.PORT}")

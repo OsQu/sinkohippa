@@ -9,7 +9,7 @@ MapActor = require('./map-actor')
 RocketActor = require('./rocket-actor')
 
 class GameManager
-  constructor: (id) ->
+  constructor: (@id) ->
     @actors = []
     @globalBus = new Bacon.Bus()
     @rocketCount = 0 # TODO: BETTER ROCKET ID!
@@ -65,6 +65,5 @@ class GameManager
       @actors = _.without(@actors, actor)
     else
       debug("Cant'find rocket #{rocketId}")
-
 
 module.exports = GameManager
