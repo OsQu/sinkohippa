@@ -53,7 +53,7 @@ namespace :deploy do
   task :restart => :log_dir do
     on roles(:app), in: :sequence, wait: 5 do
       within "#{release_path}/server" do
-        execute(:forever, 'stopall') rescue
+        execute(:forever, 'stopall') rescue true
         execute(:sh, 'start.sh')
       end
     end
