@@ -2,6 +2,7 @@ ROT = require('./vendor/rot.js/rot')
 _ = require('underscore')
 
 MessageHandler = require('./message-handler')
+Controls = require('./controls')
 
 Map = require('./map')
 Player = require('./player')
@@ -22,6 +23,10 @@ class Game
 
     @messageHandler = new MessageHandler(@)
     @messageHandler.connect()
+
+    @controls = new Controls(serverUrl: @serverUrl)
+    @controls.listGames()
+
 
   render: ->
     for player in @players

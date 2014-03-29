@@ -2,12 +2,13 @@ should = require('should')
 sinon = require('sinon')
 _ = require('underscore')
 
-actorManager = require('../../app/actors/actor-manager')
-MapActor = require('../../app/actors/map-actor')
+GameManager = require('../../../app/actors/game-manager')
+MapActor = require('../../../app/actors/map-actor')
 
 describe 'MapActor', ->
   beforeEach ->
-    @mapActor = new MapActor(actorManager)
+    @gameManager = new GameManager(0)
+    @mapActor = new MapActor(@gameManager)
 
   it 'should be correct type', ->
     @mapActor.type.should.be.eql('map')
@@ -29,7 +30,7 @@ describe 'MapActor', ->
     @mapActor.canMove(1, 1).should.be.true
 
   it 'should destroy rocket when it hits the wall', ->
-    sinon.spy(actorManager, 'deleteRocketActor')
-    actorManager.globalBus.push { type: 'ROCKET_MOVED', x: 0, y: 0, rocketId: 0 }
-    actorManager.deleteRocketActor.called.should.be.true
-    actorManager.deleteRocketActor.restore?()
+    sinon.spy(@gameManager, 'deleteRocketActor')
+    @gameManager.globalBus.push { type: 'ROCKET_MOVED', x: 0, y: 0, rocketId: 0 }
+    @gameManager.deleteRocketActor.called.should.be.true
+    @gameManager.deleteRocketActor.restore?()

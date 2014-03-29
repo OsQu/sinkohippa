@@ -17,14 +17,16 @@
     "grunt": "~0.4.1",
     "grunt-contrib-watch": "~0.5.1",
     "matchdep": "~0.1.1",
-    "webkit-devtools-agent": "~0.1.1"
+    "webkit-devtools-agent": "~0.1.1",
+    "supertest": "~0.10.0"
   },
   "dependencies": {
     "coffee-script": "~1.6.1",
     "express": "~3.0.0",
     "baconjs": "~0.6.8",
     "socket.io": "~0.9",
-    "debug": "~0.7.2"
+    "debug": "~0.7.2",
+    "node-uuid": "~1.4.1"
   },
   "engines": {
     "node": "0.8.22"

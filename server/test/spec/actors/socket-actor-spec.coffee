@@ -3,11 +3,12 @@ sinon = require('sinon')
 _ = require('underscore')
 Bacon = require('baconjs')
 
-actorManager = require('../../app/actors/actor-manager')
-SocketActor = require('../../app/actors/socket-actor')
+GameManager = require('../../../app/actors/game-manager')
+SocketActor = require('../../../app/actors/socket-actor')
 
 describe 'SocketActor', ->
   beforeEach ->
+    @gameManager = new GameManager(0)
     @io =
       sockets:
         on: ->
@@ -19,20 +20,18 @@ describe 'SocketActor', ->
       emit: sinon.spy()
       on: sinon.spy()
 
-    @oldBus = actorManager.globalBus
-    actorManager.globalBus = new Bacon.Bus()
+    @oldBus = @gameManager.globalBus
+    @gameManager.globalBus = new Bacon.Bus()
 
-    @startListeningSocketsSpy = sinon.spy SocketActor.prototype, 'startListeningSockets'
     @sendToSocketSpy = sinon.spy SocketActor.prototype, 'sendToSocket'
     @broadcastSpy = sinon.spy SocketActor.prototype, 'broadcast'
-    @deletePlayerActorStub = sinon.stub actorManager, 'deletePlayerActor'
+    @deletePlayerActorStub = sinon.stub @gameManager, 'deletePlayerActor'
 
-    @socketActor = new SocketActor(actorManager)
+    @socketActor = new SocketActor(@gameManager)
     @socketActor.io = @io
 
   afterEach ->
-    actorManager.globalBus = @oldBus
-    @startListeningSocketsSpy.restore()
+    @gameManager.globalBus = @oldBus
     @sendToSocketSpy.restore()
     @broadcastSpy.restore()
     @socket.join.reset()
@@ -43,15 +42,8 @@ describe 'SocketActor', ->
   it 'should be a correct type', ->
     @socketActor.type.should.be.eql('socket')
 
-  it 'should start listening sockets when start-listening-sockets event is triggered', ->
-    actorManager.globalBus.push
-      io: @io
-      type: 'START_LISTENING_SOCKETS'
-
-    @startListeningSocketsSpy.called.should.be.true
-
   it 'should send event to socket when send-to-socket event is triggered', ->
-    actorManager.globalBus.push
+    @gameManager.globalBus.push
       id: '123'
       key: 'test'
       data: 'testData'
@@ -60,7 +52,7 @@ describe 'SocketActor', ->
     @sendToSocketSpy.called.should.be.true
 
   it 'should send broadcast when broadcast-event is triggered', ->
-    actorManager.globalBus.push
+    @gameManager.globalBus.push
       key: 'test'
       data: 'testData'
       type: 'BROADCAST'
@@ -90,7 +82,7 @@ describe 'SocketActor', ->
 
   describe 'receive player event', ->
     it 'should push PLAYER_MOVE event to globalBus when player-move-event is received', (done) ->
-      actorManager.globalBus.filter((ev) -> ev.type == 'PLAYER_MOVE').onValue (ev) ->
+      @gameManager.globalBus.filter((ev) -> ev.type == 'PLAYER_MOVE').onValue (ev) ->
         ev.direction.should.be.eql('up')
         ev.id.should.be.eql('123')
         done()
@@ -103,7 +95,7 @@ describe 'SocketActor', ->
           id: '123'
 
     it 'should push PLAYER_SHOOT event to bus when player-shoot is received', (done) ->
-      actorManager.globalBus.filter((ev) -> ev.type == 'PLAYER_SHOOT').onValue (ev) ->
+      @gameManager.globalBus.filter((ev) -> ev.type == 'PLAYER_SHOOT').onValue (ev) ->
         ev.id.should.be.eql('123')
         ev.direction.should.be.eql('right')
         done()
@@ -120,10 +112,6 @@ describe 'SocketActor', ->
 
     it 'should add socket to sockets array', ->
       @socketActor.sockets.length.should.be.eql(1)
-
-    it 'should add socket to "all" room', ->
-      @socket.join.called.should.be.true
-      @socket.join.firstCall.args[0].should.be.eql('all')
 
     it 'should emit game state to socket', ->
       @socket.emit.called.should.be.true
