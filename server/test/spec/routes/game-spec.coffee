@@ -11,11 +11,7 @@ gameRoutes = require('../../../app/routes/game')(app)
 socketProxy = require('../../../app/socket-proxy')
 GameManager = require('../../../app/actors/game-manager')
 
-mockSocket =
-  id: 'socket-1'
-  emit: sinon.spy()
-  on: sinon.spy()
-
+mockSocketCreator = require('../spec-helpers').createMockSocket
 
 describe 'Game routes', ->
   beforeEach ->
@@ -24,13 +20,14 @@ describe 'Game routes', ->
     socketProxy.sockets = []
     socketProxy.games = []
 
-  it 'POST /game, create game', (done) ->
+  it 'should create game with POST /game', (done) ->
     request(app)
       .post('/game')
       .expect(gameId: 'test1')
       .end done
 
-  it 'PUT /game, join game', (done) ->
+  it 'should join game with PUT /game', (done) ->
+    mockSocket = mockSocketCreator('socket-1')
     socketProxy.sockets.push(mockSocket)
     socketProxy.games.push(new GameManager('game-1'))
     request(app)
@@ -42,4 +39,11 @@ describe 'Game routes', ->
       .expect(200)
       .end done
 
-
+  it 'list games with GET /game', (done) ->
+    for i in [0..2]
+      socketProxy.games.push(new GameManager("game-#{i}"))
+    request(app)
+      .get('/game')
+      .expect(200)
+      .expect(["game-0", "game-1", "game-2"])
+      .end done

@@ -6,6 +6,8 @@ Bacon = require('baconjs')
 SocketActor = require('../../../app/actors/socket-actor')
 GameManager = require('../../../app/actors/game-manager')
 
+mockSocketCreator = require('../spec-helpers').createMockSocket
+
 describe 'ActorManager', ->
   beforeEach ->
     @gameManager = new GameManager(0)
@@ -40,6 +42,14 @@ describe 'ActorManager', ->
     state[1].state.id.should.be.eql('123')
     state[1].state.x.should.be.eql(1)
     state[1].state.y.should.be.eql(1)
+
+  it 'should be able to fetch socket actor', ->
+    @gameManager.getSocketActor().should.be.defined
+
+  it 'should be able to add player', ->
+    mockSocket = mockSocketCreator('socket-1')
+    @gameManager.addPlayer(mockSocket)
+    _.find(@gameManager.actors, (a) -> a.type == 'player').should.be.defined
 
   describe 'actor creation', ->
     beforeEach ->

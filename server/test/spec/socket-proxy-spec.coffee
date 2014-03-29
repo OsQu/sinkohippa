@@ -4,8 +4,7 @@ _ = require('underscore')
 Bacon = require('baconjs')
 
 socketProxy = require('../../app/socket-proxy')
-mockSocket =
-  on: ->
+mockSocketCreator = require('./spec-helpers').createMockSocket
 
 describe 'SocketProxy', ->
   afterEach ->
@@ -13,6 +12,7 @@ describe 'SocketProxy', ->
     socketProxy.games = []
 
   it 'should accept new connection', ->
+    mockSocket = mockSocketCreator('socket')
     socketProxy.newConnection(mockSocket)
     socketProxy.sockets.length.should.eql(1)
 
