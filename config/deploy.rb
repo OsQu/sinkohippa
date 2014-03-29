@@ -35,6 +35,8 @@ set :deploy_to, '/home/sinkohippa'
 # Default value for keep_releases is 5
 # set :keep_releases, 5
 
+require 'json'
+
 namespace :deploy do
 
   desc "Create log directory"
@@ -61,7 +63,30 @@ namespace :deploy do
   task :npm_dependencies do
     on roles(:app) do
       within "#{release_path}/server" do
-        execute(:npm, "install", "--production",  "--silent")
+        execute(:npm, "install",  "--silent")
+      end
+
+      within "#{release_path}/client" do
+        execute(:npm, "install", "--silent")
+      end
+    end
+  end
+
+  desc "Configure client environment"
+  task :configure_env do
+    on roles(:app) do |server|
+      within "#{release_path}/client/app" do
+        env = { server_url: "http://#{server.hostname}:#{server.properties.websocket_port}" }
+        upload!(StringIO.new(JSON.dump(env)), "#{release_path}/client/app/env.json")
+      end
+    end
+  end
+
+  desc "Build client"
+  task :build_client => :configure_env do
+    on roles(:app) do
+      within "#{release_path}/client" do
+        execute(:grunt, "build")
       end
     end
   end
