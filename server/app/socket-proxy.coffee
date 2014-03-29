@@ -33,6 +33,14 @@ class SocketProxy
     @games.push(game)
     game
 
+  joinGame: (playerId, gameId) ->
+    playerSocket = _.find(@sockets, (s) -> s.id == playerId)
+    game = _.find(@games, (g) -> g.id == gameId)
+    if !playerSocket || !game then return false
+    game.addPlayer(playerSocket)
+    true
+
+
 
 socketProxy = new SocketProxy()
 module.exports = socketProxy
