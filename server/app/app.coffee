@@ -4,7 +4,7 @@ express = require 'express'
 app = express()
 
 # Express middlewares
-app.use(express.multipart())
+app.use(express.bodyParser())
 
 debug = require('debug')('sh:main')
 

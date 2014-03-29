@@ -25,6 +25,8 @@ class MessageHandler
     gameEvents.socketMessage(@gameSocket, 'rocket-destroyed').onValue (data) => @rocketDestroyed(data)
 
     gameEvents.globalBus.filter((ev) -> ev.target == 'server').onValue (data) => @sendToServer(data)
+    gameEvents.globalBus.filter((ev) -> ev.target == 'join-game').onValue (data) => @joinGame(data)
+
   gotGameState: (event) ->
     state = event.data
     for part in state
@@ -60,6 +62,16 @@ class MessageHandler
   sendToServer: (event) ->
     serverData = event.data
     @gameSocket.emit(serverData.key, serverData.data)
+
+  joinGame: (ev) ->
+    gameId = ev.data.gameId
+    url = ev.data.url
+    $.ajax
+      url: url
+      type: 'PUT'
+      data:
+        game_id: gameId
+        player_id: @ourId()
 
   ourId: ->
     @gameSocket.socket.sessionid

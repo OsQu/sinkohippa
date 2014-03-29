@@ -23,6 +23,13 @@ listGames = (req, res) ->
 
 
 module.exports = (app) ->
+  app.all '/game', (req, res, next) ->
+    res.header("Access-Control-Allow-Origin", "*")
+    res.header("Access-Control-Allow-Methods", "POST, GET, PUT")
+    res.header("Access-Control-Allow-Headers", "X-Requested-With")
+    if (req.method == 'OPTIONS') then return res.send(200)
+    next()
+
   app.get '/game', listGames
   app.post '/game', createGame
   app.put '/game', joinGame

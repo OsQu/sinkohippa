@@ -12,4 +12,3 @@ hud = new Hud() # TODO: Some nice loading indicator
 environment.onValue (env) ->
   sinkohippa = new Game(serverUrl: env["server_url"])
   sinkohippa.start()
-
