@@ -92,6 +92,7 @@ namespace :deploy do
   end
 
   after :updated, :npm_dependencies
+  after :updated, :build_client
   after :publishing, :restart
 
   after :restart, :clear_cache do
