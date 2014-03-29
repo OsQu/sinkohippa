@@ -37,14 +37,36 @@ set :deploy_to, '/home/sinkohippa'
 
 namespace :deploy do
 
-  desc 'Restart application'
-  task :restart do
+  desc "Create log directory"
+  task :log_dir do
     on roles(:app), in: :sequence, wait: 5 do
-      # Your restart mechanism here, for example:
-      # execute :touch, release_path.join('tmp/restart.txt')
+      within "#{release_path}/server" do
+        execute(:mkdir, "-p", "production")
+      end
     end
   end
 
+
+  desc 'Restart application'
+  task :restart => :log_dir do
+    on roles(:app), in: :sequence, wait: 5 do
+      within "#{release_path}/server" do
+        execute(:forever, 'stopall') rescue
+        execute(:sh, 'start.sh')
+      end
+    end
+  end
+
+  desc "Add npm dependencies"
+  task :npm_dependencies do
+    on roles(:app) do
+      within "#{release_path}/server" do
+        execute(:npm, "install", "--production",  "--silent")
+      end
+    end
+  end
+
+  after :updated, :npm_dependencies
   after :publishing, :restart
 
   after :restart, :clear_cache do
