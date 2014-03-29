@@ -13,7 +13,7 @@ Deploy to production using [Capistrano](http://capistranorb.com/):
     bundle install
     bundle exec cap production deploy
 
-Note: This requires access to prodcution server.
+Note: This requires access to production server.
 
 ## Live demo
 Live demo is available at [http://exobald.es](http://exobald.es)
