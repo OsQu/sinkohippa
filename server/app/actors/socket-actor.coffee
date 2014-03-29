@@ -10,18 +10,13 @@ class SocketActor
     @bindEvents()
 
   bindEvents: ->
-    @manager.globalBus.filter((ev) -> ev.type == 'START_LISTENING_SOCKETS').onValue @startListeningSockets
     @manager.globalBus.filter((ev) -> ev.type == 'SEND_TO_SOCKET').onValue @sendToSocket
     @manager.globalBus.filter((ev) -> ev.type == 'BROADCAST').onValue @broadcast
 
-  startListeningSockets: (ev) =>
-    debug('Start listening for sockets')
-    @io = ev.io
-    @io.sockets.on 'connection', @newConnection
-
   broadcast: (ev) =>
     debug("Broadcasting to all clients")
-    @io.sockets.in('all').emit(ev.key, ev.data)
+    for socket in @sockets
+      socket.emit(ev.key, ev.data)
 
   sendToSocket: (ev) =>
     socket = _.find @sockets, (s) -> s.id == ev.id
@@ -41,9 +36,7 @@ class SocketActor
     @sockets.push(socket)
 
     debug('Adding new connection to room "all"')
-    socket.join('all')
 
-    @manager.createPlayerActor(socket.id)
     gameState = @manager.getGameState()
 
     socket.emit('game-state', gameState)

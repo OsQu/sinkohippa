@@ -66,4 +66,11 @@ class GameManager
     else
       debug("Cant'find rocket #{rocketId}")
 
+  getSocketActor: ->
+    _.find(@actors, (a) -> a.type == 'socket')
+
+  addPlayer: (socket) ->
+    @getSocketActor().newConnection(socket)
+    @createPlayerActor(socket.id)
+
 module.exports = GameManager

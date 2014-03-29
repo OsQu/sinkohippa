@@ -1,8 +1,22 @@
+_ = require('underscore')
+
 socketProxy = require('../socket-proxy')
 
 createGame = (req, res) ->
   newGame = socketProxy.createGame()
   res.send(200, gameId: newGame.id)
 
+joinGame = (req, res) ->
+  if !req.body.player_id || !req.body.game_id then return res.send(404)
+
+  playerSocket = _.find(socketProxy.sockets, (s) -> s.id == req.body.player_id)
+  game = _.find(socketProxy.games, (g) -> g.id == req.body.game_id)
+  if !playerSocket then return res.send(404, "Player not found")
+  if !game then return res.send(404, "Game not found")
+  game.addPlayer(playerSocket)
+  res.send(200)
+
+
 module.exports = (app) ->
   app.post '/game', createGame
+  app.put '/game', joinGame

@@ -3,6 +3,9 @@ process.env.NODE_ENV ||= "development"
 express = require 'express'
 app = express()
 
+# Express middlewares
+app.use(express.multipart())
+
 debug = require('debug')('sh:main')
 
 http = require 'http'

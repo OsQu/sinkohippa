@@ -21,7 +21,7 @@ class SocketProxy
     @io.sockets.on 'connection', (ev) => @newConnection(ev)
 
   newConnection: (socket) ->
-    debug("Got new connection")
+    debug("Got new connection #{socket.id}")
     @sockets.push(socket)
     bind(socket, 'disconnect').onValue (ev) => @handleDisconnection(ev)
 
@@ -32,8 +32,6 @@ class SocketProxy
     game = new GameManager(uuid.v4())
     @games.push(game)
     game
-
-  joinToGame: (socketId, gameId) ->
 
 
 socketProxy = new SocketProxy()
