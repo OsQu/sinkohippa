@@ -23,7 +23,6 @@ describe 'SocketActor', ->
     @oldBus = @gameManager.globalBus
     @gameManager.globalBus = new Bacon.Bus()
 
-    @startListeningSocketsSpy = sinon.spy SocketActor.prototype, 'startListeningSockets'
     @sendToSocketSpy = sinon.spy SocketActor.prototype, 'sendToSocket'
     @broadcastSpy = sinon.spy SocketActor.prototype, 'broadcast'
     @deletePlayerActorStub = sinon.stub @gameManager, 'deletePlayerActor'
@@ -33,7 +32,6 @@ describe 'SocketActor', ->
 
   afterEach ->
     @gameManager.globalBus = @oldBus
-    @startListeningSocketsSpy.restore()
     @sendToSocketSpy.restore()
     @broadcastSpy.restore()
     @socket.join.reset()
@@ -43,13 +41,6 @@ describe 'SocketActor', ->
 
   it 'should be a correct type', ->
     @socketActor.type.should.be.eql('socket')
-
-  it 'should start listening sockets when start-listening-sockets event is triggered', ->
-    @gameManager.globalBus.push
-      io: @io
-      type: 'START_LISTENING_SOCKETS'
-
-    @startListeningSocketsSpy.called.should.be.true
 
   it 'should send event to socket when send-to-socket event is triggered', ->
     @gameManager.globalBus.push
@@ -121,10 +112,6 @@ describe 'SocketActor', ->
 
     it 'should add socket to sockets array', ->
       @socketActor.sockets.length.should.be.eql(1)
-
-    it 'should add socket to "all" room', ->
-      @socket.join.called.should.be.true
-      @socket.join.firstCall.args[0].should.be.eql('all')
 
     it 'should emit game state to socket', ->
       @socket.emit.called.should.be.true
