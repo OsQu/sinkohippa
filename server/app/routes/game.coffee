@@ -16,7 +16,13 @@ joinGame = (req, res) ->
   game.addPlayer(playerSocket)
   res.send(200)
 
+listGames = (req, res) ->
+  games = socketProxy.games
+  gameIds = _.pluck(games, 'id')
+  res.send(200, gameIds)
+
 
 module.exports = (app) ->
+  app.get '/game', listGames
   app.post '/game', createGame
   app.put '/game', joinGame
