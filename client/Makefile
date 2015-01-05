@@ -6,6 +6,8 @@ STATIC_FILES=404.html,env.json,favicon.ico,index.html,robots.txt
 
 all: build-dist
 
+# === Application ===
+
 tmp/main.js:
 	$(COFFEE) -b -o tmp app/scripts
 	cp -R app/scripts/vendor tmp/
@@ -15,10 +17,12 @@ tmp/$(BUNDLE_FILE_NAME): tmp/main.js
 
 build-dist: tmp/$(BUNDLE_FILE_NAME)
 	mkdir -p dist/scripts
-	cp tmp/$(BUNDLE_FILE_NAME) dist/$(BUNDLE_FILE_NAME)
+	cp tmp/$(BUNDLE_FILE_NAME) dist/scripts/$(BUNDLE_FILE_NAME)
 	cp -R app/scripts/vendor dist/scripts/vendor
 	cp app/{$(STATIC_FILES)} dist/
 
+# === Tests ===
+
 
 clean:
-	rm -rf tmp dist
+	rm -rf tmp dist test/tmp
