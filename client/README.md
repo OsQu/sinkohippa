@@ -25,6 +25,12 @@ To start developing new cool features to Sinkohippa, build the project to `dist/
 make
 ```
 
+And then run the server with npm script:
+
+```
+npm run server
+```
+
 To run tests, type
 
 ```
