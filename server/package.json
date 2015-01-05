@@ -24,6 +24,10 @@
     "debug": "~0.7.2",
     "node-uuid": "~1.4.1"
   },
+  "scripts": {
+    "test": "./node_modules/.bin/mocha --compilers coffee:coffee-script",
+    "test:all": "find ./test -name '*.coffee' | xargs npm run test --"
+  },
   "engines": {
     "node": "0.8.22"
   }
