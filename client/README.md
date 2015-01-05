@@ -19,14 +19,14 @@ cp app/env.json.sample app/env.json
 
 Developing
 -------
-To start developing new cool features to Sinkohippa, simply type:
+To start developing new cool features to Sinkohippa, build the project to `dist/` folder with make(1)
 
 ```
-grunt server
+make
 ```
 
 To run tests, type
 
 ```
-grunt server:test
+TODO
 ```

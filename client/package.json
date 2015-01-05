@@ -9,7 +9,10 @@
     "browsernizr": "~1.0.0",
     "chai": "*",
     "mocha": "*",
-    "sinon": "~1.7.3"
+    "sinon": "~1.7.3",
+    "browserify": "latest",
+    "coffee-script": "~1.8.0",
+    "http-server": "~0.7.4"
   },
   "engines": {
     "node": ">=0.8.0"
