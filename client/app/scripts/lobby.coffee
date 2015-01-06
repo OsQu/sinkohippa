@@ -7,12 +7,16 @@ List = require('./ui/list')
 
 Game = require('./game')
 KeyboardController = require('./keyboard-controller')
+gameEvents = require('./game-events')
 
 class Lobby
   constructor: ({@serverUrl}) ->
     @display = new ROT.Display()
     @controller = new KeyboardController()
     $('#game-container').append @display.getContainer()
+
+    @game = new Game(serverUrl: @serverUrl, display: @display)
+    @game.start()
 
   askName: ->
     @display.drawText(1, 1, "Welcome to Sinkohippa!")
@@ -43,6 +47,8 @@ class Lobby
       )
 
       @gameList.value().done (index) =>
+        @display.clear()
+
         if index == 0
           @startGame()
         else
@@ -53,13 +59,17 @@ class Lobby
 
   startGame: ->
     console.log("Start a new game")
-    return
+    $.post("#{@serverUrl}/game").done (response) =>
+      @joinGame(response.gameId)
 
-    game = new Game(serverUrl: @serverUrl, display: @display)
-    game.start()
 
   joinGame: (id) ->
     console.log("Join game #{id}")
+    gameEvents.globalBus.push
+      target: 'join-game'
+      data:
+        url: "#{@serverUrl}/game"
+        gameId: id
 
   destructor: ->
     @gameList?.destructor()
