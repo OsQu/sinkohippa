@@ -1,3 +1,3 @@
 [submodule "client/app/scripts/vendor/rot.js"]
 	path = client/app/scripts/vendor/rot.js
-	url = https://github.com/waltsu/rot.js.git
+	url = https://github.com/osqu/rot.js.git
