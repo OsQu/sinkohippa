@@ -2,7 +2,6 @@ ROT = require('./vendor/rot.js/rot')
 _ = require('underscore')
 
 MessageHandler = require('./message-handler')
-Controls = require('./controls')
 
 Map = require('./map')
 Player = require('./player')
@@ -11,22 +10,13 @@ Rocket = require('./rocket')
 gameEvents = require('./game-events')
 
 class Game
-  constructor: (options = {}) ->
+  constructor: ({@serverUrl, @display}) ->
     @fps = 30
     @players = []
     @items = []
-    @serverUrl = options.serverUrl
-
-    @display = new ROT.Display()
-    @gameContainer = $('#game-container')
-    @gameContainer.append @display.getContainer()
 
     @messageHandler = new MessageHandler(@)
     @messageHandler.connect()
-
-    @controls = new Controls(serverUrl: @serverUrl)
-    @controls.listGames()
-
 
   render: ->
     for player in @players
