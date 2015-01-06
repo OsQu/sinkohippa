@@ -1,12 +1,12 @@
 ROT = require('../vendor/rot.js/rot')
-Bacon = require('baconjs')
+Base = require('./base')
 
-class Input
+class Input extends Base
   BACKSPACE_KEYCODE = 8
   ENTER_KEYCODE = 13
 
   constructor: ({@display, @controller, @location}) ->
-    @destruct = new Bacon.Bus()
+    super
 
     @text = ""
     @returnValue = $.Deferred()
@@ -39,8 +39,6 @@ class Input
     for char, i in @text
       @display.draw(@location.x + i, @location.y, char)
     @display.draw(@text.length + @location.x, @location.y, "█")
-
-  destructor: -> @destruct.push(true)
 
   value: ->
     @returnValue.promise()
