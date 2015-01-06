@@ -1,6 +1,6 @@
 COFFEE=./node_modules/.bin/coffee
 BROWSERIFY=./node_modules/.bin/browserify
-COMPASS=bundle exec compass compile
+COMPASS=compass compile
 BUNDLE_FILE_NAME=bundle.js
 
 SOURCES=$(shell find app/scripts -type f -name '*.coffee')
