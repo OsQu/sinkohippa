@@ -4,16 +4,16 @@ Sinkohippa client
 Dependencies
 ------------
 Following packages are needed to run the frontend
-* [grunt](http://gruntjs.com/)
 * [node](http://nodejs.org/)
+* [bundler](http://bundler.io/) (and ruby 2.1.0)
 
 Installation
 ------------
 
 ```
-npm install -g grunt-cli
 git submodule update --init
 npm install
+bundle install
 cp app/env.json.sample app/env.json
 ```
 

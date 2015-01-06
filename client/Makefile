@@ -1,12 +1,13 @@
 COFFEE=./node_modules/.bin/coffee
 BROWSERIFY=./node_modules/.bin/browserify
+COMPASS=bundle exec compass compile
 BUNDLE_FILE_NAME=bundle.js
 
 SOURCES=$(shell find app/scripts -type f -name '*.coffee')
 JS_SOURCES=$(patsubst app/scripts/%, compiled/%, $(SOURCES:.coffee=.js))
 STATIC_FILES=404.html,env.json,favicon.ico,index.html,robots.txt
 
-all: build-dist
+all: app
 
 # === Application ===
 
@@ -20,12 +21,18 @@ compiled/vendor:
 compiled/$(BUNDLE_FILE_NAME): $(JS_SOURCES) compiled/vendor
 	$(BROWSERIFY) compiled/main.js -o $@
 
-.PHONY: build-dist
-build-dist: compiled/$(BUNDLE_FILE_NAME)
-	mkdir -p dist/scripts
+compiled/main.css:
+	$(COMPASS)
+
+dist: compiled/$(BUNDLE_FILE_NAME) compiled/main.css
+	mkdir -p dist/scripts dist/styles
 	cp compiled/$(BUNDLE_FILE_NAME) dist/scripts/$(BUNDLE_FILE_NAME)
+	cp compiled/main.css dist/styles/
 	cp -R app/scripts/vendor dist/scripts/vendor
 	cp app/{$(STATIC_FILES)} dist/
+
+.PHONY: app
+app: dist
 
 # === Tests ===
 
@@ -34,10 +41,6 @@ SPECS=$(shell find test/spec -type f -name '*.coffee')
 JS_SPECS=$(patsubst test/spec/%, test/compiled/spec/%, $(SPECS:.coffee=.js))
 SPEC_MAIN_JS=test/compiled/scripts/main.js
 SYM_LINKS=test/compiled/scripts/vendor test/compiled/client
-
-paskaa:
-	# $(TESTABLE_JS_SOURCES)
-	# $(JS_SPECS)
 
 test/compiled/%.js: test/%.coffee
 	$(COFFEE) -b -o $(@D) $<
