@@ -47,7 +47,7 @@ class Game
       return
 
     console.log "Adding new player"
-    player = new Player(playerData.id, playerData.x, playerData.y)
+    player = new Player(playerData.id, playerData.color, playerData.x, playerData.y)
     if player.id == @messageHandler.ourId()
       console.log "Found our player!"
       player.initButtons()
