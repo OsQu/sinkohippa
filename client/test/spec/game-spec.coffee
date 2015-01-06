@@ -2,12 +2,12 @@ expect = require('chai').expect
 
 ROT = require('../scripts/vendor/rot.js/rot')
 Bacon= require('baconjs')
-Game = require('../scripts/game')
-Player = require('../scripts/player')
-Rocket = require('../scripts/rocket')
+Game = require('../client/game')
+Player = require('../client/player')
+Rocket = require('../client/rocket')
 
-MessageHandler = require('../scripts/message-handler')
-gameEvents = require('../scripts/game-events')
+MessageHandler = require('../client/message-handler')
+gameEvents = require('../client/game-events')
 
 'use strict'
 describe 'Game', ->

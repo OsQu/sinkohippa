@@ -2,7 +2,7 @@ expect = require('chai').expect
 
 ROT = require('../scripts/vendor/rot.js/rot')
 Bacon= require('baconjs')
-Rocket = require('../scripts/rocket')
+Rocket = require('../client/rocket')
 
 describe 'Rocket', ->
   beforeEach ->
