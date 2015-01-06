@@ -5,7 +5,7 @@ BUNDLE_FILE_NAME=bundle.js
 
 SOURCES=$(shell find app/scripts -type f -name '*.coffee')
 JS_SOURCES=$(patsubst app/scripts/%, compiled/%, $(SOURCES:.coffee=.js))
-STATIC_FILES=dist/404.html dist/env.json dist/favicon.ico dist/index.html dist/robots.txt
+STATIC_FILES=dist/404.html dist/favicon.ico dist/index.html dist/robots.txt
 
 all: app test
 
@@ -35,13 +35,19 @@ dist/scripts/$(BUNDLE_FILE_NAME): compiled/$(BUNDLE_FILE_NAME)
 dist/styles: compiled/main.css
 	mkdir -p dist/styles
 	cp compiled/main.css dist/styles/main.css
+	chmod -R a+r dist/styles
 
 $(STATIC_FILES):
 	mkdir -p dist
 	cp app/$(@F) $@
 
+dist/env.json:
+	mkdir -p dist
+	cp app/env.json dist/env.json
+	chmod a+r dist/env.json
+
 .PHONY: app
-app: $(STATIC_FILES) dist/scripts/vendor dist/scripts/$(BUNDLE_FILE_NAME) dist/styles
+app: $(STATIC_FILES) dist/scripts/vendor dist/scripts/$(BUNDLE_FILE_NAME) dist/styles dist/env.json
 
 # === Tests ===
 
