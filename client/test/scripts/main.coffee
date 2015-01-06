@@ -11,5 +11,6 @@ require('../spec/message-handler-spec')
 require('../spec/hud-spec')
 require('../spec/lobby_spec')
 require('../spec/ui/input_spec')
+require('../spec/ui/list_spec')
 
 mocha.run()
