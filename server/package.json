@@ -29,6 +29,6 @@
     "test:all": "find ./test -name '*.coffee' | xargs npm run test --"
   },
   "engines": {
-    "node": "0.8.22"
+    "node": "0.10.35"
   }
 }

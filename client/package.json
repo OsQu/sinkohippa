@@ -19,6 +19,6 @@
     "test": "./node_modules/.bin/http-server -p 8081 test"
   },
   "engines": {
-    "node": ">=0.8.0"
+    "node": "0.10.35"
   }
 }
