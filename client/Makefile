@@ -2,22 +2,33 @@ COFFEE=./node_modules/.bin/coffee
 BROWSERIFY=./node_modules/.bin/browserify
 BUNDLE_FILE_NAME=bundle.js
 
+SOURCES=$(shell find app/scripts -type f -name '*.coffee')
+JS_SOURCES=$(patsubst app/scripts/%, compiled/%, $(SOURCES:.coffee=.js))
 STATIC_FILES=404.html,env.json,favicon.ico,index.html,robots.txt
 
 all: build-dist
 
 # === Application ===
 
-tmp/main.js:
-	$(COFFEE) -b -o tmp app/scripts
-	cp -R app/scripts/vendor tmp/
+paskaa:
+	# $(SOURCES)
+	# JS_SOURCES
+	# $(JS_SOURCES)
 
-tmp/$(BUNDLE_FILE_NAME): tmp/main.js
-	$(BROWSERIFY) tmp/main.js -o tmp/$(BUNDLE_FILE_NAME)
+# Compile any .coffee file to .js file
+compiled/%.js: app/scripts/%.coffee
+	$(COFFEE) -b -o $(@D) $<
 
-build-dist: tmp/$(BUNDLE_FILE_NAME)
+compiled/vendor:
+	cp -R app/scripts/vendor compiled/
+
+compiled/$(BUNDLE_FILE_NAME): $(JS_SOURCES) compiled/vendor
+	$(BROWSERIFY) compiled/main.js -o $@
+
+.PHONY: build-dist
+build-dist: compiled/$(BUNDLE_FILE_NAME)
 	mkdir -p dist/scripts
-	cp tmp/$(BUNDLE_FILE_NAME) dist/scripts/$(BUNDLE_FILE_NAME)
+	cp compiled/$(BUNDLE_FILE_NAME) dist/scripts/$(BUNDLE_FILE_NAME)
 	cp -R app/scripts/vendor dist/scripts/vendor
 	cp app/{$(STATIC_FILES)} dist/
 
@@ -25,4 +36,4 @@ build-dist: tmp/$(BUNDLE_FILE_NAME)
 
 
 clean:
-	rm -rf tmp dist test/tmp
+	rm -rf compiled dist
