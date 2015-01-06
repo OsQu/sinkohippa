@@ -53,7 +53,6 @@ test/compiled/client: $(TESTABLE_JS_SOURCES)
 
 .PHONY: test
 test: test/compiled/$(BUNDLE_FILE_NAME)
-	# DO NOTHING
 
 clean:
 	rm -rf compiled test/compiled dist
