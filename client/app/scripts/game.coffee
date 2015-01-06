@@ -69,7 +69,9 @@ class Game
 
 
   addNewRocket: (data) ->
-    rocket = new Rocket(data.id, data.x, data.y, data.shooter, data.direction)
+    # TODO: These _.finds could be optimized with a hash table!
+    player = _.find @players, (p) -> p.id == data.shooter
+    rocket = new Rocket(data.id, data.x, data.y, player, data.direction)
     @items.push(rocket)
     rocket
 

@@ -9,7 +9,7 @@ class Rocket
 
   render: (display) ->
     @handleNewPosition(display)
-    display.draw(@x, @y, @getChar())
+    display.draw(@x, @y, @getChar(), @shooter?.colorCode())
 
   clearCurrentPosition: (display) ->
     display.draw(@x, @y, '.')
