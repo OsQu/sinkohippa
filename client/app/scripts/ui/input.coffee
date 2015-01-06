@@ -2,9 +2,6 @@ ROT = require('../vendor/rot.js/rot')
 Base = require('./base')
 
 class Input extends Base
-  BACKSPACE_KEYCODE = 8
-  ENTER_KEYCODE = 13
-
   constructor: ({@controller}) ->
     super
 
@@ -26,12 +23,12 @@ class Input extends Base
       @text += char
       @render()
 
-    @input.filter((keyCode) -> keyCode == BACKSPACE_KEYCODE).onValue =>
+    @input.filter((keyCode) -> keyCode == ROT["VK_BACK_SPACE"]).onValue =>
       @text = @text[0...@text.length - 1]
       @display.draw(@location.x + @text.length + 1, @location.y, " ")
       @render()
 
-    @input.filter((keyCode) -> keyCode == ENTER_KEYCODE).onValue =>
+    @input.filter((keyCode) -> keyCode == ROT["VK_RETURN"]).onValue =>
       @returnValue.resolve(@text)
 
   render: ->
