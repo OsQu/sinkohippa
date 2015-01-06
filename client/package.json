@@ -15,7 +15,8 @@
     "http-server": "~0.7.4"
   },
   "scripts": {
-    "server": "./node_modules/.bin/http-server dist"
+    "server": "./node_modules/.bin/http-server dist",
+    "test": "./node_modules/.bin/http-server -p 8081 test"
   },
   "engines": {
     "node": ">=0.8.0"

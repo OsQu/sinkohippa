@@ -31,8 +31,18 @@ And then run the server with npm script:
 npm run server
 ```
 
+And point your browser to `http://localhost:8080`
+
 To run tests, type
 
 ```
-TODO
+make test
 ```
+
+And then run the test server with npm script:
+
+```
+npm run test
+```
+
+And point your browser to `http://localhost:8081`
