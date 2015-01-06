@@ -7,19 +7,12 @@ Dependencies
 Following packages are needed to run the backend:
 
 * [node](http://nodejs.org/)
-* [grunt (For tests)](http://gruntjs.com)
 * [foreman](https://github.com/ddollar/foreman)
 
 Installation
 ------------
 
 Install node from [http://nodejs.org/download/](http://nodejs.org/download/)
-
-Install grunt with npm:
-
-```
-npm install -g grunt-cli
-```
 
 Install foreman with gem:
 
@@ -43,12 +36,13 @@ Running tests
 ------------
 
 ```
-grunt test
+npm run test
 ```
 
-For watcher use
+If you want to watch test and only run changed ones, you need to have [fswatch](https://github.com/emcrisostomo/fswatch) installed. After installing that, run:
+
 ```
-grunt watch
+./watch_tests.sh
 ```
 
 Vagrant

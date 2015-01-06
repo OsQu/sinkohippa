@@ -2,8 +2,8 @@
 expect = require('chai').expect
 Bacon = require('baconjs')
 
-Player = require('../scripts/player')
-gameEvents = require('../scripts/game-events')
+Player = require('../client/player')
+gameEvents = require('../client/game-events')
 
 describe 'Player', ->
   beforeEach ->

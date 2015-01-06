@@ -1,11 +1,11 @@
 expect = require('chai').expect
 io = require('socket.io-client')
 
-Game = require('../scripts/game')
-Player = require('../scripts/player')
-Rocket = require('../scripts/rocket')
-MessageHandler = require('../scripts/message-handler')
-gameEvents = require('../scripts/game-events')
+Game = require('../client/game')
+Player = require('../client/player')
+Rocket = require('../client/rocket')
+MessageHandler = require('../client/message-handler')
+gameEvents = require('../client/game-events')
 
 describe 'MessageHandler', ->
   beforeEach ->

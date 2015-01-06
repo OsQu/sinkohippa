@@ -4,7 +4,7 @@ expect = require('chai').expect
 
 describe 'Socket Events', ->
   beforeEach ->
-    @gameEvents = require('../scripts/game-events')
+    @gameEvents = require('../client/game-events')
 
   it 'should push socket messages to bus', (done) ->
     onSpy = sinon.spy()

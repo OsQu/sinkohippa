@@ -4,7 +4,7 @@ expect = require('chai').expect
 ROT = require('../scripts/vendor/rot.js/rot')
 Bacon = require('baconjs')
 _ = require('underscore')
-Map = require('../scripts/map')
+Map = require('../client/map')
 describe 'Map', ->
   beforeEach ->
     @map = new Map
