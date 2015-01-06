@@ -4,7 +4,7 @@ Bacon = require('baconjs')
 class KeyboardController
   BINDING_SELECTOR = 'html'
   onInput: ->
-    keydowns = $(BINDING_SELECTOR)
+    $(BINDING_SELECTOR)
       .asEventStream('keydown')
       .doAction(".preventDefault")
       .map(".which")
