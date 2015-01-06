@@ -5,7 +5,7 @@ class Input extends Base
   BACKSPACE_KEYCODE = 8
   ENTER_KEYCODE = 13
 
-  constructor: ({@display, @controller, @location}) ->
+  constructor: ({@controller}) ->
     super
 
     @text = ""
