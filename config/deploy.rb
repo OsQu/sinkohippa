@@ -86,7 +86,7 @@ namespace :deploy do
   task :build_client => :configure_env do
     on roles(:app) do
       within "#{release_path}/client" do
-        execute(:grunt, "build")
+        execute(:make, "app")
       end
     end
   end
