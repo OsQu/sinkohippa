@@ -5,7 +5,7 @@ BUNDLE_FILE_NAME=bundle.js
 
 SOURCES=$(shell find app/scripts -type f -name '*.coffee')
 JS_SOURCES=$(patsubst app/scripts/%, compiled/%, $(SOURCES:.coffee=.js))
-STATIC_FILES=404.html,env.json,favicon.ico,index.html,robots.txt
+STATIC_FILES=dist/404.html dist/env.json dist/favicon.ico dist/index.html dist/robots.txt
 
 all: app test
 
@@ -24,15 +24,24 @@ compiled/$(BUNDLE_FILE_NAME): $(JS_SOURCES) compiled/vendor
 compiled/main.css:
 	$(COMPASS)
 
-dist: compiled/$(BUNDLE_FILE_NAME) compiled/main.css
-	mkdir -p dist/scripts dist/styles
-	cp compiled/$(BUNDLE_FILE_NAME) dist/scripts/$(BUNDLE_FILE_NAME)
-	cp compiled/main.css dist/styles/
+dist/scripts/vendor:
+	mkdir -p dist/scripts
 	cp -R app/scripts/vendor dist/scripts/vendor
-	cp app/{$(STATIC_FILES)} dist/
+
+dist/scripts/$(BUNDLE_FILE_NAME): compiled/$(BUNDLE_FILE_NAME)
+	mkdir -p dist/scripts
+	cp compiled/$(BUNDLE_FILE_NAME) dist/scripts/$(BUNDLE_FILE_NAME)
+
+dist/styles: compiled/main.css
+	mkdir -p dist/styles
+	cp compiled/main.css dist/styles/main.css
+
+$(STATIC_FILES):
+	mkdir -p dist
+	cp app/$(@F) $@
 
 .PHONY: app
-app: dist
+app: $(STATIC_FILES) dist/scripts/vendor dist/scripts/$(BUNDLE_FILE_NAME) dist/styles
 
 # === Tests ===
 
@@ -49,10 +58,10 @@ test/compiled/$(BUNDLE_FILE_NAME): $(TESTABLE_JS_SOURCES) $(JS_SPECS) $(SPEC_MAI
 	$(BROWSERIFY) test/compiled/scripts/main.js -o $@
 
 test/compiled/scripts/vendor: $(SPEC_MAIN_JS)
-	ln -s ../../../app/scripts/vendor test/compiled/scripts/vendor
+	cp -R app/scripts/vendor test/compiled/scripts/
 
 test/compiled/client: $(TESTABLE_JS_SOURCES)
-	ln -s ../../compiled test/compiled/client
+	cp -R compiled test/compiled/client
 
 .PHONY: test
 test: test/compiled/$(BUNDLE_FILE_NAME)
