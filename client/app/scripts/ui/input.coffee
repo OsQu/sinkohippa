@@ -12,6 +12,12 @@ class Input
     @returnValue = $.Deferred()
     @input = @controller.onInput().takeUntil(@destruct)
 
+    @returnValue.done => @destructor()
+
+    @bindKeyPresses()
+    @render()
+
+  bindKeyPresses: ->
     @input.filter (keyCode) ->
       # Only allow ascii characters
       keyCode >= 32 && keyCode <= 126
@@ -27,8 +33,6 @@ class Input
 
     @input.filter((keyCode) -> keyCode == ENTER_KEYCODE).onValue =>
       @returnValue.resolve(@text)
-
-    @render()
 
   render: ->
     # drawText is NOT suitable for this. It trims text and does all kinds of funny business

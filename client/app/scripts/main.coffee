@@ -1,7 +1,7 @@
 'use strict'
 
 console.log "Real mainjs"
-Game = require('./game')
+Lobby = require('./lobby')
 Hud = require('./hud')
 Bacon = require('baconjs')
 
@@ -10,5 +10,9 @@ environment = Bacon.fromPromise($.getJSON("env.json"))
 hud = new Hud() # TODO: Some nice loading indicator
 
 environment.onValue (env) ->
-  sinkohippa = new Game(serverUrl: env["server_url"])
-  sinkohippa.start()
+  lobby = new Lobby(serverUrl: env["server_url"])
+  # Just to get some nethack feeling, later use this as a nick
+  lobby.askName().done (name) ->
+    # TODO: Do something with name
+    console.log "Guys name is #{name}"
+    lobby.openLobby()
