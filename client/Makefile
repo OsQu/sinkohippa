@@ -48,7 +48,7 @@ test/compiled/%.js: test/%.coffee
 test/compiled/$(BUNDLE_FILE_NAME): $(TESTABLE_JS_SOURCES) $(JS_SPECS) $(SPEC_MAIN_JS) $(SYM_LINKS) compiled/vendor
 	$(BROWSERIFY) test/compiled/scripts/main.js -o $@
 
-test/compiled/scripts/vendor:
+test/compiled/scripts/vendor: $(SPEC_MAIN_JS)
 	ln -s ../../../app/scripts/vendor test/compiled/scripts/vendor
 
 test/compiled/client: $(TESTABLE_JS_SOURCES)
