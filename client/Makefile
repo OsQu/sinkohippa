@@ -10,11 +10,6 @@ all: build-dist
 
 # === Application ===
 
-paskaa:
-	# $(SOURCES)
-	# JS_SOURCES
-	# $(JS_SOURCES)
-
 # Compile any .coffee file to .js file
 compiled/%.js: app/scripts/%.coffee
 	$(COFFEE) -b -o $(@D) $<
