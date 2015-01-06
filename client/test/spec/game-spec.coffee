@@ -1,6 +1,6 @@
 expect = require('chai').expect
 
-ROT = require('../scripts/vendor/rot.js/rot')
+ROT = require('../client/vendor/rot.js/rot')
 Bacon= require('baconjs')
 Game = require('../client/game')
 Player = require('../client/player')
@@ -19,7 +19,7 @@ describe 'Game', ->
     @ourId = 'player-1'
     sinon.stub(MessageHandler.prototype, 'connect')
     sinon.stub(MessageHandler.prototype, 'ourId', => @ourId)
-    @game = new Game(serverUrl: "http://example.com")
+    @game = new Game(serverUrl: "http://example.com", display: new ROT.Display())
 
   afterEach ->
     gameEvents.globalBus = @oldBus

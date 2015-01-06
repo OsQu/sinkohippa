@@ -55,19 +55,18 @@ TESTABLE_JS_SOURCES=$(filter-out compiled/main.js, $(JS_SOURCES))
 SPECS=$(shell find test/spec -type f -name '*.coffee')
 JS_SPECS=$(patsubst test/spec/%, test/compiled/spec/%, $(SPECS:.coffee=.js))
 SPEC_MAIN_JS=test/compiled/scripts/main.js
-SYM_LINKS=test/compiled/scripts/vendor test/compiled/client
+EXTERNAL=test/compiled/client
 
 test/compiled/%.js: test/%.coffee
 	$(COFFEE) -b -o $(@D) $<
 
-test/compiled/$(BUNDLE_FILE_NAME): $(TESTABLE_JS_SOURCES) $(JS_SPECS) $(SPEC_MAIN_JS) $(SYM_LINKS) compiled/vendor
+test/compiled/$(BUNDLE_FILE_NAME): $(TESTABLE_JS_SOURCES) $(JS_SPECS) $(SPEC_MAIN_JS) $(EXTERNAL) compiled/vendor
 	$(BROWSERIFY) test/compiled/scripts/main.js -o $@
 
-test/compiled/scripts/vendor: $(SPEC_MAIN_JS)
-	cp -R app/scripts/vendor test/compiled/scripts/
-
 test/compiled/client: $(TESTABLE_JS_SOURCES)
-	cp -R compiled test/compiled/client
+	mkdir -p test/compiled/client
+	cp -R compiled/* test/compiled/client/
+	cp -R app/scripts/vendor test/compiled/client
 
 .PHONY: test
 test: test/compiled/$(BUNDLE_FILE_NAME)

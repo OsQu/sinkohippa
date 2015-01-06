@@ -1,7 +1,7 @@
 'use strict'
 expect = require('chai').expect
 
-ROT = require('../scripts/vendor/rot.js/rot')
+ROT = require('../client/vendor/rot.js/rot')
 Bacon = require('baconjs')
 _ = require('underscore')
 Map = require('../client/map')

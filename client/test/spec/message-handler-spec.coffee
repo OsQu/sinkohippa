@@ -1,5 +1,6 @@
 expect = require('chai').expect
 io = require('socket.io-client')
+ROT = require('../client/vendor/rot.js/rot')
 
 Game = require('../client/game')
 Player = require('../client/player')
@@ -14,7 +15,7 @@ describe 'MessageHandler', ->
       socket: { sessionid: 'ownId' }
 
     sinon.spy(gameEvents, 'socketMessage')
-    @game = new Game(serverUrl: "http://example.com")
+    @game = new Game(serverUrl: "http://example.com", display: new ROT.Display())
 
     @messageHandler = new MessageHandler @game
 
