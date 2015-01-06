@@ -14,5 +14,6 @@ class KeyboardController
     code = ROT[rotKeyCode]
     $(BINDING_SELECTOR).asEventStream('keydown').filter((ev) ->
       ev.keyCode == code)
+    .doAction(".preventDefault")
 
 module.exports = KeyboardController
