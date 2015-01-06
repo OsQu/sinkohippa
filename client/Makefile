@@ -7,7 +7,7 @@ SOURCES=$(shell find app/scripts -type f -name '*.coffee')
 JS_SOURCES=$(patsubst app/scripts/%, compiled/%, $(SOURCES:.coffee=.js))
 STATIC_FILES=404.html,env.json,favicon.ico,index.html,robots.txt
 
-all: app
+all: app test
 
 # === Application ===
 

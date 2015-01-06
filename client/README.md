@@ -22,7 +22,7 @@ Developing
 To start developing new cool features to Sinkohippa, build the project to `dist/` folder with make(1)
 
 ```
-make
+make app
 ```
 
 And then run the server with npm script:
