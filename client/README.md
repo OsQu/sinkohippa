@@ -42,7 +42,7 @@ make test
 And then run the test server with npm script:
 
 ```
-npm run test
+npm run test:all
 ```
 
 And point your browser to `http://localhost:8081`
