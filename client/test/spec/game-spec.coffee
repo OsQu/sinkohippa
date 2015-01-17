@@ -8,13 +8,11 @@ Rocket = require('../client/rocket')
 
 MessageHandler = require('../client/message-handler')
 gameEvents = require('../client/game-events')
+require("./mocks")["mockGameEvents"]()
 
 'use strict'
 describe 'Game', ->
   beforeEach ->
-    @oldBus = gameEvents.globalBus
-    gameEvents.globalBus = new Bacon.Bus()
-
     @requestAnimStub = sinon.stub(Game.prototype, 'requestAnimationFrame')
     @ourId = 'player-1'
     sinon.stub(MessageHandler.prototype, 'connect')
@@ -22,7 +20,6 @@ describe 'Game', ->
     @game = new Game(serverUrl: "http://example.com", display: new ROT.Display())
 
   afterEach ->
-    gameEvents.globalBus = @oldBus
     @requestAnimStub.restore()
     MessageHandler.prototype.connect.restore?()
     MessageHandler.prototype.ourId.restore?()
