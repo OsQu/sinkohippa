@@ -57,6 +57,9 @@ class GameManager
     else
       debug("Can't find player #{playerId}")
 
+    if @playerCount() == 0
+      @globalBus.push { type: "BROADCAST", key: "game-destroyed", data: @id }
+
   deleteRocketActor: (rocketId) ->
     actor = _.find(@actors, (a) -> a.type == 'rocket' && a.id == rocketId)
     if actor
@@ -75,5 +78,8 @@ class GameManager
 
   playerCount: ->
     _.select(@actors, (a) -> a.type == 'player').length
+
+  destroy: ->
+    actor.destroy?() for actor in @actors
 
 module.exports = GameManager

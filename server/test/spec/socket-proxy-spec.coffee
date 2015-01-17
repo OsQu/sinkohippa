@@ -30,3 +30,8 @@ describe 'SocketProxy', ->
     socketProxy.createGame()
     socketProxy.games.length.should.eql(1)
     socketProxy.games[0].id.should.exists
+
+  it 'should destroy a game', ->
+    game = socketProxy.createGame()
+    socketProxy.destroyGame(game)
+    socketProxy.games.length.should.eql(0)
