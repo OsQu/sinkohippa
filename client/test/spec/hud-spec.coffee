@@ -26,7 +26,7 @@ describe 'HUD', ->
     expect(@hud).to.be.not.undefined
 
   it 'should update hud after hud-event', ->
-    player = new Player 'player-1', 100, 100
+    player = new Player 'player-1', "red", 100, 100
     player.health = 3
     gameEvents.globalBus.push { target: 'hud', data: player }
     expect(Hud.prototype.updateHud.called).to.be.true

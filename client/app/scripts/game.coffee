@@ -3,11 +3,13 @@ _ = require('underscore')
 
 MessageHandler = require('./message-handler')
 
+Hud = require('./ui/hud')
 Map = require('./map')
 Player = require('./player')
 Rocket = require('./rocket')
 
 gameEvents = require('./game-events')
+screenHeight = require('./constants')["screenDimensions"]["height"]
 
 class Game
   constructor: ({@serverUrl, @display}) ->
@@ -17,6 +19,8 @@ class Game
 
     @messageHandler = new MessageHandler(@)
     @messageHandler.connect()
+
+    @hud = new Hud(display: @display, location: { x: 1, y: screenHeight - 2 })
 
   render: ->
     for player in @players
@@ -51,6 +55,7 @@ class Game
     if player.id == @messageHandler.ourId()
       console.log "Found our player!"
       player.initButtons()
+      gameEvents.globalBus.push(target: 'hud', data: { health: playerData.health })
 
     @players.push(player)
 
