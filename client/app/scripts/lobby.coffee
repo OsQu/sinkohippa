@@ -8,10 +8,11 @@ List = require('./ui/list')
 Game = require('./game')
 KeyboardController = require('./keyboard-controller')
 gameEvents = require('./game-events')
+screenDimensions = require('./constants')["screenDimensions"]
 
 class Lobby
   constructor: ({@serverUrl}) ->
-    @display = new ROT.Display()
+    @display = new ROT.Display(screenDimensions)
     @controller = new KeyboardController()
     $('#game-container').append @display.getContainer()
 

@@ -2,12 +2,9 @@
 
 console.log "Real mainjs"
 Lobby = require('./lobby')
-Hud = require('./hud')
 Bacon = require('baconjs')
 
 environment = Bacon.fromPromise($.getJSON("env.json"))
-
-hud = new Hud() # TODO: Some nice loading indicator
 
 environment.onValue (env) ->
   lobby = new Lobby(serverUrl: env["server_url"])
