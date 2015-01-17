@@ -97,3 +97,7 @@ describe 'ActorManager', ->
       @gameManager.actors.length.should.be.eql(1)
       deleteActor.destroy.called.should.be.true
 
+    it "should be able to give player count", ->
+      @gameManager.createPlayerActor('1')
+      @gameManager.createPlayerActor('2')
+      @gameManager.playerCount().should.be.eql(2)
