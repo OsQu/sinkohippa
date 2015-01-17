@@ -79,4 +79,7 @@ class GameManager
   playerCount: ->
     _.select(@actors, (a) -> a.type == 'player').length
 
+  destroy: ->
+    actor.destroy?() for actor in @actors
+
 module.exports = GameManager

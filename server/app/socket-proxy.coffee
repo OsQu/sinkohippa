@@ -39,6 +39,7 @@ class SocketProxy
 
   destroyGame: (game)->
     debug("Destroying game: #{game.id}")
+    game.destroy()
     @games = _.without(@games, game)
 
   joinGame: (playerId, gameId) ->
