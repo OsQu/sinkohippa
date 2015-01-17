@@ -1,10 +1,14 @@
 debug = require('debug')('sh:player-actor')
+_ = require('underscore')
+
+PLAYER_COLORS = ["red", "blue", "green", "yellow", "white"]
 
 class PlayerActor
   constructor: (@manager, @id) ->
     @type = 'player'
     @x = 1
     @y = 1
+    @color = PLAYER_COLORS[@manager.playerCount() % PLAYER_COLORS.length]
     @health = 5
     @shootCooldown = 500
     @manager.globalBus.push { type: 'BROADCAST', key: 'new-player', data: @getState() }
@@ -27,6 +31,7 @@ class PlayerActor
       id: @id
       x: @x
       y: @y
+      color: @color
       health: @health
     state
 

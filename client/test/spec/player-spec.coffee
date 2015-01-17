@@ -7,7 +7,7 @@ gameEvents = require('../client/game-events')
 
 describe 'Player', ->
   beforeEach ->
-    @player = new Player '', 0, 0
+    @player = new Player '', "white", 0, 0
 
   describe 'After initialization', ->
     it 'should have correct character', ->

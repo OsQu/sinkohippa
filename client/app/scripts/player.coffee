@@ -3,14 +3,23 @@ KeyboardController = require('./keyboard-controller')
 gameEvents = require('./game-events')
 
 class Player
-  constructor: (@id, @x, @y) ->
+  constructor: (@id, @color, @x, @y) ->
 
   getChar: ->
     '@'
 
   render: (display) ->
     @handleNewPosition(display)
-    display.draw(@x, @y, @getChar())
+    display.draw(@x, @y, @getChar(), @colorCode())
+
+  colorCode: ->
+    switch @color
+      when "red" then "#ff0000"
+      when "blue" then "#1b6cde"
+      when "green" then "#00ff00"
+      when "white" then "#ffffff"
+      when "yellow" then "#ffff00"
+      else "#ffffff"
 
   clearCurrentPosition: (display) ->
     # Assume that player can't stand inside the wall. This might need improving

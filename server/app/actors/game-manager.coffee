@@ -73,4 +73,7 @@ class GameManager
     @getSocketActor().newConnection(socket)
     @createPlayerActor(socket.id)
 
+  playerCount: ->
+    _.select(@actors, (a) -> a.type == 'player').length
+
 module.exports = GameManager

@@ -36,6 +36,7 @@ describe 'PlayerActor', ->
     state.x.should.be.eql(1)
     state.y.should.be.eql(1)
     state.health.should.be.eql(5)
+    state.color.should.be.eql("red")
 
   it 'should respond to own player_move event', ->
     @gameManager.globalBus.push
