@@ -97,6 +97,18 @@ describe 'ActorManager', ->
       @gameManager.actors.length.should.be.eql(1)
       deleteActor.destroy.called.should.be.true
 
+    it "should broadcast game-destroyed when last player leaves", (done) ->
+      @gameManager.globalBus.filter((ev) -> ev.type == 'BROADCAST' && ev.key == "game-destroyed")
+        .take(1)
+        .onValue (ev) =>
+          ev.data.should.be.eql(@gameManager.id)
+          done()
+
+      @gameManager.createPlayerActor("1")
+      @gameManager.createPlayerActor("2")
+      @gameManager.deletePlayerActor("1")
+      @gameManager.deletePlayerActor("2")
+
     it "should be able to give player count", ->
       @gameManager.createPlayerActor('1')
       @gameManager.createPlayerActor('2')

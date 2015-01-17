@@ -30,8 +30,16 @@ class SocketProxy
 
   createGame: ->
     game = new GameManager(uuid.v4())
+    game.globalBus.filter (ev) ->
+      ev.type == "BROADCAST" && ev.key == "game-destroyed"
+    .take(1).onValue (ev) => @destroyGame(game)
+
     @games.push(game)
     game
+
+  destroyGame: (game)->
+    debug("Destroying game: #{game.id}")
+    @games = _.without(@games, game)
 
   joinGame: (playerId, gameId) ->
     playerSocket = _.find(@sockets, (s) -> s.id == playerId)
