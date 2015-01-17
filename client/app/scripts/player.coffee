@@ -43,26 +43,21 @@ class Player
 
   moveUp: ->
     gameEvents.globalBus.push @getMoveEvent('up')
-    @lastMoved = 'up'
   moveDown: ->
     gameEvents.globalBus.push @getMoveEvent('down')
-    @lastMoved = 'down'
   moveRight: ->
     gameEvents.globalBus.push @getMoveEvent('right')
-    @lastMoved = 'right'
   moveLeft: ->
-    console.log "moving left"
     gameEvents.globalBus.push @getMoveEvent('left')
-    @lastMoved = 'left'
 
-  shootRocket: ->
+  shootRocket: (direction) ->
     gameEvents.globalBus.push
       target: 'server'
       data:
         key: 'player'
         data:
           action: 'shoot'
-          direction: @lastMoved
+          direction: direction
 
   initButtons: ->
     console.log("Turning on buttons!")
@@ -71,6 +66,10 @@ class Player
     keyboardController.bind('j').merge(keyboardController.bind("down")).onValue => @moveDown()
     keyboardController.bind('k').merge(keyboardController.bind("up")).onValue => @moveUp()
     keyboardController.bind('l').merge(keyboardController.bind("right")).onValue => @moveRight()
-    keyboardController.bind('space').doAction('.preventDefault').onValue => @shootRocket()
+
+    keyboardController.bind('w').doAction('.preventDefault').onValue => @shootRocket("up")
+    keyboardController.bind('d').doAction('.preventDefault').onValue => @shootRocket("right")
+    keyboardController.bind('s').doAction('.preventDefault').onValue => @shootRocket("down")
+    keyboardController.bind('a').doAction('.preventDefault').onValue => @shootRocket("left")
 
 module.exports = Player
