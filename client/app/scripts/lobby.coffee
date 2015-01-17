@@ -20,8 +20,9 @@ class Lobby
 
   askName: ->
     @display.drawText(1, 1, "Welcome to Sinkohippa!")
-    @display.drawText(1, 3, "What is your name? ")
-    input = new Input(display: @display, controller: @controller, location: { x: 20, y: 3})
+    @display.drawText(1, 3, "Move with arrow keys or [hjkl]. Shoot with [wasd]. Happy shooting!")
+    @display.drawText(1, 5, "What is your name? ")
+    input = new Input(display: @display, controller: @controller, location: { x: 20, y: 5})
     input.value()
 
   openLobby: ->
