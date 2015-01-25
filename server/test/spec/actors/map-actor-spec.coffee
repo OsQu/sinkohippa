@@ -4,6 +4,7 @@ _ = require('underscore')
 
 GameManager = require('../../../app/actors/game-manager')
 MapActor = require('../../../app/actors/map-actor')
+Factory = require('../factory')
 
 describe 'MapActor', ->
   beforeEach ->
@@ -31,6 +32,7 @@ describe 'MapActor', ->
 
   it 'should destroy rocket when it hits the wall', ->
     sinon.spy(@gameManager, 'deleteRocketActor')
-    @gameManager.globalBus.push { type: 'ROCKET_MOVED', x: 0, y: 0, rocketId: 0 }
+    rocketActor = Factory.rocketActor(gameManager: @gameManager, y: 1, direction: 'up')
+    rocketActor.move()
     @gameManager.deleteRocketActor.called.should.be.true
     @gameManager.deleteRocketActor.restore?()

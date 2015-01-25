@@ -54,22 +54,18 @@ class PlayerActor
     @manager.createRocketActor(@id, @x, @y, ev.direction)
 
   rocketHit: (ev) =>
-    debug "Player #{@id} got hit by rocket #{ev.rocketId}"
-    @manager.deleteRocketActor(ev.rocketId)
-    @reduceHealth ev.damage
-
-  reduceHealth: (amount) ->
-    @health = @health - amount
+    debug "Player #{@id} got hit by rocket #{ev.rocket.id}"
+    @manager.deleteRocketActor(ev.rocket.id)
+    @health = @health - ev.damage
     debug "Reduced player #{@id} health to #{@health}"
-    if @health <= 0 then @die()
+    if @health <= 0 then @die(ev.rocket)
     @broadcastStateChanged()
 
-  # For now just respawns player back to starting point
-  die: ->
+  die: (rocket) ->
     debug "Crap! (For player #{@id}). It died :("
     @x = 1
     @y = 1
     @health = 5
-    @broadcastStateChanged()
+    @manager.globalBus.push { type: 'PLAYER_DIE', player: @, rocket: rocket }
 
 module.exports = PlayerActor

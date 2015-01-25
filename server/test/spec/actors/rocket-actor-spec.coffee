@@ -47,8 +47,8 @@ describe 'RocketActor', ->
     @rocketActor.x.should.be.eql(7)
 
   it 'should emit rocket-moved event when moving the rocket', (done) ->
-    gameManager.globalBus.filter((ev) -> ev.type == 'ROCKET_MOVED').onValue (ev) ->
-      ev.rocketId.should.be.eql('rocket-1')
+    gameManager.globalBus.filter((ev) -> ev.type == 'ROCKET_MOVED').onValue (ev) =>
+      ev.rocket.should.be.eql(@rocketActor)
       ev.x.should.be.eql(6)
       ev.y.should.be.eql(4)
       ev.damage.should.be.eql(1)

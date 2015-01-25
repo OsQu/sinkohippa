@@ -5,6 +5,7 @@ Bacon = require('baconjs')
 
 GameManager = require('../../../app/actors/game-manager')
 PlayerActor = require('../../../app/actors/player-actor')
+Factory = require('../factory')
 
 describe 'PlayerActor', ->
   beforeEach ->
@@ -90,31 +91,48 @@ describe 'PlayerActor', ->
     @shootWithPlayerSpy.callCount.should.be.eql(2)
 
   it 'should be able to be hit by rocket', ->
-    @gameManager.globalBus.push { type: 'ROCKET_MOVED', x: @playerActor.x, y: @playerActor.y }
+    rocket = Factory.rocketActor(
+      gameManager: @gameManager,
+      x: @playerActor.x,
+      y: @playerActor.y + 1,
+      direction: 'up')
+    rocket.move()
     @rocketHitSpy.called.should.be.true
 
   it 'should reduce health when hit by rocket', ->
-    @playerActor.rocketHit
-      rocketId: 'rocket-1'
-      damage: 1
-      x: @playerActor.x
-      y: @playerActor.y
+    rocket = Factory.rocketActor(
+      gameManager: @gameManager,
+      x: @playerActor.x,
+      y: @playerActor.y + 1,
+      direction: 'up')
+    rocket.move()
     @playerActor.health.should.be.eql(4)
 
-  it 'should broadcast player-state-changed when losing health', (done) ->
-    @gameManager.globalBus.filter((ev) -> ev.type == 'BROADCAST').onValue (ev) ->
+  it 'should broadcast player-state-changed when rocket is hit', (done) ->
+    @gameManager.globalBus.filter((ev) -> ev.type == 'BROADCAST' && ev.key == "player-state-changed").onValue (ev) ->
       done()
 
-    @playerActor.reduceHealth(1)
+    rocket = Factory.rocketActor(
+      gameManager: @gameManager,
+      x: @playerActor.x,
+      y: @playerActor.y + 1,
+      direction: 'up')
+    rocket.move()
 
-  it 'should die if health is reduced to zero', ->
-    @playerActor.x = 10
-    @playerActor.y = 12
-    @playerActor.health = 3
-    @playerActor.reduceHealth(3)
-    @playerActor.x.should.be.eql(1)
-    @playerActor.y.should.be.eql(1)
-    @playerActor.health.should.be.eql(5)
+  it 'should die if health is reduced to zero', (done) ->
+    @gameManager.globalBus.filter((ev) =>
+      ev.type == 'PLAYER_DIE' && ev.player == @playerActor
+    ).onValue (ev) ->
+      done()
+
+    rocket = Factory.rocketActor(
+      gameManager: @gameManager,
+      x: @playerActor.x,
+      y: @playerActor.y + 1,
+      direction: 'up')
+
+    @playerActor.health = 1
+    rocket.move()
 
   it 'should broadcast player-state-changed when dying', (done) ->
     @gameManager.globalBus.filter((ev) -> ev.type == 'BROADCAST').onValue (ev) ->

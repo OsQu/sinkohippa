@@ -44,8 +44,8 @@ class MapActor
     @arrayedMap[x][y].wall == 0
 
   rocketHitTheWall: (ev) =>
-    debug("Rocket #{ev.rocketId} hit the wall")
-    @manager.deleteRocketActor(ev.rocketId)
+    debug("Rocket #{ev.rocket.id} hit the wall")
+    @manager.deleteRocketActor(ev.rocket.id)
 
 
 module.exports = MapActor
