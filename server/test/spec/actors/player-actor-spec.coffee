@@ -135,7 +135,16 @@ describe 'PlayerActor', ->
     rocket.move()
 
   it 'should broadcast player-state-changed when dying', (done) ->
-    @gameManager.globalBus.filter((ev) -> ev.type == 'BROADCAST').onValue (ev) ->
+    @gameManager.globalBus.filter((ev) ->
+      ev.type == 'BROADCAST' && ev.key == 'player-state-changed'
+    ).onValue (ev) ->
       done()
-    @playerActor.die()
+    rocket = Factory.rocketActor(
+      gameManager: @gameManager,
+      x: @playerActor.x,
+      y: @playerActor.y + 1,
+      direction: 'up')
+
+    @playerActor.health = 1
+    rocket.move()
 
