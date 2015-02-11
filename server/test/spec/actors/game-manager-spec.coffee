@@ -112,4 +112,4 @@ describe 'ActorManager', ->
     it "should be able to give player count", ->
       @gameManager.createPlayerActor('1')
       @gameManager.createPlayerActor('2')
-      @gameManager.playerCount().should.be.eql(2)
+      @gameManager.players().length.should.be.eql(2)

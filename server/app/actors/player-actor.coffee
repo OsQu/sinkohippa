@@ -8,7 +8,7 @@ class PlayerActor
     @type = 'player'
     @x = 1
     @y = 1
-    @color = PLAYER_COLORS[@manager.playerCount() % PLAYER_COLORS.length]
+    @color = PLAYER_COLORS[@manager.players().length % PLAYER_COLORS.length]
     @health = 5
     @shootCooldown = 500
     @manager.globalBus.push { type: 'BROADCAST', key: 'new-player', data: @getState() }

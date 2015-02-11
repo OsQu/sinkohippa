@@ -57,7 +57,7 @@ class GameManager
     else
       debug("Can't find player #{playerId}")
 
-    if @playerCount() == 0
+    if @players().length == 0
       @globalBus.push { type: "BROADCAST", key: "game-destroyed", data: @id }
 
   deleteRocketActor: (rocketId) ->
@@ -76,8 +76,8 @@ class GameManager
     @getSocketActor().newConnection(socket)
     @createPlayerActor(socket.id)
 
-  playerCount: ->
-    _.select(@actors, (a) -> a.type == 'player').length
+  players: ->
+    _.select(@actors, (a) -> a.type == 'player')
 
   destroy: ->
     actor.destroy?() for actor in @actors

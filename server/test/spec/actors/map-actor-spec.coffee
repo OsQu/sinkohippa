@@ -1,6 +1,7 @@
 should = require('should')
 sinon = require('sinon')
 _ = require('underscore')
+Bacon = require('baconjs')
 
 GameManager = require('../../../app/actors/game-manager')
 MapActor = require('../../../app/actors/map-actor')
@@ -9,7 +10,13 @@ Factory = require('../factory')
 describe 'MapActor', ->
   beforeEach ->
     @gameManager = new GameManager(0)
+    @oldBus = @gameManager.globalBus
+    @gameManager.globalBus = new Bacon.Bus()
+
     @mapActor = new MapActor(@gameManager)
+
+  afterEach ->
+    @gameManager.globalBus = @oldBus
 
   it 'should be correct type', ->
     @mapActor.type.should.be.eql('map')
