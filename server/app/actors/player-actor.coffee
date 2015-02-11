@@ -12,6 +12,7 @@ class PlayerActor
     @health = 5
     @shootCooldown = 500
     @manager.globalBus.push { type: 'BROADCAST', key: 'new-player', data: @getState() }
+    @manager.globalBus.push { type: 'PLAYER_ADD', player: @ }
 
     @bindEvents()
 

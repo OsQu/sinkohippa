@@ -28,6 +28,10 @@ describe 'PlayerActor', ->
     @rocketHitSpy.restore()
     @shootWithPlayerSpy.restore()
 
+  it 'should push PLAYER_ADD event when it\'s created', (done) ->
+    @gameManager.globalBus.filter((ev) -> ev.type == 'PLAYER_ADD').onValue -> done()
+    new PlayerActor(@gameManager)
+
   it 'should be correct type', ->
     @playerActor.type.should.be.eql('player')
 
