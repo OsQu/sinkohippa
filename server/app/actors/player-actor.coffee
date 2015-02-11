@@ -23,6 +23,7 @@ class PlayerActor
 
   destroy: ->
     @manager.globalBus.push { type: 'BROADCAST', key: 'player-leaving', data: @id }
+    @manager.globalBus.push { type: 'PLAYER_REMOVE', player: @ }
     @unsubscribeMovePlayer()
     @unsubscribeShoot()
     @unsubscribeRocketMoved()

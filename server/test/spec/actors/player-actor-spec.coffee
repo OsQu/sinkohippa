@@ -32,6 +32,10 @@ describe 'PlayerActor', ->
     @gameManager.globalBus.filter((ev) -> ev.type == 'PLAYER_ADD').onValue -> done()
     new PlayerActor(@gameManager)
 
+  it 'should push PLAYER_REMOVE event when it\'s removed', (done) ->
+    @gameManager.globalBus.filter((ev) -> ev.type == 'PLAYER_REMOVE').onValue -> done()
+    @playerActor.destroy()
+
   it 'should be correct type', ->
     @playerActor.type.should.be.eql('player')
 
