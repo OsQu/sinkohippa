@@ -37,11 +37,6 @@ class SocketActor
 
     debug('Adding new connection to room "all"')
 
-    gameState = @manager.getGameState()
-
-    socket.emit('game-state', gameState)
-    debug('Game state to new player sent')
-
     @bind(socket, 'player').onValue @handlePlayerEvent
     @bind(socket, 'disconnect').onValue @handleDisconnection
 

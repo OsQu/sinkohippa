@@ -81,6 +81,7 @@ class GameManager
   addPlayer: (socket) ->
     @getSocketActor().newConnection(socket)
     @createPlayerActor(socket.id)
+    @globalBus.push { id: socket.id, type: 'SEND_TO_SOCKET', key: 'game-state', data: @getGameState() }
 
   players: ->
     _.select(@actors, (a) -> a.type == 'player')
