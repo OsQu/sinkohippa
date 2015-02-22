@@ -4,6 +4,7 @@ _ = require('underscore')
 class ScoreActor
   constructor: (@manager) ->
     @players = @manager.players()
+    @type = 'score'
     @_score = {}
 
     @bindEvents()
