@@ -1,3 +1,4 @@
+debug = require('debug')('sh:score-actor')
 _ = require('underscore')
 
 class ScoreActor
@@ -35,5 +36,7 @@ class ScoreActor
     @_score[player.id] = @_score[player.id] + amount
     @manager.globalBus.push { type: 'BROADCAST', key: 'score-changed', data: @score() }
 
+  getState: ->
+    @score()
 
 module.exports = ScoreActor

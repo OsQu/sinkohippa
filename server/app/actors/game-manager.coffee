@@ -5,6 +5,7 @@ Bacon = require('baconjs')
 
 SocketActor = require('./socket-actor')
 PlayerActor = require('./player-actor')
+ScoreActor = require('./score-actor')
 MapActor = require('./map-actor')
 RocketActor = require('./rocket-actor')
 
@@ -16,6 +17,7 @@ class GameManager
 
     @createMapActor()
     @createSocketActor()
+    @createScoreActor()
 
   # Collects state of all actors expect socket and returns it
   getGameState: ->
@@ -35,6 +37,10 @@ class GameManager
     debug('Creating socket actor')
     socketActor = new SocketActor(@)
     @actors.push(socketActor)
+
+  createScoreActor: ->
+    debug('Creating score actor')
+    @actors.push(new ScoreActor(@))
 
   createPlayerActor: (playerId) ->
     debug('Creating player actor')
