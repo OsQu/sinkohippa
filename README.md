@@ -16,4 +16,4 @@ Deploy to production using [Capistrano](http://capistranorb.com/):
 Note: This requires access to production server.
 
 ## Live demo
-Live demo is available at [http://exobald.es](http://exobald.es)
+Live demo is available at [http:/sinkohippa.com](http://sinkohippa.com)
