@@ -1,13 +1,16 @@
 debug = require('debug')('sh:player-actor')
 _ = require('underscore')
 
+random = require("../utils/random")
+
 PLAYER_COLORS = ["red", "blue", "green", "yellow", "white"]
 
 class PlayerActor
   constructor: (@manager, @id) ->
     @type = 'player'
-    @x = 1
-    @y = 1
+    # TODO: Refactor these to use map constants
+    @x = random.randomNumber(78) + 1
+    @y = random.randomNumber(23) + 1
     @color = PLAYER_COLORS[@manager.playerCount() % PLAYER_COLORS.length]
     @health = 5
     @shootCooldown = 500
@@ -66,9 +69,9 @@ class PlayerActor
 
   # For now just respawns player back to starting point
   die: ->
-    debug "Crap! (For player #{@id}). It died :("
-    @x = 1
-    @y = 1
+    debug "(For player #{@id}). It died :("
+    @x = random.randomNumber(78) + 1
+    @y = random.randomNumber(23) + 1
     @health = 5
     @broadcastStateChanged()
 
