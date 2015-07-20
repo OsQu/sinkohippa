@@ -96,4 +96,10 @@ class Game
     else
       @addNewRocket data
 
+  getScores: ->
+    @scoreBoard.getScores()
+
+  setScores: (scores) ->
+    @scoreBoard.setScores(scores)
+
 module.exports = Game

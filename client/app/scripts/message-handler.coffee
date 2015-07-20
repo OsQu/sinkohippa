@@ -33,6 +33,7 @@ class MessageHandler
       switch part.type
         when 'map' then @updateMap { data: part.state }
         when 'player' then @addNewPlayer { data: part.state }
+        when 'score' then @setScores { data: part.state }
 
   updateMap: (event) ->
     @game.setNewMap(event.data)
@@ -43,6 +44,10 @@ class MessageHandler
   addNewPlayer: (ev) ->
     playerData = ev.data
     @game.addNewPlayer(playerData)
+
+  setScores: (ev) ->
+    scores = ev.data
+    @game.setScores(scores)
 
   playerLeaving: (ev) ->
     console.log "Removing player"

@@ -2,11 +2,13 @@ ROT = require('./vendor/rot.js/rot')
 Bacon = require('baconjs')
 
 KeyboardController = require('./keyboard-controller')
+Scores = require('./models/scores')
 screenDimensions = require('./constants')["screenDimensions"]
 
 class ScoreBoard
   constructor: ->
     @destruct = new Bacon.Bus()
+    @scores = new Scores()
 
     @_bindTabToggle()
 
@@ -20,6 +22,12 @@ class ScoreBoard
 
   destroy: ->
     @destruct.push(true)
+
+  getScores: ->
+    @scores
+
+  setScores: (scores) ->
+    @scores.set(scores)
 
   _bindTabToggle: ->
     controller = new KeyboardController()
