@@ -3,7 +3,7 @@ _ = require('underscore')
 
 Input = require('./ui/input')
 Header = require('./ui/header')
-List = require('./ui/list')
+SelectableList = require('./ui/selectable_list')
 
 Game = require('./game')
 KeyboardController = require('./keyboard-controller')
@@ -41,7 +41,7 @@ class Lobby
 
   renderGameList: ->
     @fetchGames().done (games) =>
-      @gameList = new List(
+      @gameList = new SelectableList(
         display: @display,
         location: {x: 1, y: 7},
         items: _.union ["Create new game"], games
