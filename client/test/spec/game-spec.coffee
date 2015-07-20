@@ -17,12 +17,14 @@ describe 'Game', ->
     @ourId = 'player-1'
     sinon.stub(MessageHandler.prototype, 'connect')
     sinon.stub(MessageHandler.prototype, 'ourId', => @ourId)
+    sinon.stub(MessageHandler.prototype, 'listenMessages', => new Bacon.Bus())
     @game = new Game(serverUrl: "http://example.com", display: new ROT.Display())
 
   afterEach ->
     @requestAnimStub.restore()
     MessageHandler.prototype.connect.restore?()
     MessageHandler.prototype.ourId.restore?()
+    MessageHandler.prototype.listenMessages.restore?()
 
   describe 'After initialization', ->
     it 'should start polling when calling start', ->

@@ -27,6 +27,9 @@ class MessageHandler
     gameEvents.globalBus.filter((ev) -> ev.target == 'server').onValue (data) => @sendToServer(data)
     gameEvents.globalBus.filter((ev) -> ev.target == 'join-game').onValue (data) => @joinGame(data)
 
+  listenMessages: (key) ->
+    gameEvents.socketMessage(@gameSocket, key)
+
   gotGameState: (event) ->
     state = event.data
     for part in state

@@ -22,7 +22,7 @@ class Game
     @messageHandler.connect()
 
     @hud = new Hud(display: @display, location: { x: 1, y: screenHeight - 2 })
-    @scoreBoard = new ScoreBoard()
+    @scoreBoard = new ScoreBoard(@messageHandler)
 
   render: ->
     for player in @players

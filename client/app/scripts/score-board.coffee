@@ -6,11 +6,12 @@ Scores = require('./models/scores')
 screenDimensions = require('./constants')["screenDimensions"]
 
 class ScoreBoard
-  constructor: ->
+  constructor: (@messageHandler) ->
     @destruct = new Bacon.Bus()
     @scores = new Scores()
 
     @_bindTabToggle()
+    @_listenScoreChanges()
 
     @display = new ROT.Display(screenDimensions)
     @$element = $(@display.getContainer())
@@ -36,5 +37,10 @@ class ScoreBoard
     .skipDuplicates()
     .onValue (type) =>
       @toggle()
+
+  _listenScoreChanges: ->
+    @messageHandler.listenMessages('score-changed').takeUntil(@destruct)
+      .onValue (ev) =>
+        @setScores(ev.data)
 
 module.exports = ScoreBoard
