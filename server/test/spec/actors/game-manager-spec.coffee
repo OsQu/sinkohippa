@@ -40,8 +40,8 @@ describe 'ActorManager', ->
     state[0].state.should.be.instanceOf(Array)
     state[1].type.should.be.eql('player')
     state[1].state.id.should.be.eql('123')
-    state[1].state.x.should.be.eql(1)
-    state[1].state.y.should.be.eql(1)
+    state[1].state.x.should.exist
+    state[1].state.y.should.exist
 
   it 'should be able to fetch socket actor', ->
     @gameManager.getSocketActor().should.be.defined
