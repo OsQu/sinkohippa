@@ -1,4 +1,4 @@
-class Score
+class Scores
   constructor: ->
     @scores = {}
 
@@ -11,4 +11,4 @@ class Score
   forPlayer: (id) ->
     @scores[id]
 
-module.exports = Score
+module.exports = Scores
