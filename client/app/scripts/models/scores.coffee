@@ -1,3 +1,5 @@
+_ = require('underscore')
+
 class Scores
   constructor: ->
     @scores = {}
@@ -10,5 +12,8 @@ class Scores
 
   forPlayer: (id) ->
     @scores[id]
+
+  pretty: ->
+    _.map(@scores, (score, id) -> "#{id}: #{score}")
 
 module.exports = Scores

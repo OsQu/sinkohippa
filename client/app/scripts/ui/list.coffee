@@ -1,3 +1,5 @@
+_ = require('underscore')
+
 Base = require('./base')
 class List extends Base
   constructor: ({@items}) ->
@@ -5,9 +7,12 @@ class List extends Base
     @render()
 
   render: ->
-    for item, i in @items
+    items = if _.isFunction(@items)
+      @items()
+    else
+      @items
+
+    for item, i in items
       @display.drawText(@location.x, @location.y + i, item)
 
 module.exports = List
-
-
