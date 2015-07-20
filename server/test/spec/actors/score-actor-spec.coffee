@@ -8,16 +8,22 @@ ScoreActor = require('../../../app/actors/score-actor')
 PlayerActor = require('../../../app/actors/player-actor')
 Factory = require('../factory')
 
+random = require('../../../app/utils/random')
+
 describe 'ScoreActor', ->
   beforeEach ->
     @gameManager = new GameManager(0)
     @oldBus = @gameManager.globalBus
     @gameManager.globalBus = new Bacon.Bus()
 
+    @randomStub = sinon.stub random, "randomNumber"
+    @randomStub.returns(0)
+
     @scoreActor = new ScoreActor(@gameManager)
 
   afterEach ->
     @gameManager.globalBus = @oldBus
+    @randomStub.restore()
 
   it 'adds player when it\'s created', ->
     playerCount = @scoreActor.players.length
