@@ -41,6 +41,7 @@ class MapActor
     @map
 
   canMove: (x, y) =>
+    return false if x < 0 || y < 0
     @arrayedMap[x][y].wall == 0
 
   rocketHitTheWall: (ev) =>
