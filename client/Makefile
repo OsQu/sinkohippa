@@ -4,7 +4,6 @@ COMPASS=compass compile
 BUNDLE_FILE_NAME=bundle.js
 
 SOURCES=$(shell find app/scripts -type f -name '*.coffee')
-SCSS_SOURCES=$(shell find app/styles -type f -name '*.scss')
 JS_SOURCES=$(patsubst app/scripts/%, compiled/%, $(SOURCES:.coffee=.js))
 STATIC_FILES=dist/404.html dist/favicon.ico dist/index.html dist/robots.txt
 
@@ -22,7 +21,7 @@ compiled/vendor:
 compiled/$(BUNDLE_FILE_NAME): $(JS_SOURCES) compiled/vendor
 	$(BROWSERIFY) compiled/main.js -o $@
 
-compiled/main.css: $(SCSS_SOURCES)
+compiled/%.css: app/styles/%.scss
 	$(COMPASS)
 
 dist/scripts/vendor:
