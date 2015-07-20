@@ -4,6 +4,7 @@ _ = require('underscore')
 MessageHandler = require('./message-handler')
 
 Hud = require('./ui/hud')
+ScoreBoard = require('./score-board')
 Map = require('./map')
 Player = require('./player')
 Rocket = require('./rocket')
@@ -21,6 +22,7 @@ class Game
     @messageHandler.connect()
 
     @hud = new Hud(display: @display, location: { x: 1, y: screenHeight - 2 })
+    @scoreBoard = new ScoreBoard()
 
   render: ->
     for player in @players

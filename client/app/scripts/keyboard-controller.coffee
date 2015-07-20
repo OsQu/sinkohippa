@@ -9,10 +9,10 @@ class KeyboardController
       .doAction(".preventDefault")
       .map(".which")
 
-  bind: (key) ->
+  bind: (key, event = 'keydown') ->
     rotKeyCode = "VK_#{key.toUpperCase()}"
     code = ROT[rotKeyCode]
-    $(BINDING_SELECTOR).asEventStream('keydown').filter((ev) ->
+    $(BINDING_SELECTOR).asEventStream(event).filter((ev) ->
       ev.keyCode == code)
     .doAction(".preventDefault")
 
