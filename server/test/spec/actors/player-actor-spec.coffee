@@ -6,6 +6,7 @@ Bacon = require('baconjs')
 GameManager = require('../../../app/actors/game-manager')
 PlayerActor = require('../../../app/actors/player-actor')
 Factory = require('../factory')
+random = require('../../../app/utils/random')
 
 describe 'PlayerActor', ->
   beforeEach ->
@@ -15,6 +16,8 @@ describe 'PlayerActor', ->
     @oldBus = @gameManager.globalBus
     @gameManager.globalBus = new Bacon.Bus()
 
+    @randomStub = sinon.stub random, "randomNumber"
+    @randomStub.returns(0)
     @movePlayerSpy = sinon.spy PlayerActor.prototype, 'movePlayer'
     @rocketHitSpy = sinon.spy PlayerActor.prototype, 'rocketHit'
     @shootWithPlayerSpy = sinon.spy PlayerActor.prototype, 'shootWithPlayer'
@@ -24,6 +27,7 @@ describe 'PlayerActor', ->
   afterEach ->
     @clock.restore()
     @gameManager.globalBus = @oldBus
+    @randomStub.restore()
     @movePlayerSpy.restore()
     @rocketHitSpy.restore()
     @shootWithPlayerSpy.restore()

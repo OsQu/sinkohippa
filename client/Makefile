@@ -21,7 +21,7 @@ compiled/vendor:
 compiled/$(BUNDLE_FILE_NAME): $(JS_SOURCES) compiled/vendor
 	$(BROWSERIFY) compiled/main.js -o $@
 
-compiled/main.css:
+compiled/%.css: app/styles/%.scss
 	$(COMPASS)
 
 dist/scripts/vendor:

@@ -1,13 +1,16 @@
 debug = require('debug')('sh:player-actor')
 _ = require('underscore')
 
+random = require("../utils/random")
+
 PLAYER_COLORS = ["red", "blue", "green", "yellow", "white"]
 
 class PlayerActor
   constructor: (@manager, @id) ->
     @type = 'player'
-    @x = 1
-    @y = 1
+    # TODO: Refactor these to use map constants
+    @x = random.randomNumber(78) + 1
+    @y = random.randomNumber(23) + 1
     @color = PLAYER_COLORS[@manager.players().length % PLAYER_COLORS.length]
     @health = 5
     @shootCooldown = 500
@@ -65,8 +68,8 @@ class PlayerActor
 
   die: (rocket) ->
     debug "Crap! (For player #{@id}). It died :("
-    @x = 1
-    @y = 1
+    @x = random.randomNumber(78) + 1
+    @y = random.randomNumber(23) + 1
     @health = 5
     @manager.globalBus.push { type: 'PLAYER_DIE', player: @, rocket: rocket }
 
