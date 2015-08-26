@@ -8,7 +8,7 @@ random = require("../utils/random")
 PLAYER_COLORS = ["red", "blue", "green", "yellow", "white"]
 
 class PlayerActor extends BaseActor
-  constructor: (@manager, @id) ->
+  constructor: (@manager, @id, @name) ->
     super
     @type = 'player'
     # TODO: Refactor these to use map constants
@@ -33,13 +33,12 @@ class PlayerActor extends BaseActor
     @manager.globalBus.push { type: 'PLAYER_REMOVE', player: @ }
 
   getState: ->
-    state =
-      id: @id
-      x: @x
-      y: @y
-      color: @color
-      health: @health
-    state
+    id: @id
+    x: @x
+    y: @y
+    color: @color
+    health: @health
+    name: @name
 
 
   broadcastStateChanged: ->

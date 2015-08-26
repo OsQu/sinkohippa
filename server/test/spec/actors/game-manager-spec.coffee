@@ -48,7 +48,7 @@ describe 'ActorManager', ->
 
   it 'should be able to add player', ->
     mockSocket = mockSocketCreator('socket-1')
-    @gameManager.addPlayer(mockSocket)
+    @gameManager.addPlayer(mockSocket, "MANNY")
     _.find(@gameManager.actors, (a) -> a.type == 'player').should.be.defined
 
   it 'should emit game state after player is added', ->

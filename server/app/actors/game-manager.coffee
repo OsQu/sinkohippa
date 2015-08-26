@@ -44,9 +44,9 @@ class GameManager extends BaseActor
     debug('Creating score actor')
     @actors.push(new ScoreActor(@))
 
-  createPlayerActor: (playerId) ->
+  createPlayerActor: (playerId, playerName) ->
     debug('Creating player actor')
-    playerActor = new PlayerActor(@, playerId)
+    playerActor = new PlayerActor(@, playerId, playerName)
     @actors.push(playerActor)
 
   createRocketActor: (shooterId, x, y, direction) ->
@@ -80,9 +80,9 @@ class GameManager extends BaseActor
   getSocketActor: ->
     _.find(@actors, (a) -> a.type == 'socket')
 
-  addPlayer: (socket) ->
+  addPlayer: (socket, playerName) ->
     @getSocketActor().newConnection(socket)
-    @createPlayerActor(socket.id)
+    @createPlayerActor(socket.id, playerName)
     @globalBus.push { id: socket.id, type: 'SEND_TO_SOCKET', key: 'game-state', data: @getGameState() }
 
   players: ->

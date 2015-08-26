@@ -34,7 +34,8 @@ describe 'Game routes', ->
       .put('/game')
       .send({
         game_id: 'game-1',
-        player_id: 'socket-1'
+        player_id: 'socket-1',
+        player_name: "MANNY"
       })
       .expect(200)
       .end done

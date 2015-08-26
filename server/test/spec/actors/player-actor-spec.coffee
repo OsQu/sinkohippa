@@ -22,7 +22,7 @@ describe 'PlayerActor', ->
     @rocketHitSpy = sinon.spy PlayerActor.prototype, 'rocketHit'
     @shootWithPlayerSpy = sinon.spy PlayerActor.prototype, 'shootWithPlayer'
 
-    @playerActor = new PlayerActor(@gameManager, '123')
+    @playerActor = new PlayerActor(@gameManager, '123', "MANNY")
 
   afterEach ->
     @clock.restore()
@@ -34,7 +34,7 @@ describe 'PlayerActor', ->
 
   it 'should push PLAYER_ADD event when it\'s created', (done) ->
     @gameManager.globalBus.filter((ev) -> ev.type == 'PLAYER_ADD').onValue -> done()
-    new PlayerActor(@gameManager)
+    new PlayerActor(@gameManager, "MANNY")
 
   it 'should push PLAYER_REMOVE event when it\'s removed', (done) ->
     @gameManager.globalBus.filter((ev) -> ev.type == 'PLAYER_REMOVE').onValue -> done()
@@ -50,6 +50,7 @@ describe 'PlayerActor', ->
     state.y.should.be.eql(1)
     state.health.should.be.eql(5)
     state.color.should.be.eql("red")
+    state.name.should.be.eql("MANNY")
 
   it 'should respond to own player_move event', ->
     @gameManager.globalBus.push

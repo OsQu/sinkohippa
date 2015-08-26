@@ -12,10 +12,11 @@ class Factory
     direction = direction || 'up'
     new RocketActor(gameManager, id, shooterId, x, y, direction)
 
-  playerActor: ({gameManager, id, x, y, health} = {}) ->
+  playerActor: ({gameManager, id, x, y, health, name} = {}) ->
     gameManager = gameManager || new GameManager(0)
     id = id || 0
-    player = new PlayerActor(gameManager, id)
+    name = name || "MANNY"
+    player = new PlayerActor(gameManager, id, name)
     player.x = x if x
     player.y = y if y
     player.health = health if health

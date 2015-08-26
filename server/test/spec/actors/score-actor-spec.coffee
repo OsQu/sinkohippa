@@ -31,7 +31,7 @@ describe 'ScoreActor', ->
     @scoreActor.players.length.should.be.eql(playerCount + 1)
 
   it 'removes player when it\'s destroyed', ->
-    player = new PlayerActor(@gameManager, '123')
+    player = new PlayerActor(@gameManager, '123', "MANNY")
     playerCount = @scoreActor.players.length
     player.destroy()
     @scoreActor.players.length.should.be.eql(playerCount - 1)

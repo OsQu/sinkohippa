@@ -42,11 +42,11 @@ class SocketProxy
     game.destroy()
     @games = _.without(@games, game)
 
-  joinGame: (playerId, gameId) ->
+  joinGame: (playerId, playerName, gameId) ->
     playerSocket = _.find(@sockets, (s) -> s.id == playerId)
     game = _.find(@games, (g) -> g.id == gameId)
     if !playerSocket || !game then return false
-    game.addPlayer(playerSocket)
+    game.addPlayer(playerSocket, playerName)
     true
 
 

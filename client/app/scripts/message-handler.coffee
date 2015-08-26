@@ -74,12 +74,15 @@ class MessageHandler
   joinGame: (ev) ->
     gameId = ev.data.gameId
     url = ev.data.url
+    playerName = ev.data.playerName
     $.ajax
       url: url
       type: 'PUT'
       data:
         game_id: gameId
         player_id: @ourId()
+        player_name: playerName
+
 
   ourId: ->
     @gameSocket.socket.sessionid

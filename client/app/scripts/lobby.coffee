@@ -27,8 +27,10 @@ class Lobby
     input.value()
 
   openLobby: ->
-    @display.clear()
-    @render()
+    @askName().done (name) =>
+      @playerName = name
+      @display.clear()
+      @render()
 
   render: ->
     @renderHeader()
@@ -60,7 +62,6 @@ class Lobby
     $.get("#{@serverUrl}/game")
 
   startGame: ->
-    console.log("Start a new game")
     $.post("#{@serverUrl}/game").done (response) =>
       @joinGame(response.gameId)
 
@@ -72,6 +73,7 @@ class Lobby
       data:
         url: "#{@serverUrl}/game"
         gameId: id
+        playerName: @playerName
 
   destructor: ->
     @gameList?.destructor()
