@@ -22,10 +22,12 @@ class ScoreActor extends BaseActor
     unless _.find(@players, (p) -> p == player)
       @players.push(player)
       @_score[player.id] = { name: player.name, score: 0 }
+      @_publishScore()
 
   playerRemoved: (player) ->
     @players = _.reject(@players, (p) -> p == player)
     delete @_score[player.id]
+    @_publishScore()
 
   playerDied: (player, rocket) ->
     shooter = _.find(@players, (p) -> p.id == rocket.shooterId)
@@ -34,9 +36,12 @@ class ScoreActor extends BaseActor
   score: ->
     @_score
 
+  _publishScore: ->
+    @manager.globalBus.push { type: 'BROADCAST', key: 'score-changed', data: @score() }
+
   _updateScore: (player, amount) ->
     @_score[player.id].score += amount
-    @manager.globalBus.push { type: 'BROADCAST', key: 'score-changed', data: @score() }
+    @_publishScore()
 
   getState: ->
     @score()
