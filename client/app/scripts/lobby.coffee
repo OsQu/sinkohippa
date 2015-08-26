@@ -27,10 +27,15 @@ class Lobby
     input.value()
 
   openLobby: ->
+    @display.clear()
     @askName().done (name) =>
-      @playerName = name
-      @display.clear()
-      @render()
+      if name != ""
+        @playerName = name
+        @display.clear()
+        @render()
+      else
+        alert("Excuse me miss/sir, the name cannot be empty.")
+        @openLobby()
 
   render: ->
     @renderHeader()
