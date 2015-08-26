@@ -2,8 +2,12 @@ debug = require('debug')('sh:socket-actor')
 Bacon = require('baconjs')
 _ = require('underscore')
 
-class SocketActor
+BaseActor = require('./base-actor')
+
+class SocketActor extends BaseActor
   constructor: (@manager) ->
+    super
+
     @type = 'socket'
     @sockets = []
 

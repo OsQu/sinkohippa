@@ -2,8 +2,11 @@ ROT = require('../vendor/rot.js/rot')
 debug = require('debug')('sh:map-actor')
 _ = require('underscore')
 
-class MapActor
+BaseActor = require('./base-actor')
+
+class MapActor extends BaseActor
   constructor: (@manager) ->
+    super
     @type = 'map'
     @map = []
     @mapWidth = 80
@@ -14,7 +17,7 @@ class MapActor
     @bindEvents()
 
   bindEvents: ->
-    @manager.globalBus.filter((ev) => ev.type == 'ROCKET_MOVED').filter((ev) => !@canMove(ev.x, ev.y)).onValue @rocketHitTheWall
+    @subscribe @manager.globalBus.filter((ev) => ev.type == 'ROCKET_MOVED').filter((ev) => !@canMove(ev.x, ev.y)).onValue @rocketHitTheWall
 
   generateMap: (map, width, height) ->
     debug('Generationg map')

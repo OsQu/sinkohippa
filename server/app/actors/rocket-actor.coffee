@@ -1,7 +1,11 @@
 debug = require('debug')('sh:rocket-actor')
 
-class RocketActor
+BaseActor = require('./base-actor')
+
+class RocketActor extends BaseActor
   constructor: (@manager, @id, @shooterId, @x, @y, @direction) ->
+    super
+
     @type = 'rocket'
     @speed = 50 # ms / square
     @damage = 1
@@ -18,6 +22,7 @@ class RocketActor
     state
 
   destroy: ->
+    super
     # We need to destroy rocket after the moving tick has happened
     process.nextTick =>
       debug("Destroying rocket #{@id}")

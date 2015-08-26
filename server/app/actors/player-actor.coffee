@@ -1,12 +1,15 @@
 debug = require('debug')('sh:player-actor')
 _ = require('underscore')
 
+BaseActor = require('./base-actor')
+
 random = require("../utils/random")
 
 PLAYER_COLORS = ["red", "blue", "green", "yellow", "white"]
 
-class PlayerActor
+class PlayerActor extends BaseActor
   constructor: (@manager, @id) ->
+    super
     @type = 'player'
     # TODO: Refactor these to use map constants
     @x = random.randomNumber(78) + 1
@@ -20,16 +23,14 @@ class PlayerActor
     @bindEvents()
 
   bindEvents: ->
-    @unsubscribeMovePlayer = @manager.globalBus.filter((ev) => ev.id == @id).filter((ev) => ev.type == 'PLAYER_MOVE').onValue @movePlayer
-    @unsubscribeShoot = @manager.globalBus.filter((ev) => ev.id == @id).filter((ev) => ev.type == 'PLAYER_SHOOT').debounceImmediate(@shootCooldown).onValue @shootWithPlayer
-    @unsubscribeRocketMoved = @manager.globalBus.filter((ev) => ev.type == 'ROCKET_MOVED').filter((ev) => ev.x == @x && ev.y == @y).onValue @rocketHit
+    @subscribe @manager.globalBus.filter((ev) => ev.id == @id).filter((ev) => ev.type == 'PLAYER_MOVE').onValue @movePlayer
+    @subscribe @manager.globalBus.filter((ev) => ev.id == @id).filter((ev) => ev.type == 'PLAYER_SHOOT').debounceImmediate(@shootCooldown).onValue @shootWithPlayer
+    @subscribe @manager.globalBus.filter((ev) => ev.type == 'ROCKET_MOVED').filter((ev) => ev.x == @x && ev.y == @y).onValue @rocketHit
 
   destroy: ->
+    super
     @manager.globalBus.push { type: 'BROADCAST', key: 'player-leaving', data: @id }
     @manager.globalBus.push { type: 'PLAYER_REMOVE', player: @ }
-    @unsubscribeMovePlayer()
-    @unsubscribeShoot()
-    @unsubscribeRocketMoved()
 
   getState: ->
     state =

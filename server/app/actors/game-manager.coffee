@@ -3,14 +3,16 @@ _ = require('underscore')
 
 Bacon = require('baconjs')
 
+BaseActor = require('./base-actor')
 SocketActor = require('./socket-actor')
 PlayerActor = require('./player-actor')
 ScoreActor = require('./score-actor')
 MapActor = require('./map-actor')
 RocketActor = require('./rocket-actor')
 
-class GameManager
+class GameManager extends BaseActor
   constructor: (@id) ->
+    super
     @actors = []
     @globalBus = new Bacon.Bus()
     @rocketCount = 0 # TODO: BETTER ROCKET ID!
@@ -87,6 +89,7 @@ class GameManager
     _.select(@actors, (a) -> a.type == 'player')
 
   destroy: ->
+    super
     actor.destroy?() for actor in @actors
 
 module.exports = GameManager

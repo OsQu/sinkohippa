@@ -1,8 +1,12 @@
 debug = require('debug')('sh:score-actor')
 _ = require('underscore')
 
-class ScoreActor
+BaseActor = require('./base-actor')
+
+class ScoreActor extends BaseActor
   constructor: (@manager) ->
+    super
+
     @players = @manager.players()
     @type = 'score'
     @_score = {}
@@ -10,12 +14,9 @@ class ScoreActor
     @bindEvents()
 
   bindEvents: ->
-    @unsubscribePlayerAdd = @manager.globalBus.filter((ev) -> ev.type == 'PLAYER_ADD').onValue (data) => @playerAdded(data.player)
-    @unsubscribePlayerRemove = @manager.globalBus.filter((ev) -> ev.type == 'PLAYER_REMOVE').onValue (data) => @playerRemoved(data.player)
-    @unsubscribePlayerDie = @manager.globalBus.filter((ev) -> ev.type == 'PLAYER_DIE').onValue (data) => @playerDied(data.player, data.rocket)
-
-  destroy: ->
-    @unsubscribePlayerAdd()
+    @subscribe @manager.globalBus.filter((ev) -> ev.type == 'PLAYER_ADD').onValue (data) => @playerAdded(data.player)
+    @subscribe @manager.globalBus.filter((ev) -> ev.type == 'PLAYER_REMOVE').onValue (data) => @playerRemoved(data.player)
+    @subscribe @manager.globalBus.filter((ev) -> ev.type == 'PLAYER_DIE').onValue (data) => @playerDied(data.player, data.rocket)
 
   playerAdded: (player) ->
     unless _.find(@players, (p) -> p == player)
