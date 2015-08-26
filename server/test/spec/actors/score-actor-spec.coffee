@@ -48,7 +48,10 @@ describe 'ScoreActor', ->
     it 'increases score if player kills another player', ->
       @player1.shootWithPlayer({ direction: 'right' })
       @clock.tick(100)
-      @scoreActor.score()[@player1.id].should.be.eql(1)
+      @scoreActor.score()[@player1.id].score.should.be.eql(1)
+
+    it 'sends player names within the scores', ->
+      @scoreActor.score()[@player1.id].name.should.be.eql("MANNY")
 
     it 'broadcasts score-changed when scores are updated', (done) ->
       @gameManager.globalBus.filter((ev) -> ev.type == 'BROADCAST' && ev.key == 'score-changed').onValue -> done()

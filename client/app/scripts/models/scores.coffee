@@ -14,6 +14,6 @@ class Scores
     @scores[id]
 
   pretty: ->
-    _.map(@scores, (score, id) -> "#{id}: #{score}")
+    _.map(@scores, (score) -> "#{score.name}: #{score.score}")
 
 module.exports = Scores
