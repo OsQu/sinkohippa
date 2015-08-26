@@ -3,12 +3,16 @@ $pageWidth: 720px;
 h1 {
   text-align: center;
 }
+
 #game-container {
   width: $pageWidth;
   margin: 0 auto;
+
+  canvas {
+    position: absolute
+  }
 }
 
-#player-info {
-  width: $pageWidth;
-  margin: 0 auto;
+#score-board {
+  display: none
 }

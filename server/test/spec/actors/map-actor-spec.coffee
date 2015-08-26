@@ -1,14 +1,22 @@
 should = require('should')
 sinon = require('sinon')
 _ = require('underscore')
+Bacon = require('baconjs')
 
 GameManager = require('../../../app/actors/game-manager')
 MapActor = require('../../../app/actors/map-actor')
+Factory = require('../factory')
 
 describe 'MapActor', ->
   beforeEach ->
     @gameManager = new GameManager(0)
+    @oldBus = @gameManager.globalBus
+    @gameManager.globalBus = new Bacon.Bus()
+
     @mapActor = new MapActor(@gameManager)
+
+  afterEach ->
+    @gameManager.globalBus = @oldBus
 
   it 'should be correct type', ->
     @mapActor.type.should.be.eql('map')
@@ -31,6 +39,7 @@ describe 'MapActor', ->
 
   it 'should destroy rocket when it hits the wall', ->
     sinon.spy(@gameManager, 'deleteRocketActor')
-    @gameManager.globalBus.push { type: 'ROCKET_MOVED', x: 0, y: 0, rocketId: 0 }
+    rocketActor = Factory.rocketActor(gameManager: @gameManager, y: 1, direction: 'up')
+    rocketActor.move()
     @gameManager.deleteRocketActor.called.should.be.true
     @gameManager.deleteRocketActor.restore?()

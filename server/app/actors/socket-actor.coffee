@@ -2,8 +2,12 @@ debug = require('debug')('sh:socket-actor')
 Bacon = require('baconjs')
 _ = require('underscore')
 
-class SocketActor
+BaseActor = require('./base-actor')
+
+class SocketActor extends BaseActor
   constructor: (@manager) ->
+    super
+
     @type = 'socket'
     @sockets = []
 
@@ -36,11 +40,6 @@ class SocketActor
     @sockets.push(socket)
 
     debug('Adding new connection to room "all"')
-
-    gameState = @manager.getGameState()
-
-    socket.emit('game-state', gameState)
-    debug('Game state to new player sent')
 
     @bind(socket, 'player').onValue @handlePlayerEvent
     @bind(socket, 'disconnect').onValue @handleDisconnection

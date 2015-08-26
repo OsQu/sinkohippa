@@ -27,12 +27,16 @@ class MessageHandler
     gameEvents.globalBus.filter((ev) -> ev.target == 'server').onValue (data) => @sendToServer(data)
     gameEvents.globalBus.filter((ev) -> ev.target == 'join-game').onValue (data) => @joinGame(data)
 
+  listenMessages: (key) ->
+    gameEvents.socketMessage(@gameSocket, key)
+
   gotGameState: (event) ->
     state = event.data
     for part in state
       switch part.type
         when 'map' then @updateMap { data: part.state }
         when 'player' then @addNewPlayer { data: part.state }
+        when 'score' then @setScores { data: part.state }
 
   updateMap: (event) ->
     @game.setNewMap(event.data)
@@ -43,6 +47,10 @@ class MessageHandler
   addNewPlayer: (ev) ->
     playerData = ev.data
     @game.addNewPlayer(playerData)
+
+  setScores: (ev) ->
+    scores = ev.data
+    @game.setScores(scores)
 
   playerLeaving: (ev) ->
     console.log "Removing player"
@@ -66,12 +74,15 @@ class MessageHandler
   joinGame: (ev) ->
     gameId = ev.data.gameId
     url = ev.data.url
+    playerName = ev.data.playerName
     $.ajax
       url: url
       type: 'PUT'
       data:
         game_id: gameId
         player_id: @ourId()
+        player_name: playerName
+
 
   ourId: ->
     @gameSocket.socket.sessionid

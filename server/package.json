@@ -17,15 +17,15 @@
     "supertest": "~0.10.0"
   },
   "dependencies": {
-    "coffee-script": "~1.6.1",
+    "coffee-script": "~1.9.3",
     "express": "~3.0.0",
-    "baconjs": "~0.6.8",
+    "baconjs": "~0.7.0",
     "socket.io": "~0.9",
     "debug": "~0.7.2",
     "node-uuid": "~1.4.1"
   },
   "scripts": {
-    "test": "./node_modules/.bin/mocha --compilers coffee:coffee-script",
+    "test": "./node_modules/.bin/mocha --compilers coffee:coffee-script/register",
     "test:all": "find ./test -name '*.coffee' | xargs npm run test --"
   },
   "engines": {

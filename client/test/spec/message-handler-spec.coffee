@@ -60,6 +60,18 @@ describe 'MessageHandler', ->
       @messageHandler.gotGameState(state)
       expect(@game.map).to.be.not.undefined
 
+    it 'should update score from score event', ->
+      state =
+        data:
+          [
+            {
+              type: 'score'
+              state: {player1: 0, player2: 5}
+            }
+          ]
+      @messageHandler.gotGameState(state)
+      expect(@game.getScores().forPlayer("player2")).to.be.eql(5)
+
     it 'should update map to Game from map event', ->
       @messageHandler.updateMap(data: [{x: 0, y: 0, wall: 1}])
       expect(@game.map.tiles[0]).to.be.not.undefined

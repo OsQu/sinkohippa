@@ -1,14 +1,17 @@
+debug = require('debug')('sh-game')
 _ = require('underscore')
 
 socketProxy = require('../socket-proxy')
 
 createGame = (req, res) ->
+  debug("Creating game")
   newGame = socketProxy.createGame()
   res.send(200, gameId: newGame.id)
 
 joinGame = (req, res) ->
-  if !req.body.player_id || !req.body.game_id then return res.send(404)
-  success = socketProxy.joinGame(req.body.player_id, req.body.game_id)
+  debug("Joining game, player: #{req.body.player_name}")
+  if !req.body.player_id || !req.body.game_id || !req.body.player_name then return res.send(404)
+  success = socketProxy.joinGame(req.body.player_id, req.body.player_name, req.body.game_id)
   if success
     res.send(200)
   else

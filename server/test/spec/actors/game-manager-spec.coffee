@@ -13,9 +13,12 @@ describe 'ActorManager', ->
     @gameManager = new GameManager(0)
     @oldBus = @gameManager.globalBus
     @gameManager.globalBus = new Bacon.Bus()
+    # Bind events to mock bus
+    _.each @gameManager.actors, (a) -> a.bindEvents?()
 
   afterEach ->
     @gameManager.rocketCount = 0
+    @gameManager.globalBus = @oldBus
     SocketActor.prototype.broadcast.restore?()
 
   it 'should have id', ->
@@ -36,20 +39,22 @@ describe 'ActorManager', ->
   it 'should be able to give state', ->
     @gameManager.createPlayerActor('123')
     state = @gameManager.getGameState()
-    state[0].type.should.be.eql('map')
-    state[0].state.should.be.instanceOf(Array)
-    state[1].type.should.be.eql('player')
-    state[1].state.id.should.be.eql('123')
-    state[1].state.x.should.exist
-    state[1].state.y.should.exist
+    _.any(state, (s) -> s.type == 'map').should.be.true
+    _.any(state, (s) -> s.type == 'player').should.be.true
+    _.any(state, (s) -> s.type == 'score').should.be.true
 
   it 'should be able to fetch socket actor', ->
     @gameManager.getSocketActor().should.be.defined
 
   it 'should be able to add player', ->
     mockSocket = mockSocketCreator('socket-1')
-    @gameManager.addPlayer(mockSocket)
+    @gameManager.addPlayer(mockSocket, "MANNY")
     _.find(@gameManager.actors, (a) -> a.type == 'player').should.be.defined
+
+  it 'should emit game state after player is added', ->
+    mockSocket = mockSocketCreator('socket-1')
+    @gameManager.addPlayer(mockSocket)
+    mockSocket.emit.calledWith("game-state").should.be.true
 
   describe 'actor creation', ->
     beforeEach ->
@@ -112,4 +117,4 @@ describe 'ActorManager', ->
     it "should be able to give player count", ->
       @gameManager.createPlayerActor('1')
       @gameManager.createPlayerActor('2')
-      @gameManager.playerCount().should.be.eql(2)
+      @gameManager.players().length.should.be.eql(2)

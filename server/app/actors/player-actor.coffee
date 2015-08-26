@@ -1,42 +1,44 @@
 debug = require('debug')('sh:player-actor')
 _ = require('underscore')
 
+BaseActor = require('./base-actor')
+
 random = require("../utils/random")
 
 PLAYER_COLORS = ["red", "blue", "green", "yellow", "white"]
 
-class PlayerActor
-  constructor: (@manager, @id) ->
+class PlayerActor extends BaseActor
+  constructor: (@manager, @id, @name) ->
+    super
     @type = 'player'
     # TODO: Refactor these to use map constants
     @x = random.randomNumber(78) + 1
     @y = random.randomNumber(23) + 1
-    @color = PLAYER_COLORS[@manager.playerCount() % PLAYER_COLORS.length]
+    @color = PLAYER_COLORS[@manager.players().length % PLAYER_COLORS.length]
     @health = 5
     @shootCooldown = 500
     @manager.globalBus.push { type: 'BROADCAST', key: 'new-player', data: @getState() }
+    @manager.globalBus.push { type: 'PLAYER_ADD', player: @ }
 
     @bindEvents()
 
   bindEvents: ->
-    @unsubscribeMovePlayer = @manager.globalBus.filter((ev) => ev.id == @id).filter((ev) => ev.type == 'PLAYER_MOVE').onValue @movePlayer
-    @unsubscribeShoot = @manager.globalBus.filter((ev) => ev.id == @id).filter((ev) => ev.type == 'PLAYER_SHOOT').debounceImmediate(@shootCooldown).onValue @shootWithPlayer
-    @unsubscribeRocketMoved = @manager.globalBus.filter((ev) => ev.type == 'ROCKET_MOVED').filter((ev) => ev.x == @x && ev.y == @y).onValue @rocketHit
+    @subscribe @manager.globalBus.filter((ev) => ev.id == @id).filter((ev) => ev.type == 'PLAYER_MOVE').onValue @movePlayer
+    @subscribe @manager.globalBus.filter((ev) => ev.id == @id).filter((ev) => ev.type == 'PLAYER_SHOOT').debounceImmediate(@shootCooldown).onValue @shootWithPlayer
+    @subscribe @manager.globalBus.filter((ev) => ev.type == 'ROCKET_MOVED').filter((ev) => ev.x == @x && ev.y == @y).onValue @rocketHit
 
   destroy: ->
+    super
     @manager.globalBus.push { type: 'BROADCAST', key: 'player-leaving', data: @id }
-    @unsubscribeMovePlayer()
-    @unsubscribeShoot()
-    @unsubscribeRocketMoved()
+    @manager.globalBus.push { type: 'PLAYER_REMOVE', player: @ }
 
   getState: ->
-    state =
-      id: @id
-      x: @x
-      y: @y
-      color: @color
-      health: @health
-    state
+    id: @id
+    x: @x
+    y: @y
+    color: @color
+    health: @health
+    name: @name
 
 
   broadcastStateChanged: ->
@@ -57,22 +59,18 @@ class PlayerActor
     @manager.createRocketActor(@id, @x, @y, ev.direction)
 
   rocketHit: (ev) =>
-    debug "Player #{@id} got hit by rocket #{ev.rocketId}"
-    @manager.deleteRocketActor(ev.rocketId)
-    @reduceHealth ev.damage
-
-  reduceHealth: (amount) ->
-    @health = @health - amount
+    debug "Player #{@id} got hit by rocket #{ev.rocket.id}"
+    @manager.deleteRocketActor(ev.rocket.id)
+    @health = @health - ev.damage
     debug "Reduced player #{@id} health to #{@health}"
-    if @health <= 0 then @die()
+    if @health <= 0 then @die(ev.rocket)
     @broadcastStateChanged()
 
-  # For now just respawns player back to starting point
-  die: ->
-    debug "(For player #{@id}). It died :("
+  die: (rocket) ->
+    debug "Crap! (For player #{@id}). It died :("
     @x = random.randomNumber(78) + 1
     @y = random.randomNumber(23) + 1
     @health = 5
-    @broadcastStateChanged()
+    @manager.globalBus.push { type: 'PLAYER_DIE', player: @, rocket: rocket }
 
 module.exports = PlayerActor

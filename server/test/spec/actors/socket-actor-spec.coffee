@@ -113,10 +113,6 @@ describe 'SocketActor', ->
     it 'should add socket to sockets array', ->
       @socketActor.sockets.length.should.be.eql(1)
 
-    it 'should emit game state to socket', ->
-      @socket.emit.called.should.be.true
-      @socket.emit.firstCall.args[0].should.be.eql('game-state')
-
     it 'should listen player event from socket', ->
       @socket.on.firstCall.args[0].should.be.eql('player')
 

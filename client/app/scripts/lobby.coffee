@@ -3,7 +3,7 @@ _ = require('underscore')
 
 Input = require('./ui/input')
 Header = require('./ui/header')
-List = require('./ui/list')
+SelectableList = require('./ui/selectable_list')
 
 Game = require('./game')
 KeyboardController = require('./keyboard-controller')
@@ -28,7 +28,14 @@ class Lobby
 
   openLobby: ->
     @display.clear()
-    @render()
+    @askName().done (name) =>
+      if name != ""
+        @playerName = name
+        @display.clear()
+        @render()
+      else
+        alert("Excuse me miss/sir, the name cannot be empty.")
+        @openLobby()
 
   render: ->
     @renderHeader()
@@ -41,7 +48,7 @@ class Lobby
 
   renderGameList: ->
     @fetchGames().done (games) =>
-      @gameList = new List(
+      @gameList = new SelectableList(
         display: @display,
         location: {x: 1, y: 7},
         items: _.union ["Create new game"], games
@@ -60,7 +67,6 @@ class Lobby
     $.get("#{@serverUrl}/game")
 
   startGame: ->
-    console.log("Start a new game")
     $.post("#{@serverUrl}/game").done (response) =>
       @joinGame(response.gameId)
 
@@ -72,6 +78,7 @@ class Lobby
       data:
         url: "#{@serverUrl}/game"
         gameId: id
+        playerName: @playerName
 
   destructor: ->
     @gameList?.destructor()

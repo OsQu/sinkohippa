@@ -3,19 +3,23 @@ _ = require('underscore')
 
 Bacon = require('baconjs')
 
+BaseActor = require('./base-actor')
 SocketActor = require('./socket-actor')
 PlayerActor = require('./player-actor')
+ScoreActor = require('./score-actor')
 MapActor = require('./map-actor')
 RocketActor = require('./rocket-actor')
 
-class GameManager
+class GameManager extends BaseActor
   constructor: (@id) ->
+    super
     @actors = []
     @globalBus = new Bacon.Bus()
     @rocketCount = 0 # TODO: BETTER ROCKET ID!
 
     @createMapActor()
     @createSocketActor()
+    @createScoreActor()
 
   # Collects state of all actors expect socket and returns it
   getGameState: ->
@@ -36,9 +40,13 @@ class GameManager
     socketActor = new SocketActor(@)
     @actors.push(socketActor)
 
-  createPlayerActor: (playerId) ->
+  createScoreActor: ->
+    debug('Creating score actor')
+    @actors.push(new ScoreActor(@))
+
+  createPlayerActor: (playerId, playerName) ->
     debug('Creating player actor')
-    playerActor = new PlayerActor(@, playerId)
+    playerActor = new PlayerActor(@, playerId, playerName)
     @actors.push(playerActor)
 
   createRocketActor: (shooterId, x, y, direction) ->
@@ -57,7 +65,7 @@ class GameManager
     else
       debug("Can't find player #{playerId}")
 
-    if @playerCount() == 0
+    if @players().length == 0
       @globalBus.push { type: "BROADCAST", key: "game-destroyed", data: @id }
 
   deleteRocketActor: (rocketId) ->
@@ -72,14 +80,16 @@ class GameManager
   getSocketActor: ->
     _.find(@actors, (a) -> a.type == 'socket')
 
-  addPlayer: (socket) ->
+  addPlayer: (socket, playerName) ->
     @getSocketActor().newConnection(socket)
-    @createPlayerActor(socket.id)
+    @createPlayerActor(socket.id, playerName)
+    @globalBus.push { id: socket.id, type: 'SEND_TO_SOCKET', key: 'game-state', data: @getGameState() }
 
-  playerCount: ->
-    _.select(@actors, (a) -> a.type == 'player').length
+  players: ->
+    _.select(@actors, (a) -> a.type == 'player')
 
   destroy: ->
+    super
     actor.destroy?() for actor in @actors
 
 module.exports = GameManager
