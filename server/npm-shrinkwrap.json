@@ -3,8 +3,9 @@
   "version": "0.0.1",
   "dependencies": {
     "baconjs": {
-      "version": "0.6.22",
-      "from": "baconjs@~0.6.8"
+      "version": "0.7.71",
+      "from": "baconjs@0.7.71",
+      "resolved": "https://registry.npmjs.org/baconjs/-/baconjs-0.7.71.tgz"
     },
     "coffee-script": {
       "version": "1.9.3",
