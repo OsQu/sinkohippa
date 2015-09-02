@@ -21,7 +21,7 @@ class PlayerActor extends BaseActor
       @x = random.randomNumber(78) + 1
       @y = random.randomNumber(23) + 1
     @color = PLAYER_COLORS[@manager.players().length % PLAYER_COLORS.length]
-    @health = 5
+    @health = 3
     @shootCooldown = 500
     @manager.globalBus.push { type: 'BROADCAST', key: 'new-player', data: @getState() }
     @manager.globalBus.push { type: 'PLAYER_ADD', player: @ }
@@ -76,7 +76,7 @@ class PlayerActor extends BaseActor
     debug "Crap! (For player #{@id}). It died :("
     @x = random.randomNumber(78) + 1
     @y = random.randomNumber(23) + 1
-    @health = 5
+    @health = 3
     @manager.globalBus.push { type: 'PLAYER_DIE', player: @, rocket: rocket }
 
 module.exports = PlayerActor
