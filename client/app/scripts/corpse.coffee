@@ -4,7 +4,6 @@ class Corpse
   constructor: (@x, @y, @color) ->
 
   render: (display) ->
-    console.log('Rendering corpse', @x, @y, @color)
     display.draw(@x, @y, '%', @colorCode())
 
   colorCode: ->
