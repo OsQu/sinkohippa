@@ -74,9 +74,12 @@ class PlayerActor extends BaseActor
 
   die: (rocket) ->
     debug "Crap! (For player #{@id}). It died :("
+    oldX = @x
+    oldY = @y
     @x = random.randomNumber(78) + 1
     @y = random.randomNumber(23) + 1
     @health = 3
     @manager.globalBus.push { type: 'PLAYER_DIE', player: @, rocket: rocket }
+    @manager.globalBus.push { type: 'BROADCAST', key: 'new-corpse', data: {x: oldX, y: oldY, color: @color}}
 
 module.exports = PlayerActor

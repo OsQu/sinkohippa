@@ -161,3 +161,18 @@ describe 'PlayerActor', ->
     @playerActor.health = 1
     rocket.move()
 
+  it 'should broadcast a corpse add message when dying', (done) ->
+    @gameManager.globalBus.filter((ev) =>
+      ev.type == 'BROADCAST' && ev.key == 'new-corpse' &&
+        ev.data.x == @playerActor.x && ev.data.y == @playerActor.y &&
+        ev.data.color == @playerActor.color
+    ).onValue (ev) ->
+      done()
+    rocket = Factory.rocketActor(
+      gameManager: @gameManager,
+      x: @playerActor.x,
+      y: @playerActor.y + 1,
+      direction: 'up')
+
+    @playerActor.health = 1
+    rocket.move()
