@@ -131,3 +131,7 @@ describe 'MessageHandler', ->
     it 'should give our id when asking it', ->
       @messageHandler.connect()
       expect(@messageHandler.ourId()).to.be.equals('ownId')
+
+    it 'should add corpses', ->
+      @messageHandler.newCorpse({data: {x: 1, y: 1, color: 'red'}})
+      expect(@game.corpses.length).to.be.equals(1)

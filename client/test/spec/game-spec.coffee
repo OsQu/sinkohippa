@@ -107,3 +107,7 @@ describe 'Game', ->
         @game.items.push new Rocket(0, 5, 5, 'shooter-1', 'right')
         @game.removeRocket 0
         expect(@game.items.length).to.be.equals(0)
+
+      it 'should add new corpses', ->
+        @game.addCorpse({x: 1, y: 1, color: 'red'})
+        expect(@game.corpses.length).to.be.equals(1)
