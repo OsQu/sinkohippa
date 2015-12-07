@@ -8,18 +8,22 @@ class RocketActor extends BaseActor
 
     @type = 'rocket'
     @speed = 50 # ms / square
+    @explosionLength = 100 # ms
     @damage = 1
     @startMoving()
 
   getState: ->
-    state =
-      shooter: @shooterId
-      id: @id
-      x: @x
-      y: @y
-      direction: @direction
-      damage: @damage
-    state
+    shooter: @shooterId
+    id: @id
+    x: @x
+    y: @y
+    direction: @direction
+    damage: @damage
+
+  getExplosion: ->
+    id: @id
+    x: @x
+    y: @y
 
   destroy: ->
     super
@@ -28,6 +32,10 @@ class RocketActor extends BaseActor
       debug("Destroying rocket #{@id}")
       @stopMoving()
       @manager.globalBus.push { type: 'BROADCAST', key: 'rocket-destroyed', data: @getState() }
+      @manager.globalBus.push { type: 'BROADCAST', key: 'add-explosion', data: @getExplosion() }
+      setTimeout =>
+        @manager.globalBus.push { type: 'BROADCAST', key: 'remove-explosion', data: @getExplosion() }
+      , @explosionLength
 
   startMoving: ->
     @intervalId = setInterval(@move, @speed)
