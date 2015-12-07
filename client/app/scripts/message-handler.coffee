@@ -24,6 +24,8 @@ class MessageHandler
     gameEvents.socketMessage(@gameSocket, 'rocket-moved').onValue @, 'rocketMoved'
     gameEvents.socketMessage(@gameSocket, 'rocket-destroyed').onValue @, 'rocketDestroyed'
     gameEvents.socketMessage(@gameSocket, 'new-corpse').onValue @, 'newCorpse'
+    gameEvents.socketMessage(@gameSocket, 'add-explosion').onValue @, 'addExplosion'
+    gameEvents.socketMessage(@gameSocket, 'remove-explosion').onValue @, 'removeExplosion'
 
     gameEvents.globalBus.filter((ev) -> ev.target == 'server').onValue @, 'sendToServer'
     gameEvents.globalBus.filter((ev) -> ev.target == 'join-game').onValue @, 'joinGame'
@@ -86,6 +88,12 @@ class MessageHandler
 
   newCorpse: (ev) ->
     @game.addCorpse(ev.data)
+
+  addExplosion: (ev) ->
+    @game.addExplosion(ev.data)
+
+  removeExplosion: (ev) ->
+    @game.removeExplosion(ev.data.id)
 
   ourId: ->
     @gameSocket.socket.sessionid

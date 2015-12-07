@@ -19,21 +19,6 @@ describe 'Player', ->
           done()
       @player.render(mockDisplay)
 
-    it 'should move player to new position if possible', ->
-      @player.newX = 5
-      @player.newY = 6
-      @player.handleNewPosition({ draw: -> })
-      expect(@player.x).to.be.equal(5)
-      expect(@player.y).to.be.equal(6)
-
-    it 'should clear current position if new position exists', ->
-      @player.newX = 5
-      drawSpy = sinon.spy()
-      @player.handleNewPosition({ draw: drawSpy })
-      expect(drawSpy.called).to.be.true
-      expect(drawSpy.firstCall.args[0]).to.be.equals(0)
-      expect(drawSpy.firstCall.args[2]).to.be.equals('.')
-
     it 'should send moving data to server', (done) ->
       count = 0
       gameEvents.globalBus.onValue (ev) ->

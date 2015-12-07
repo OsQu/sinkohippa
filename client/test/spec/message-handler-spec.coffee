@@ -5,6 +5,7 @@ ROT = require('../client/vendor/rot.js/rot')
 Game = require('../client/game')
 Player = require('../client/player')
 Rocket = require('../client/rocket')
+Explosion = require('../client/explosion')
 MessageHandler = require('../client/message-handler')
 gameEvents = require('../client/game-events')
 
@@ -101,8 +102,8 @@ describe 'MessageHandler', ->
           id: 'player'
           x: 99
           y: 101
-      expect(player.newX).to.be.equals(99)
-      expect(player.newY).to.be.equals(101)
+      expect(player.x).to.be.equals(99)
+      expect(player.y).to.be.equals(101)
 
     it 'should move rocket in Game from rocket-moving event', ->
       rocket = new Rocket(0, 2, 4, 'shooter-1', 'down')
@@ -114,7 +115,7 @@ describe 'MessageHandler', ->
           shooter: 'shooter-1'
           x: 2
           y: 5
-      expect(rocket.newY).to.be.equals(5)
+      expect(rocket.y).to.be.equals(5)
 
     it 'should remove rocket in Game from rocket-destroyed event', ->
       rocket = new Rocket(0, 2, 4, 'shooter-1', 'down')
@@ -135,3 +136,13 @@ describe 'MessageHandler', ->
     it 'should add corpses', ->
       @messageHandler.newCorpse({data: {x: 1, y: 1, color: 'red'}})
       expect(@game.corpses.length).to.be.equals(1)
+
+    it 'should add explosions', ->
+      @messageHandler.addExplosion({data: {x: 1, y: 1, id: 1}})
+      expect(@game.explosions.length).to.be.equals(1)
+
+    it 'should remove explosions', ->
+      explosion = new Explosion(1, 1, 1)
+      @game.explosions.push(explosion)
+      @messageHandler.removeExplosion({data: {id: 1}})
+      expect(@game.explosions.length).to.be.equals(0)
