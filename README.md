@@ -17,3 +17,7 @@ Note: This requires access to production server.
 
 ## Live demo
 Live demo is available at [http://sinkohippa.com](http://sinkohippa.com)
+
+## Project damagement
+
+There's an [open Trello board](https://trello.com/b/laRDvT4f/sinkohippa) that contains some sort of backlog.
