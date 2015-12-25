@@ -13,6 +13,7 @@ describe 'Map', ->
   describe 'After initialization', ->
     it 'should have generated map correctly', ->
       expect(@map.tiles).not.to.be.empty
+
     it 'should have correct tiles', ->
       tile = @map.tiles[90]
       expect(tile.x).to.be.equal 3

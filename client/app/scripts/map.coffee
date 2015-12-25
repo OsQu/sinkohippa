@@ -1,5 +1,6 @@
 ROT = require('./vendor/rot.js/rot')
 Tile = require('./tile')
+mapDimensions = require('./constants')['mapDimensions']
 _ = require('underscore')
 
 class Map
@@ -11,7 +12,7 @@ class Map
 
 
   generate: () ->
-    generator = new ROT.Map.Arena(80, 25)
+    generator = new ROT.Map.Arena(mapDimensions.width, mapDimensions.height)
     generator.create (x,y, wall) =>
       @tiles.push new Tile x, y, wall
 

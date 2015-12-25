@@ -1,7 +1,7 @@
 expect = require('chai').expect
 
 ROT = require('../client/vendor/rot.js/rot')
-Bacon= require('baconjs')
+Bacon = require('baconjs')
 Rocket = require('../client/rocket')
 Player = require('../client/player')
 

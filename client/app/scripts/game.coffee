@@ -10,9 +10,11 @@ Player = require('./player')
 Rocket = require('./rocket')
 Corpse = require('./corpse')
 Explosion = require('./explosion')
+MapDisplay = require('./map-display')
 
 gameEvents = require('./game-events')
-screenHeight = require('./constants')["screenDimensions"]["height"]
+screenDimensions = require('./constants')['screenDimensions']
+mapDimensions = require('./constants')['mapDimensions']
 
 class Game
   constructor: ({@serverUrl, @display}) ->
@@ -26,21 +28,22 @@ class Game
     @messageHandler = new MessageHandler(@)
     @messageHandler.connect()
 
-    @hud = new Hud(display: @display, location: { x: 1, y: screenHeight - 2 })
+    @hud = new Hud(display: @display, location: { x: 1, y: screenDimensions.height - 2 })
+    @mapDisplay = new MapDisplay(@display, mapDimensions)
     @scoreBoard = new ScoreBoard(@messageHandler)
 
   render: ->
     for [x, y] in @resetTiles
-      @map?.renderTile(@display, x, y)
+      @map?.renderTile(@mapDisplay, x, y)
       @resetTiles = []
     for corpse in @corpses
-      corpse.render(@display)
+      corpse.render(@mapDisplay)
     for player in @players
-      player.render(@display)
+      player.render(@mapDisplay)
     for item in @items
-      item.render(@display)
+      item.render(@mapDisplay)
     for explosion in @explosions
-      explosion.render(@display)
+      explosion.render(@mapDisplay)
 
   gameLoop: =>
     setTimeout @gameLoop, 1000 / @fps
@@ -55,7 +58,7 @@ class Game
 
   setNewMap: (data) ->
     @map = new Map(data)
-    @map.render(@display)
+    @map.render(@mapDisplay)
     console.log "New map set and rendered"
 
   addNewPlayer: (playerData) ->

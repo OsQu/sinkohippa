@@ -8,6 +8,7 @@ class Explosion
     console.log('render explosion', @id, @x, @y)
     renderOne = (x, y, symbol) ->
       display.draw(x, y, symbol, Explosion.color)
+
     renderOne(@x-1, @y-1, '/')
     renderOne(@x, @y-1, '-')
     renderOne(@x+1, @y-1, '\\')
