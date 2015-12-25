@@ -1,0 +1,7 @@
+echo "# Running server tests.."
+cd server
+
+npm run test:all
+
+echo "# Running client tests.."
+cd ../client
