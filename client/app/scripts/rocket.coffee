@@ -8,18 +8,12 @@ class Rocket
       '-'
 
   render: (display) ->
-    @handleNewPosition(display)
     display.draw(@x, @y, @getChar(), @shooter?.colorCode())
 
   clearCurrentPosition: (display) ->
     display.draw(@x, @y, '.')
 
-  handleNewPosition: (display) ->
-    if @newX or @newY
-      @clearCurrentPosition(display)
-      @x = @newX
-      @y = @newY
-      delete @newX
-      delete @newY
+  tilesToReset: ->
+    [[@x, @y]]
 
 module.exports = Rocket

@@ -10,23 +10,13 @@ class Player
     '@'
 
   render: (display) ->
-    @handleNewPosition(display)
     display.draw(@x, @y, @getChar(), @colorCode())
 
   colorCode: ->
     colors(@color)
 
-  clearCurrentPosition: (display) ->
-    # Assume that player can't stand inside the wall. This might need improving
-    display.draw(@x, @y, '.')
-
-  handleNewPosition: (display) ->
-    if @newX or @newY
-      @clearCurrentPosition(display)
-      @x = @newX
-      @y = @newY
-      delete @newX
-      delete @newY
+  tilesToReset: ->
+    [[@x, @y]]
 
   getMoveEvent: (direction) ->
     target: 'server'

@@ -72,12 +72,18 @@ describe 'RocketActor', ->
 
   it 'should be able to destroy rocket', (done) ->
     gameManager.globalBus.filter((ev) -> ev.type == 'BROADCAST').onValue (ev) ->
-      ev.key.should.be.eql('rocket-destroyed')
-      done()
+      if ev.key == 'rocket-destroyed'
+        done()
     @rocketActor.destroy()
 
   it 'should broadcast rocket-destroyed event when rocket is destroyed', (done) ->
     gameManager.globalBus.filter((ev) -> ev.type == 'BROADCAST').onValue (ev) ->
-      ev.key.should.be.eql('rocket-destroyed')
-      done()
+      if ev.key == 'rocket-destroyed'
+        done()
+    @rocketActor.destroy()
+
+  it 'should broadcast add-explosion event when rocket is destroyed', (done) ->
+    gameManager.globalBus.filter((ev) -> ev.type == 'BROADCAST').onValue (ev) ->
+      if ev.key == 'add-explosion'
+        done()
     @rocketActor.destroy()
