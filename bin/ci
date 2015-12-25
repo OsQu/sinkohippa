@@ -1,7 +1,10 @@
 echo "# Running server tests.."
 cd server
 
+npm install
 npm run test:all
+
+# Return here if != 0
 
 echo "# Running client tests.."
 cd ../client
