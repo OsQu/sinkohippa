@@ -2,6 +2,9 @@ echo "# Running server tests.."
 cd server
 
 npm install
+
+echo "Current dir after npm install: $(pwd)"
+
 npm run test:all
 
 # Return here if != 0
