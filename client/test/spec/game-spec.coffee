@@ -69,8 +69,8 @@ describe 'Game', ->
           x: 99
           y: 101
           health: 4
-        expect(@game.players[0].newX).to.be.equals(99)
-        expect(@game.players[0].newY).to.be.equals(101)
+        expect(@game.players[0].x).to.be.equals(99)
+        expect(@game.players[0].y).to.be.equals(101)
         expect(@game.players[0].health).to.be.equals(4)
 
       it 'should push hud event if own player state changed', (done) ->
@@ -101,7 +101,7 @@ describe 'Game', ->
           x: 6
           y: 5
         expect(@game.items.length).to.be.equals(1)
-        expect(@game.items[0].newX).to.be.equals(6)
+        expect(@game.items[0].x).to.be.equals(6)
 
       it 'should remove rocket', ->
         @game.items.push new Rocket(0, 5, 5, 'shooter-1', 'right')

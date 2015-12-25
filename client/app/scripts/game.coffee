@@ -9,6 +9,7 @@ Map = require('./map')
 Player = require('./player')
 Rocket = require('./rocket')
 Corpse = require('./corpse')
+Explosion = require('./explosion')
 
 gameEvents = require('./game-events')
 screenHeight = require('./constants')["screenDimensions"]["height"]
@@ -19,6 +20,8 @@ class Game
     @players = []
     @items = []
     @corpses = []
+    @explosions = []
+    @resetTiles = []
 
     @messageHandler = new MessageHandler(@)
     @messageHandler.connect()
@@ -27,18 +30,21 @@ class Game
     @scoreBoard = new ScoreBoard(@messageHandler)
 
   render: ->
+    for [x, y] in @resetTiles
+      @map?.renderTile(@display, x, y)
+      @resetTiles = []
     for corpse in @corpses
       corpse.render(@display)
     for player in @players
       player.render(@display)
     for item in @items
       item.render(@display)
+    for explosion in @explosions
+      explosion.render(@display)
 
   gameLoop: =>
-    setTimeout =>
-      @requestAnimationFrame(@gameLoop)
-      @render()
-    , 1000 / @fps
+    setTimeout @gameLoop, 1000 / @fps
+    @requestAnimationFrame(=> @render())
 
   start: =>
     console.log "Starting engine"
@@ -68,16 +74,16 @@ class Game
   removePlayer: (playerId) ->
     player = _.find @players, (p) -> p.id == playerId
     @players = _.without @players, player
-    @map?.renderTile(@display, player.x, player.y)
+    @resetTiles = @resetTiles.concat(player.tilesToReset())
 
   playerStateChanged: (newData) ->
     player = _.find(@players, (p) -> p.id == newData.id)
-    player.newX = newData.x
-    player.newY = newData.y
+    @resetTiles = @resetTiles.concat(player.tilesToReset())
+    player.x = newData.x
+    player.y = newData.y
     player.health = newData.health
     if player.id == @messageHandler.ourId()
       gameEvents.globalBus.push { target: 'hud', data: player }
-
 
   addNewRocket: (data) ->
     # TODO: These _.finds could be optimized with a hash table!
@@ -90,13 +96,14 @@ class Game
     console.log "Destroying rocket"
     item = _.find @items, (i) -> i.id == rocketId
     @items = _.without @items, item
-    @map?.renderTile(@display, item.x, item.y)
+    @resetTiles = @resetTiles.concat(item.tilesToReset())
 
   moveRocket: (data) ->
     rocket = _.find @items, (i) -> i.id == data.id
     if rocket
-      rocket.newX = data.x
-      rocket.newY = data.y
+      @resetTiles = @resetTiles.concat(rocket.tilesToReset())
+      rocket.x = data.x
+      rocket.y = data.y
     else
       @addNewRocket data
 
@@ -108,5 +115,15 @@ class Game
 
   addCorpse: ({x, y, color}) ->
     @corpses.push(new Corpse(x, y, color))
+
+  addExplosion: ({id, x, y}) ->
+    @explosions.push(new Explosion(id, x, y))
+
+  removeExplosion: (id) ->
+    explosion = _.find(@explosions, (exp) -> exp.id == id)
+    @explosions = _.without @explosions, explosion
+    @resetTiles = @resetTiles.concat(explosion.tilesToReset())
+
+
 
 module.exports = Game
