@@ -44,7 +44,7 @@ class MapActor extends BaseActor
     @map
 
   canMove: (x, y) =>
-    return false if x < 0 || y < 0 || x > @mapWidth || y > @mapHeight
+    return false if x < 0 || y < 0
     @arrayedMap[x][y].wall == 0
 
   rocketHitTheWall: (ev) =>

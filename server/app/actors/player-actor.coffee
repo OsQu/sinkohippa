@@ -12,14 +12,8 @@ class PlayerActor extends BaseActor
     super
     @type = 'player'
     # TODO: Refactor these to use map constants
-    debug "adding player: #{@name}"
-    if @name == "SPEC42"
-      debug "Adding spectator"
-      @x = 100
-      @y = 100
-    else
-      @x = random.randomNumber(78) + 1
-      @y = random.randomNumber(23) + 1
+    @x = random.randomNumber(78) + 1
+    @y = random.randomNumber(23) + 1
     @color = PLAYER_COLORS[@manager.players().length % PLAYER_COLORS.length]
     @health = 3
     @shootCooldown = 500
