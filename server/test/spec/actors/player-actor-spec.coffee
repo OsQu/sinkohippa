@@ -48,7 +48,7 @@ describe 'PlayerActor', ->
     state.id.should.be.eql('123')
     state.x.should.be.eql(1)
     state.y.should.be.eql(1)
-    state.health.should.be.eql(5)
+    state.health.should.be.eql(3)
     state.color.should.be.eql("red")
     state.name.should.be.eql("MANNY")
 
@@ -119,7 +119,7 @@ describe 'PlayerActor', ->
       y: @playerActor.y + 1,
       direction: 'up')
     rocket.move()
-    @playerActor.health.should.be.eql(4)
+    @playerActor.health.should.be.eql(2)
 
   it 'should broadcast player-state-changed when rocket is hit', (done) ->
     @gameManager.globalBus.filter((ev) -> ev.type == 'BROADCAST' && ev.key == "player-state-changed").onValue (ev) ->
@@ -161,3 +161,18 @@ describe 'PlayerActor', ->
     @playerActor.health = 1
     rocket.move()
 
+  it 'should broadcast a corpse add message when dying', (done) ->
+    @gameManager.globalBus.filter((ev) =>
+      ev.type == 'BROADCAST' && ev.key == 'new-corpse' &&
+        ev.data.x == @playerActor.x && ev.data.y == @playerActor.y &&
+        ev.data.color == @playerActor.color
+    ).onValue (ev) ->
+      done()
+    rocket = Factory.rocketActor(
+      gameManager: @gameManager,
+      x: @playerActor.x,
+      y: @playerActor.y + 1,
+      direction: 'up')
+
+    @playerActor.health = 1
+    rocket.move()

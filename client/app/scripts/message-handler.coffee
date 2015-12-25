@@ -15,17 +15,18 @@ class MessageHandler
     io.connect(@game.serverUrl)
 
   bindEvents: ->
-    gameEvents.socketMessage(@gameSocket, 'game-state').onValue (data) => @gotGameState(data)
-    gameEvents.socketMessage(@gameSocket, 'map').onValue (data) => @updateMap(data)
-    gameEvents.socketMessage(@gameSocket, 'info').onValue (data) => @gotServerInfo(data)
-    gameEvents.socketMessage(@gameSocket, 'new-player').onValue (data) => @addNewPlayer(data)
-    gameEvents.socketMessage(@gameSocket, 'player-leaving').onValue (data) => @playerLeaving(data)
-    gameEvents.socketMessage(@gameSocket, 'player-state-changed').onValue (data) => @playerStateChanged(data)
-    gameEvents.socketMessage(@gameSocket, 'rocket-moved').onValue (data) => @rocketMoved(data)
-    gameEvents.socketMessage(@gameSocket, 'rocket-destroyed').onValue (data) => @rocketDestroyed(data)
+    gameEvents.socketMessage(@gameSocket, 'game-state').onValue @, 'gotGameState'
+    gameEvents.socketMessage(@gameSocket, 'map').onValue @, 'updateMap'
+    gameEvents.socketMessage(@gameSocket, 'info').onValue @, 'gotServerInfo'
+    gameEvents.socketMessage(@gameSocket, 'new-player').onValue @, 'addNewPlayer'
+    gameEvents.socketMessage(@gameSocket, 'player-leaving').onValue @, 'playerLeaving'
+    gameEvents.socketMessage(@gameSocket, 'player-state-changed').onValue @, 'playerStateChanged'
+    gameEvents.socketMessage(@gameSocket, 'rocket-moved').onValue @, 'rocketMoved'
+    gameEvents.socketMessage(@gameSocket, 'rocket-destroyed').onValue @, 'rocketDestroyed'
+    gameEvents.socketMessage(@gameSocket, 'new-corpse').onValue @, 'newCorpse'
 
-    gameEvents.globalBus.filter((ev) -> ev.target == 'server').onValue (data) => @sendToServer(data)
-    gameEvents.globalBus.filter((ev) -> ev.target == 'join-game').onValue (data) => @joinGame(data)
+    gameEvents.globalBus.filter((ev) -> ev.target == 'server').onValue @, 'sendToServer'
+    gameEvents.globalBus.filter((ev) -> ev.target == 'join-game').onValue @, 'joinGame'
 
   listenMessages: (key) ->
     gameEvents.socketMessage(@gameSocket, key)
@@ -83,6 +84,8 @@ class MessageHandler
         player_id: @ourId()
         player_name: playerName
 
+  newCorpse: (ev) ->
+    @game.addCorpse(ev.data)
 
   ourId: ->
     @gameSocket.socket.sessionid

@@ -8,6 +8,7 @@ ScoreBoard = require('./score-board')
 Map = require('./map')
 Player = require('./player')
 Rocket = require('./rocket')
+Corpse = require('./corpse')
 
 gameEvents = require('./game-events')
 screenHeight = require('./constants')["screenDimensions"]["height"]
@@ -17,6 +18,7 @@ class Game
     @fps = 30
     @players = []
     @items = []
+    @corpses = []
 
     @messageHandler = new MessageHandler(@)
     @messageHandler.connect()
@@ -25,6 +27,8 @@ class Game
     @scoreBoard = new ScoreBoard(@messageHandler)
 
   render: ->
+    for corpse in @corpses
+      corpse.render(@display)
     for player in @players
       player.render(@display)
     for item in @items
@@ -101,5 +105,8 @@ class Game
 
   setScores: (scores) ->
     @scoreBoard.setScores(scores)
+
+  addCorpse: ({x, y, color}) ->
+    @corpses.push(new Corpse(x, y, color))
 
 module.exports = Game
